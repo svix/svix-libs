@@ -1,12 +1,13 @@
 // this file is @generated
+import { IntegrationIn, IntegrationInUtil } from "../models/integration_in";
+import { IntegrationKeyOut, IntegrationKeyOutUtil } from "../models/integration_key_out";
+import { IntegrationOut, IntegrationOutUtil } from "../models/integration_out";
+import { IntegrationUpdate, IntegrationUpdateUtil } from "../models/integration_update";
 import {
-  IntegrationIn,
-  IntegrationKeyOut,
-  IntegrationOut,
-  IntegrationUpdate,
   ListResponseIntegrationOut,
-  Ordering,
-} from "../openapi";
+  ListResponseIntegrationOutUtil,
+} from "../models/list_response_integration_out";
+import { Ordering, OrderingUtil } from "../models/ordering";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface IntegrationListOptions {
@@ -41,7 +42,7 @@ export class Integration {
     request.setQueryParam("iterator", options?.iterator);
     request.setQueryParam("order", options?.order);
 
-    return request.send(this.requestCtx, "ListResponseIntegrationOut");
+    return request.send(this.requestCtx, ListResponseIntegrationOutUtil._fromJsonObject);
   }
 
   /** Create an integration. */
@@ -54,9 +55,9 @@ export class Integration {
 
     request.setPathParam("app_id", appId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(integrationIn, "IntegrationIn");
+    request.setBody(IntegrationInUtil._toJsonObject(integrationIn));
 
-    return request.send(this.requestCtx, "IntegrationOut");
+    return request.send(this.requestCtx, IntegrationOutUtil._fromJsonObject);
   }
 
   /** Get an integration. */
@@ -69,7 +70,7 @@ export class Integration {
     request.setPathParam("app_id", appId);
     request.setPathParam("integ_id", integId);
 
-    return request.send(this.requestCtx, "IntegrationOut");
+    return request.send(this.requestCtx, IntegrationOutUtil._fromJsonObject);
   }
 
   /** Update an integration. */
@@ -85,9 +86,9 @@ export class Integration {
 
     request.setPathParam("app_id", appId);
     request.setPathParam("integ_id", integId);
-    request.setBody(integrationUpdate, "IntegrationUpdate");
+    request.setBody(IntegrationUpdateUtil._toJsonObject(integrationUpdate));
 
-    return request.send(this.requestCtx, "IntegrationOut");
+    return request.send(this.requestCtx, IntegrationOutUtil._fromJsonObject);
   }
 
   /** Delete an integration. */
@@ -117,7 +118,7 @@ export class Integration {
     request.setPathParam("app_id", appId);
     request.setPathParam("integ_id", integId);
 
-    return request.send(this.requestCtx, "IntegrationKeyOut");
+    return request.send(this.requestCtx, IntegrationKeyOutUtil._fromJsonObject);
   }
 
   /** Rotate the integration's key. The previous key will be immediately revoked. */
@@ -135,6 +136,6 @@ export class Integration {
     request.setPathParam("integ_id", integId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
 
-    return request.send(this.requestCtx, "IntegrationKeyOut");
+    return request.send(this.requestCtx, IntegrationKeyOutUtil._fromJsonObject);
   }
 }

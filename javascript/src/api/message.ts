@@ -1,5 +1,10 @@
 // this file is @generated
-import { ListResponseMessageOut, MessageIn, MessageOut } from "../openapi";
+import {
+  ListResponseMessageOut,
+  ListResponseMessageOutUtil,
+} from "../models/list_response_message_out";
+import { MessageIn, MessageInUtil } from "../models/message_in";
+import { MessageOut, MessageOutUtil } from "../models/message_out";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface MessageListOptions {
@@ -62,7 +67,7 @@ export class Message {
     request.setQueryParam("tag", options?.tag);
     request.setQueryParam("event_types", options?.eventTypes);
 
-    return request.send(this.requestCtx, "ListResponseMessageOut");
+    return request.send(this.requestCtx, ListResponseMessageOutUtil._fromJsonObject);
   }
 
   /**
@@ -86,9 +91,9 @@ export class Message {
     request.setPathParam("app_id", appId);
     request.setQueryParam("with_content", options?.withContent);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(messageIn, "MessageIn");
+    request.setBody(MessageInUtil._toJsonObject(messageIn));
 
-    return request.send(this.requestCtx, "MessageOut");
+    return request.send(this.requestCtx, MessageOutUtil._fromJsonObject);
   }
 
   /** Get a message by its ID or eventID. */
@@ -103,7 +108,7 @@ export class Message {
     request.setPathParam("msg_id", msgId);
     request.setQueryParam("with_content", options?.withContent);
 
-    return request.send(this.requestCtx, "MessageOut");
+    return request.send(this.requestCtx, MessageOutUtil._fromJsonObject);
   }
 
   /**

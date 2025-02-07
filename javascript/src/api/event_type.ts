@@ -1,14 +1,21 @@
 // this file is @generated
 import {
   EventTypeImportOpenApiIn,
+  EventTypeImportOpenApiInUtil,
+} from "../models/event_type_import_open_api_in";
+import {
   EventTypeImportOpenApiOut,
-  EventTypeIn,
-  EventTypeOut,
-  EventTypePatch,
-  EventTypeUpdate,
+  EventTypeImportOpenApiOutUtil,
+} from "../models/event_type_import_open_api_out";
+import { EventTypeIn, EventTypeInUtil } from "../models/event_type_in";
+import { EventTypeOut, EventTypeOutUtil } from "../models/event_type_out";
+import { EventTypePatch, EventTypePatchUtil } from "../models/event_type_patch";
+import { EventTypeUpdate, EventTypeUpdateUtil } from "../models/event_type_update";
+import {
   ListResponseEventTypeOut,
-  Ordering,
-} from "../openapi";
+  ListResponseEventTypeOutUtil,
+} from "../models/list_response_event_type_out";
+import { Ordering, OrderingUtil } from "../models/ordering";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface EventTypeListOptions {
@@ -50,7 +57,7 @@ export class EventType {
     request.setQueryParam("include_archived", options?.includeArchived);
     request.setQueryParam("with_content", options?.withContent);
 
-    return request.send(this.requestCtx, "ListResponseEventTypeOut");
+    return request.send(this.requestCtx, ListResponseEventTypeOutUtil._fromJsonObject);
   }
 
   /**
@@ -67,9 +74,9 @@ export class EventType {
     const request = new SvixRequest(HttpMethod.POST, "/api/v1/event-type");
 
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(eventTypeIn, "EventTypeIn");
+    request.setBody(EventTypeInUtil._toJsonObject(eventTypeIn));
 
-    return request.send(this.requestCtx, "EventTypeOut");
+    return request.send(this.requestCtx, EventTypeOutUtil._fromJsonObject);
   }
 
   /**
@@ -86,9 +93,9 @@ export class EventType {
     const request = new SvixRequest(HttpMethod.POST, "/api/v1/event-type/import/openapi");
 
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(eventTypeImportOpenApiIn, "EventTypeImportOpenApiIn");
+    request.setBody(EventTypeImportOpenApiInUtil._toJsonObject(eventTypeImportOpenApiIn));
 
-    return request.send(this.requestCtx, "EventTypeImportOpenApiOut");
+    return request.send(this.requestCtx, EventTypeImportOpenApiOutUtil._fromJsonObject);
   }
 
   /** Get an event type. */
@@ -100,7 +107,7 @@ export class EventType {
 
     request.setPathParam("event_type_name", eventTypeName);
 
-    return request.send(this.requestCtx, "EventTypeOut");
+    return request.send(this.requestCtx, EventTypeOutUtil._fromJsonObject);
   }
 
   /** Update an event type. */
@@ -114,9 +121,9 @@ export class EventType {
     );
 
     request.setPathParam("event_type_name", eventTypeName);
-    request.setBody(eventTypeUpdate, "EventTypeUpdate");
+    request.setBody(EventTypeUpdateUtil._toJsonObject(eventTypeUpdate));
 
-    return request.send(this.requestCtx, "EventTypeOut");
+    return request.send(this.requestCtx, EventTypeOutUtil._fromJsonObject);
   }
 
   /**
@@ -150,8 +157,8 @@ export class EventType {
     );
 
     request.setPathParam("event_type_name", eventTypeName);
-    request.setBody(eventTypePatch, "EventTypePatch");
+    request.setBody(EventTypePatchUtil._toJsonObject(eventTypePatch));
 
-    return request.send(this.requestCtx, "EventTypeOut");
+    return request.send(this.requestCtx, EventTypeOutUtil._fromJsonObject);
   }
 }

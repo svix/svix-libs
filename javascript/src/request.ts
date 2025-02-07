@@ -77,8 +77,8 @@ export class SvixRequest {
     this.headerParams[name] = value;
   }
 
-  public setBody(value: any, type: string) {
-    this.body = JSON.stringify(ObjectSerializer.serialize(value, type, ""));
+  public setBody(value: any) {
+    this.body = JSON.stringify(value);
   }
 
   /**
@@ -90,9 +90,12 @@ export class SvixRequest {
    * If the server returns a 5xx error, the request is retried up to two times with exponential backoff.
    * If retries are exhausted, an `ApiException<HttpErrorOut>` is thrown.
    */
-  public async send<R>(ctx: SvixRequestContext, responseType: string): Promise<R> {
+  public async send<R>(
+    ctx: SvixRequestContext,
+    parseResponseBody: (jsonObject: any) => R
+  ): Promise<R> {
     const responseBody = await this.sendInner(ctx);
-    return ObjectSerializer.deserialize(JSON.parse(responseBody), responseType, "");
+    return parseResponseBody(JSON.parse(responseBody));
   }
 
   /** Same as `send`, but the response body is discarded, not parsed. */

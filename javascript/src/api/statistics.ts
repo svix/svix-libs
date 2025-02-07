@@ -1,5 +1,10 @@
 // this file is @generated
-import { AggregateEventTypesOut, AppUsageStatsIn, AppUsageStatsOut } from "../openapi";
+import {
+  AggregateEventTypesOut,
+  AggregateEventTypesOutUtil,
+} from "../models/aggregate_event_types_out";
+import { AppUsageStatsIn, AppUsageStatsInUtil } from "../models/app_usage_stats_in";
+import { AppUsageStatsOut, AppUsageStatsOutUtil } from "../models/app_usage_stats_out";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface StatisticsAggregateAppStatsOptions {
@@ -22,9 +27,9 @@ export class Statistics {
     const request = new SvixRequest(HttpMethod.POST, "/api/v1/stats/usage/app");
 
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(appUsageStatsIn, "AppUsageStatsIn");
+    request.setBody(AppUsageStatsInUtil._toJsonObject(appUsageStatsIn));
 
-    return request.send(this.requestCtx, "AppUsageStatsOut");
+    return request.send(this.requestCtx, AppUsageStatsOutUtil._fromJsonObject);
   }
 
   /**
@@ -36,6 +41,6 @@ export class Statistics {
   public aggregateEventTypes(): Promise<AggregateEventTypesOut> {
     const request = new SvixRequest(HttpMethod.PUT, "/api/v1/stats/usage/event-types");
 
-    return request.send(this.requestCtx, "AggregateEventTypesOut");
+    return request.send(this.requestCtx, AggregateEventTypesOutUtil._fromJsonObject);
   }
 }

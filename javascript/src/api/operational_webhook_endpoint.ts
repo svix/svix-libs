@@ -1,15 +1,37 @@
 // this file is @generated
 import {
   ListResponseOperationalWebhookEndpointOut,
+  ListResponseOperationalWebhookEndpointOutUtil,
+} from "../models/list_response_operational_webhook_endpoint_out";
+import {
   OperationalWebhookEndpointHeadersIn,
+  OperationalWebhookEndpointHeadersInUtil,
+} from "../models/operational_webhook_endpoint_headers_in";
+import {
   OperationalWebhookEndpointHeadersOut,
+  OperationalWebhookEndpointHeadersOutUtil,
+} from "../models/operational_webhook_endpoint_headers_out";
+import {
   OperationalWebhookEndpointIn,
+  OperationalWebhookEndpointInUtil,
+} from "../models/operational_webhook_endpoint_in";
+import {
   OperationalWebhookEndpointOut,
+  OperationalWebhookEndpointOutUtil,
+} from "../models/operational_webhook_endpoint_out";
+import {
   OperationalWebhookEndpointSecretIn,
+  OperationalWebhookEndpointSecretInUtil,
+} from "../models/operational_webhook_endpoint_secret_in";
+import {
   OperationalWebhookEndpointSecretOut,
+  OperationalWebhookEndpointSecretOutUtil,
+} from "../models/operational_webhook_endpoint_secret_out";
+import {
   OperationalWebhookEndpointUpdate,
-  Ordering,
-} from "../openapi";
+  OperationalWebhookEndpointUpdateUtil,
+} from "../models/operational_webhook_endpoint_update";
+import { Ordering, OrderingUtil } from "../models/ordering";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface OperationalWebhookEndpointListOptions {
@@ -45,7 +67,10 @@ export class OperationalWebhookEndpoint {
     request.setQueryParam("iterator", options?.iterator);
     request.setQueryParam("order", options?.order);
 
-    return request.send(this.requestCtx, "ListResponseOperationalWebhookEndpointOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseOperationalWebhookEndpointOutUtil._fromJsonObject
+    );
   }
 
   /** Create an operational webhook endpoint. */
@@ -59,9 +84,14 @@ export class OperationalWebhookEndpoint {
     );
 
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(operationalWebhookEndpointIn, "OperationalWebhookEndpointIn");
+    request.setBody(
+      OperationalWebhookEndpointInUtil._toJsonObject(operationalWebhookEndpointIn)
+    );
 
-    return request.send(this.requestCtx, "OperationalWebhookEndpointOut");
+    return request.send(
+      this.requestCtx,
+      OperationalWebhookEndpointOutUtil._fromJsonObject
+    );
   }
 
   /** Get an operational webhook endpoint. */
@@ -73,7 +103,10 @@ export class OperationalWebhookEndpoint {
 
     request.setPathParam("endpoint_id", endpointId);
 
-    return request.send(this.requestCtx, "OperationalWebhookEndpointOut");
+    return request.send(
+      this.requestCtx,
+      OperationalWebhookEndpointOutUtil._fromJsonObject
+    );
   }
 
   /** Update an operational webhook endpoint. */
@@ -87,9 +120,14 @@ export class OperationalWebhookEndpoint {
     );
 
     request.setPathParam("endpoint_id", endpointId);
-    request.setBody(operationalWebhookEndpointUpdate, "OperationalWebhookEndpointUpdate");
+    request.setBody(
+      OperationalWebhookEndpointUpdateUtil._toJsonObject(operationalWebhookEndpointUpdate)
+    );
 
-    return request.send(this.requestCtx, "OperationalWebhookEndpointOut");
+    return request.send(
+      this.requestCtx,
+      OperationalWebhookEndpointOutUtil._fromJsonObject
+    );
   }
 
   /** Delete an operational webhook endpoint. */
@@ -113,7 +151,10 @@ export class OperationalWebhookEndpoint {
 
     request.setPathParam("endpoint_id", endpointId);
 
-    return request.send(this.requestCtx, "OperationalWebhookEndpointHeadersOut");
+    return request.send(
+      this.requestCtx,
+      OperationalWebhookEndpointHeadersOutUtil._fromJsonObject
+    );
   }
 
   /** Set the additional headers to be sent with the operational webhook. */
@@ -128,8 +169,9 @@ export class OperationalWebhookEndpoint {
 
     request.setPathParam("endpoint_id", endpointId);
     request.setBody(
-      operationalWebhookEndpointHeadersIn,
-      "OperationalWebhookEndpointHeadersIn"
+      OperationalWebhookEndpointHeadersInUtil._toJsonObject(
+        operationalWebhookEndpointHeadersIn
+      )
     );
 
     return request.sendNoResponseBody(this.requestCtx);
@@ -149,7 +191,10 @@ export class OperationalWebhookEndpoint {
 
     request.setPathParam("endpoint_id", endpointId);
 
-    return request.send(this.requestCtx, "OperationalWebhookEndpointSecretOut");
+    return request.send(
+      this.requestCtx,
+      OperationalWebhookEndpointSecretOutUtil._fromJsonObject
+    );
   }
 
   /**
@@ -170,8 +215,9 @@ export class OperationalWebhookEndpoint {
     request.setPathParam("endpoint_id", endpointId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
     request.setBody(
-      operationalWebhookEndpointSecretIn,
-      "OperationalWebhookEndpointSecretIn"
+      OperationalWebhookEndpointSecretInUtil._toJsonObject(
+        operationalWebhookEndpointSecretIn
+      )
     );
 
     return request.sendNoResponseBody(this.requestCtx);
