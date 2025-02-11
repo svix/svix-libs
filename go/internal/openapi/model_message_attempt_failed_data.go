@@ -22,8 +22,8 @@ var _ MappedNullable = &MessageAttemptFailedData{}
 
 // MessageAttemptFailedData struct for MessageAttemptFailedData
 type MessageAttemptFailedData struct {
-	// The attempt's ID
-	Id string `json:"id"`
+	// The MessageAttempt's ID.
+	Id string `json:"id" validate:"regexp=^atmpt_[A-Za-z0-9]{27}$"`
 	ResponseStatusCode int32 `json:"responseStatusCode"`
 	Timestamp time.Time `json:"timestamp"`
 }

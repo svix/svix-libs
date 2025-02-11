@@ -24,8 +24,8 @@ var _ MappedNullable = &AuthTokenOut{}
 type AuthTokenOut struct {
 	CreatedAt time.Time `json:"createdAt"`
 	ExpiresAt *time.Time `json:"expiresAt,omitempty"`
-	// The key's ID
-	Id string `json:"id"`
+	// The ApplicationToken's ID.
+	Id string `json:"id" validate:"regexp=^key_[A-Za-z0-9]{27}$"`
 	Name *string `json:"name,omitempty"`
 	Scopes []string `json:"scopes,omitempty"`
 	Token string `json:"token"`

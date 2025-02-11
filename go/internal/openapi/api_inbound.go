@@ -60,7 +60,7 @@ V1InboundMsg Handle Inbound
 Handles a raw inbound webhook for the application.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @param inboundToken
  @return ApiV1InboundMsgRequest
 */
@@ -267,7 +267,7 @@ Invalidates the previous inbound url (if one exists), producing a new inbound
 URL for this app.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1InboundRotateUrlRequest
 */
 func (a *InboundAPIService) V1InboundRotateUrl(ctx context.Context, appId string) ApiV1InboundRotateUrlRequest {

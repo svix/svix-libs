@@ -25,8 +25,8 @@ type IntegrationOut struct {
 	CreatedAt time.Time `json:"createdAt"`
 	// The set of feature flags the integration has access to.
 	FeatureFlags []string `json:"featureFlags,omitempty"`
-	// The integ's ID
-	Id string `json:"id"`
+	// The Integration's ID.
+	Id string `json:"id" validate:"regexp=^integ_[A-Za-z0-9]{27}$"`
 	Name string `json:"name"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }

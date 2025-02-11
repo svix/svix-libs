@@ -39,7 +39,7 @@ V1BackgroundTaskGet Get Background Task
 Get a background task by ID.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param taskId
+ @param taskId The QueueBackgroundTask's ID.
  @return ApiV1BackgroundTaskGetRequest
 */
 func (a *BackgroundTasksAPIService) V1BackgroundTaskGet(ctx context.Context, taskId string) ApiV1BackgroundTaskGetRequest {
@@ -71,6 +71,12 @@ func (a *BackgroundTasksAPIService) V1BackgroundTaskGetExecute(r ApiV1Background
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.taskId) < 33 {
+		return localVarReturnValue, nil, reportError("taskId must have at least 33 elements")
+	}
+	if strlen(r.taskId) > 33 {
+		return localVarReturnValue, nil, reportError("taskId must have less than 33 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

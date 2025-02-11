@@ -24,7 +24,8 @@ type BackgroundTaskFinishedEvent2 struct {
 	Data Data `json:"data"`
 	Status BackgroundTaskStatus `json:"status"`
 	Task BackgroundTaskType `json:"task"`
-	TaskId string `json:"taskId"`
+	// The QueueBackgroundTask's ID.
+	TaskId string `json:"taskId" validate:"regexp=^qtask_[A-Za-z0-9]{27}$"`
 }
 
 type _BackgroundTaskFinishedEvent2 BackgroundTaskFinishedEvent2

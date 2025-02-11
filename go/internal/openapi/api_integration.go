@@ -52,7 +52,7 @@ V1IntegrationCreate Create Integration
 Create an integration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1IntegrationCreateRequest
 */
 func (a *IntegrationAPIService) V1IntegrationCreate(ctx context.Context, appId string) ApiV1IntegrationCreateRequest {
@@ -246,8 +246,8 @@ V1IntegrationDelete Delete Integration
 Delete an integration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param integId The integ's ID
+ @param appId The Application's ID or UID.
+ @param integId The Integration's ID.
  @return ApiV1IntegrationDeleteRequest
 */
 func (a *IntegrationAPIService) V1IntegrationDelete(ctx context.Context, appId string, integId string) ApiV1IntegrationDeleteRequest {
@@ -284,6 +284,12 @@ func (a *IntegrationAPIService) V1IntegrationDeleteExecute(r ApiV1IntegrationDel
 	}
 	if strlen(r.appId) > 256 {
 		return nil, reportError("appId must have less than 256 elements")
+	}
+	if strlen(r.integId) < 33 {
+		return nil, reportError("integId must have at least 33 elements")
+	}
+	if strlen(r.integId) > 33 {
+		return nil, reportError("integId must have less than 33 elements")
 	}
 
 	// to determine the Content-Type header
@@ -424,8 +430,8 @@ V1IntegrationGet Get Integration
 Get an integration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param integId The integ's ID
+ @param appId The Application's ID or UID.
+ @param integId The Integration's ID.
  @return ApiV1IntegrationGetRequest
 */
 func (a *IntegrationAPIService) V1IntegrationGet(ctx context.Context, appId string, integId string) ApiV1IntegrationGetRequest {
@@ -464,6 +470,12 @@ func (a *IntegrationAPIService) V1IntegrationGetExecute(r ApiV1IntegrationGetReq
 	}
 	if strlen(r.appId) > 256 {
 		return localVarReturnValue, nil, reportError("appId must have less than 256 elements")
+	}
+	if strlen(r.integId) < 33 {
+		return localVarReturnValue, nil, reportError("integId must have at least 33 elements")
+	}
+	if strlen(r.integId) > 33 {
+		return localVarReturnValue, nil, reportError("integId must have less than 33 elements")
 	}
 
 	// to determine the Content-Type header
@@ -613,8 +625,8 @@ V1IntegrationGetKey Get Integration Key
 Get an integration's key.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param integId The integ's ID
+ @param appId The Application's ID or UID.
+ @param integId The Integration's ID.
  @return ApiV1IntegrationGetKeyRequest
 
 Deprecated
@@ -656,6 +668,12 @@ func (a *IntegrationAPIService) V1IntegrationGetKeyExecute(r ApiV1IntegrationGet
 	}
 	if strlen(r.appId) > 256 {
 		return localVarReturnValue, nil, reportError("appId must have less than 256 elements")
+	}
+	if strlen(r.integId) < 33 {
+		return localVarReturnValue, nil, reportError("integId must have at least 33 elements")
+	}
+	if strlen(r.integId) > 33 {
+		return localVarReturnValue, nil, reportError("integId must have less than 33 elements")
 	}
 
 	// to determine the Content-Type header
@@ -825,7 +843,7 @@ V1IntegrationList List Integrations
 List the application's integrations.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1IntegrationListRequest
 */
 func (a *IntegrationAPIService) V1IntegrationList(ctx context.Context, appId string) ApiV1IntegrationListRequest {
@@ -1027,8 +1045,8 @@ V1IntegrationRotateKey Rotate Integration Key
 Rotate the integration's key. The previous key will be immediately revoked.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param integId The integ's ID
+ @param appId The Application's ID or UID.
+ @param integId The Integration's ID.
  @return ApiV1IntegrationRotateKeyRequest
 */
 func (a *IntegrationAPIService) V1IntegrationRotateKey(ctx context.Context, appId string, integId string) ApiV1IntegrationRotateKeyRequest {
@@ -1067,6 +1085,12 @@ func (a *IntegrationAPIService) V1IntegrationRotateKeyExecute(r ApiV1Integration
 	}
 	if strlen(r.appId) > 256 {
 		return localVarReturnValue, nil, reportError("appId must have less than 256 elements")
+	}
+	if strlen(r.integId) < 33 {
+		return localVarReturnValue, nil, reportError("integId must have at least 33 elements")
+	}
+	if strlen(r.integId) > 33 {
+		return localVarReturnValue, nil, reportError("integId must have less than 33 elements")
 	}
 
 	// to determine the Content-Type header
@@ -1225,8 +1249,8 @@ V1IntegrationUpdate Update Integration
 Update an integration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param integId The integ's ID
+ @param appId The Application's ID or UID.
+ @param integId The Integration's ID.
  @return ApiV1IntegrationUpdateRequest
 */
 func (a *IntegrationAPIService) V1IntegrationUpdate(ctx context.Context, appId string, integId string) ApiV1IntegrationUpdateRequest {
@@ -1265,6 +1289,12 @@ func (a *IntegrationAPIService) V1IntegrationUpdateExecute(r ApiV1IntegrationUpd
 	}
 	if strlen(r.appId) > 256 {
 		return localVarReturnValue, nil, reportError("appId must have less than 256 elements")
+	}
+	if strlen(r.integId) < 33 {
+		return localVarReturnValue, nil, reportError("integId must have at least 33 elements")
+	}
+	if strlen(r.integId) > 33 {
+		return localVarReturnValue, nil, reportError("integId must have less than 33 elements")
 	}
 	if r.integrationUpdate == nil {
 		return localVarReturnValue, nil, reportError("integrationUpdate is required and must be specified")

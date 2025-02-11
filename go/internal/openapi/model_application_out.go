@@ -23,12 +23,12 @@ var _ MappedNullable = &ApplicationOut{}
 // ApplicationOut struct for ApplicationOut
 type ApplicationOut struct {
 	CreatedAt time.Time `json:"createdAt"`
-	// The app's ID
-	Id string `json:"id"`
+	// The Application's ID.
+	Id string `json:"id" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
 	Metadata map[string]string `json:"metadata"`
 	Name string `json:"name"`
 	RateLimit *int32 `json:"rateLimit,omitempty"`
-	// The app's UID
+	// The Application's UID.
 	Uid *string `json:"uid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }

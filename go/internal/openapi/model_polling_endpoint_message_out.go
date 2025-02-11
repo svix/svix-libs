@@ -29,8 +29,8 @@ type PollingEndpointMessageOut struct {
 	// The event type's name
 	EventType string `json:"eventType" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	Headers *map[string]string `json:"headers,omitempty"`
-	// The msg's ID
-	Id string `json:"id"`
+	// The Message's ID.
+	Id string `json:"id" validate:"regexp=^msg_[A-Za-z0-9]{27}$"`
 	Payload map[string]interface{} `json:"payload"`
 	Tags []string `json:"tags,omitempty"`
 	Timestamp time.Time `json:"timestamp"`

@@ -22,6 +22,7 @@ type Data struct {
 	DataAnyOf1 *DataAnyOf1
 	DataAnyOf2 *DataAnyOf2
 	DataAnyOf3 *DataAnyOf3
+	DataAnyOf4 *DataAnyOf4
 }
 
 // Unmarshal JSON data into any of the pointers in the struct
@@ -79,6 +80,19 @@ func (dst *Data) UnmarshalJSON(data []byte) error {
 		dst.DataAnyOf3 = nil
 	}
 
+	// try to unmarshal JSON data into DataAnyOf4
+	err = json.Unmarshal(data, &dst.DataAnyOf4);
+	if err == nil {
+		jsonDataAnyOf4, _ := json.Marshal(dst.DataAnyOf4)
+		if string(jsonDataAnyOf4) == "{}" { // empty struct
+			dst.DataAnyOf4 = nil
+		} else {
+			return nil // data stored in dst.DataAnyOf4, return on the first match
+		}
+	} else {
+		dst.DataAnyOf4 = nil
+	}
+
 	return fmt.Errorf("data failed to match schemas in anyOf(Data)")
 }
 
@@ -98,6 +112,10 @@ func (src *Data) MarshalJSON() ([]byte, error) {
 
 	if src.DataAnyOf3 != nil {
 		return json.Marshal(&src.DataAnyOf3)
+	}
+
+	if src.DataAnyOf4 != nil {
+		return json.Marshal(&src.DataAnyOf4)
 	}
 
 	return nil, nil // no data in anyOf schemas

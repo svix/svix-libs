@@ -55,7 +55,7 @@ Create a new endpoint for the application.
 When `secret` is `null` the secret is automatically generated (recommended).
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1EndpointCreateRequest
 */
 func (a *EndpointAPIService) V1EndpointCreate(ctx context.Context, appId string) ApiV1EndpointCreateRequest {
@@ -249,8 +249,8 @@ V1EndpointDelete Delete Endpoint
 Delete an endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointDeleteRequest
 */
 func (a *EndpointAPIService) V1EndpointDelete(ctx context.Context, appId string, endpointId string) ApiV1EndpointDeleteRequest {
@@ -433,8 +433,8 @@ V1EndpointDeleteMtlsConfig Delete Endpoint Mtls Config
 Delete endpoint mTLS configuration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointDeleteMtlsConfigRequest
 */
 func (a *EndpointAPIService) V1EndpointDeleteMtlsConfig(ctx context.Context, appId string, endpointId string) ApiV1EndpointDeleteMtlsConfigRequest {
@@ -617,8 +617,8 @@ V1EndpointDeleteOauthConfig Delete Endpoint Oauth Config
 Delete endpoint OAuth configuration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointDeleteOauthConfigRequest
 */
 func (a *EndpointAPIService) V1EndpointDeleteOauthConfig(ctx context.Context, appId string, endpointId string) ApiV1EndpointDeleteOauthConfigRequest {
@@ -801,8 +801,8 @@ V1EndpointGet Get Endpoint
 Get an endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointGetRequest
 */
 func (a *EndpointAPIService) V1EndpointGet(ctx context.Context, appId string, endpointId string) ApiV1EndpointGetRequest {
@@ -996,8 +996,8 @@ V1EndpointGetHeaders Get Endpoint Headers
 Get the additional headers to be sent with the webhook.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointGetHeadersRequest
 */
 func (a *EndpointAPIService) V1EndpointGetHeaders(ctx context.Context, appId string, endpointId string) ApiV1EndpointGetHeadersRequest {
@@ -1174,6 +1174,201 @@ func (a *EndpointAPIService) V1EndpointGetHeadersExecute(r ApiV1EndpointGetHeade
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiV1EndpointGetMtlsConfigRequest struct {
+	ctx context.Context
+	ApiService *EndpointAPIService
+	appId string
+	endpointId string
+}
+
+func (r ApiV1EndpointGetMtlsConfigRequest) Execute() (*EndpointMtlsConfigOut, *http.Response, error) {
+	return r.ApiService.V1EndpointGetMtlsConfigExecute(r)
+}
+
+/*
+V1EndpointGetMtlsConfig Get Endpoint Mtls Config
+
+Get endpoint mTLS configuration.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
+ @return ApiV1EndpointGetMtlsConfigRequest
+*/
+func (a *EndpointAPIService) V1EndpointGetMtlsConfig(ctx context.Context, appId string, endpointId string) ApiV1EndpointGetMtlsConfigRequest {
+	return ApiV1EndpointGetMtlsConfigRequest{
+		ApiService: a,
+		ctx: ctx,
+		appId: appId,
+		endpointId: endpointId,
+	}
+}
+
+// Execute executes the request
+//  @return EndpointMtlsConfigOut
+func (a *EndpointAPIService) V1EndpointGetMtlsConfigExecute(r ApiV1EndpointGetMtlsConfigRequest) (*EndpointMtlsConfigOut, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EndpointMtlsConfigOut
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EndpointAPIService.V1EndpointGetMtlsConfig")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/app/{app_id}/endpoint/{endpoint_id}/mtls"
+	localVarPath = strings.Replace(localVarPath, "{"+"app_id"+"}", url.PathEscape(parameterValueToString(r.appId, "appId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"endpoint_id"+"}", url.PathEscape(parameterValueToString(r.endpointId, "endpointId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if strlen(r.appId) < 1 {
+		return localVarReturnValue, nil, reportError("appId must have at least 1 elements")
+	}
+	if strlen(r.appId) > 256 {
+		return localVarReturnValue, nil, reportError("appId must have less than 256 elements")
+	}
+	if strlen(r.endpointId) < 1 {
+		return localVarReturnValue, nil, reportError("endpointId must have at least 1 elements")
+	}
+	if strlen(r.endpointId) > 256 {
+		return localVarReturnValue, nil, reportError("endpointId must have less than 256 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v HTTPValidationError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiV1EndpointGetOauthConfigRequest struct {
 	ctx context.Context
 	ApiService *EndpointAPIService
@@ -1191,8 +1386,8 @@ V1EndpointGetOauthConfig Get Endpoint Oauth Config
 Get endpoint OAuth configuration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointGetOauthConfigRequest
 */
 func (a *EndpointAPIService) V1EndpointGetOauthConfig(ctx context.Context, appId string, endpointId string) ApiV1EndpointGetOauthConfigRequest {
@@ -1389,8 +1584,8 @@ This is used to verify the authenticity of the webhook.
 For more information please refer to [the consuming webhooks docs](https://docs.svix.com/consuming-webhooks/).
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointGetSecretRequest
 */
 func (a *EndpointAPIService) V1EndpointGetSecret(ctx context.Context, appId string, endpointId string) ApiV1EndpointGetSecretRequest {
@@ -1598,8 +1793,8 @@ V1EndpointGetStats Endpoint Stats
 Get basic statistics for the endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointGetStatsRequest
 */
 func (a *EndpointAPIService) V1EndpointGetStats(ctx context.Context, appId string, endpointId string) ApiV1EndpointGetStatsRequest {
@@ -1819,7 +2014,7 @@ V1EndpointList List Endpoints
 List the application's endpoints.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1EndpointListRequest
 */
 func (a *EndpointAPIService) V1EndpointList(ctx context.Context, appId string) ApiV1EndpointListRequest {
@@ -2020,8 +2215,8 @@ V1EndpointPatch Patch Endpoint
 Partially update an endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointPatchRequest
 */
 func (a *EndpointAPIService) V1EndpointPatch(ctx context.Context, appId string, endpointId string) ApiV1EndpointPatchRequest {
@@ -2226,8 +2421,8 @@ V1EndpointPatchHeaders Patch Endpoint Headers
 Partially set the additional headers to be sent with the webhook.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointPatchHeadersRequest
 */
 func (a *EndpointAPIService) V1EndpointPatchHeaders(ctx context.Context, appId string, endpointId string) ApiV1EndpointPatchHeadersRequest {
@@ -2430,8 +2625,8 @@ Resend all failed messages since a given time.
 Messages that were sent successfully, even if failed initially, are not resent.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointRecoverRequest
 */
 func (a *EndpointAPIService) V1EndpointRecover(ctx context.Context, appId string, endpointId string) ApiV1EndpointRecoverRequest {
@@ -2649,8 +2844,8 @@ Only messages that were created after `since` will be sent.
 Messages that were previously sent to the endpoint are not resent.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointReplayMissingRequest
 */
 func (a *EndpointAPIService) V1EndpointReplayMissing(ctx context.Context, appId string, endpointId string) ApiV1EndpointReplayMissingRequest {
@@ -2867,8 +3062,8 @@ Rotates the endpoint's signing secret.
 The previous secret will remain valid for the next 24 hours.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointRotateSecretRequest
 */
 func (a *EndpointAPIService) V1EndpointRotateSecret(ctx context.Context, appId string, endpointId string) ApiV1EndpointRotateSecretRequest {
@@ -3072,8 +3267,8 @@ V1EndpointSendExample Send Event Type Example Message
 Send an example message for an event.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointSendExampleRequest
 */
 func (a *EndpointAPIService) V1EndpointSendExample(ctx context.Context, appId string, endpointId string) ApiV1EndpointSendExampleRequest {
@@ -3275,8 +3470,8 @@ V1EndpointTransformationGet Get Endpoint Transformation
 Get the transformation code associated with this endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointTransformationGetRequest
 */
 func (a *EndpointAPIService) V1EndpointTransformationGet(ctx context.Context, appId string, endpointId string) ApiV1EndpointTransformationGetRequest {
@@ -3476,8 +3671,8 @@ V1EndpointTransformationPartialUpdate Set Endpoint Transformation
 Set or unset the transformation code associated with this endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointTransformationPartialUpdateRequest
 */
 func (a *EndpointAPIService) V1EndpointTransformationPartialUpdate(ctx context.Context, appId string, endpointId string) ApiV1EndpointTransformationPartialUpdateRequest {
@@ -3678,8 +3873,8 @@ V1EndpointTransformationSimulate Simulate
 Simulate running the transformation on the payload and code.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointTransformationSimulateRequest
 */
 func (a *EndpointAPIService) V1EndpointTransformationSimulate(ctx context.Context, appId string, endpointId string) ApiV1EndpointTransformationSimulateRequest {
@@ -3887,8 +4082,8 @@ V1EndpointUpdate Update Endpoint
 Update an endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointUpdateRequest
 */
 func (a *EndpointAPIService) V1EndpointUpdate(ctx context.Context, appId string, endpointId string) ApiV1EndpointUpdateRequest {
@@ -4093,8 +4288,8 @@ V1EndpointUpdateHeaders Update Endpoint Headers
 Set the additional headers to be sent with the webhook.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointUpdateHeadersRequest
 */
 func (a *EndpointAPIService) V1EndpointUpdateHeaders(ctx context.Context, appId string, endpointId string) ApiV1EndpointUpdateHeadersRequest {
@@ -4288,8 +4483,8 @@ V1EndpointUpdateMtlsConfig Update Endpoint Mtls Config
 Create / update endpoint mTLS configuration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointUpdateMtlsConfigRequest
 */
 func (a *EndpointAPIService) V1EndpointUpdateMtlsConfig(ctx context.Context, appId string, endpointId string) ApiV1EndpointUpdateMtlsConfigRequest {
@@ -4483,8 +4678,8 @@ V1EndpointUpdateOauthConfig Update Endpoint Oauth Config
 Create / update endpoint OAuth configuration.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointUpdateOauthConfigRequest
 */
 func (a *EndpointAPIService) V1EndpointUpdateOauthConfig(ctx context.Context, appId string, endpointId string) ApiV1EndpointUpdateOauthConfigRequest {
@@ -4684,7 +4879,7 @@ V1SinkCreate Create Sink
 Create a new sink for the application.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1SinkCreateRequest
 */
 func (a *EndpointAPIService) V1SinkCreate(ctx context.Context, appId string) ApiV1SinkCreateRequest {
@@ -4878,8 +5073,8 @@ V1SinkGet Get Sink
 Get a sink.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param sinkId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param sinkId The Endpoint's ID or UID.
  @return ApiV1SinkGetRequest
 */
 func (a *EndpointAPIService) V1SinkGet(ctx context.Context, appId string, sinkId string) ApiV1SinkGetRequest {
@@ -5093,7 +5288,7 @@ V1SinkList List Sinks
 List the application's sinks.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1SinkListRequest
 */
 func (a *EndpointAPIService) V1SinkList(ctx context.Context, appId string) ApiV1SinkListRequest {

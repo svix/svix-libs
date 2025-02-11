@@ -21,13 +21,13 @@ var _ MappedNullable = &EndpointDeletedEventData{}
 
 // EndpointDeletedEventData Sent when an endpoint is created, updated, or deleted
 type EndpointDeletedEventData struct {
-	// The app's ID
-	AppId string `json:"appId"`
-	// The app's UID
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
+	// The Application's UID.
 	AppUid *string `json:"appUid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
-	// The ep's ID
-	EndpointId string `json:"endpointId"`
-	// The ep's UID
+	// The Endpoint's ID.
+	EndpointId string `json:"endpointId" validate:"regexp=^ep_[A-Za-z0-9]{27}$"`
+	// The Endpoint's UID.
 	EndpointUid *string `json:"endpointUid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 }
 

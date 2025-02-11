@@ -22,13 +22,13 @@ var _ MappedNullable = &MessageAttemptOut{}
 
 // MessageAttemptOut struct for MessageAttemptOut
 type MessageAttemptOut struct {
-	// The ep's ID
-	EndpointId string `json:"endpointId"`
-	// The attempt's ID
-	Id string `json:"id"`
+	// The Endpoint's ID.
+	EndpointId string `json:"endpointId" validate:"regexp=^ep_[A-Za-z0-9]{27}$"`
+	// The MessageAttempt's ID.
+	Id string `json:"id" validate:"regexp=^atmpt_[A-Za-z0-9]{27}$"`
 	Msg *MessageOut `json:"msg,omitempty"`
-	// The msg's ID
-	MsgId string `json:"msgId"`
+	// The Message's ID.
+	MsgId string `json:"msgId" validate:"regexp=^msg_[A-Za-z0-9]{27}$"`
 	Response string `json:"response"`
 	// Response duration in milliseconds.
 	ResponseDurationMs int64 `json:"responseDurationMs"`

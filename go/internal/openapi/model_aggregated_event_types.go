@@ -21,8 +21,8 @@ var _ MappedNullable = &AggregatedEventTypes{}
 
 // AggregatedEventTypes struct for AggregatedEventTypes
 type AggregatedEventTypes struct {
-	// The app's ID
-	AppId string `json:"appId"`
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
 	ExplicitlySubscribedEventTypes []string `json:"explicitlySubscribedEventTypes"`
 	HasCatchAllEndpoint bool `json:"hasCatchAllEndpoint"`
 }

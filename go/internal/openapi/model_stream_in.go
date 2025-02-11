@@ -23,7 +23,7 @@ var _ MappedNullable = &StreamIn{}
 type StreamIn struct {
 	// The stream's description.
 	Description string `json:"description"`
-	// The Stream's UID.
+	// An optional unique identifier for the stream.
 	Uid *string `json:"uid,omitempty" validate:"regexp=^(?!strm_)[a-zA-Z0-9_-]+$"`
 }
 

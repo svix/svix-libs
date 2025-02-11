@@ -26,13 +26,15 @@ type TemplateOut struct {
 	Description string `json:"description"`
 	FeatureFlag *string `json:"featureFlag,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	FilterTypes []string `json:"filterTypes,omitempty"`
-	Id string `json:"id"`
+	// The TransformationTemplate's ID.
+	Id string `json:"id" validate:"regexp=^trtmpl_[A-Za-z0-9]{27}$"`
 	Instructions string `json:"instructions"`
 	InstructionsLink *string `json:"instructionsLink,omitempty"`
 	Kind ConnectorKind `json:"kind"`
 	Logo string `json:"logo"`
 	Name string `json:"name"`
-	OrgId string `json:"orgId"`
+	// The Organization's ID.
+	OrgId string `json:"orgId" validate:"regexp=^org_[A-Za-z0-9]{27}$"`
 	Transformation string `json:"transformation"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
