@@ -1,234 +1,65 @@
-// this file is @generated (with manual changes)
+// this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.MessageAttemptApi
 import com.svix.kotlin.models.ListResponseEndpointMessageOut
-import com.svix.kotlin.models.ListResponseMessageAttemptEndpointOut
 import com.svix.kotlin.models.ListResponseMessageAttemptOut
 import com.svix.kotlin.models.ListResponseMessageEndpointOut
 import com.svix.kotlin.models.MessageAttemptOut
 import com.svix.kotlin.models.MessageStatus
 import com.svix.kotlin.models.StatusCodeClass
-import java.time.OffsetDateTime
+import kotlinx.datetime.Instant
+import okhttp3.Headers
+import okhttp3.HttpUrl
 
-class MessageAttemptListByEndpointOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var status: MessageStatus? = null
-    var statusCodeClass: StatusCodeClass? = null
-    var channel: String? = null
-    var tag: String? = null
-    var before: OffsetDateTime? = null
-    var after: OffsetDateTime? = null
-    var withContent: Boolean? = null
-    var withMsg: Boolean? = null
-    var eventTypes: List<String>? = null
+data class MessageAttemptListByEndpointOptions(
+    val limit: ULong? = null,
+    val iterator: String? = null,
+    val status: MessageStatus? = null,
+    val statusCodeClass: StatusCodeClass? = null,
+    val channel: String? = null,
+    val tag: String? = null,
+    val before: Instant? = null,
+    val after: Instant? = null,
+    val withContent: Boolean? = null,
+    val withMsg: Boolean? = null,
+    val eventTypes: Set<String>? = null,
+)
 
-    /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
+data class MessageAttemptListByMsgOptions(
+    val limit: ULong? = null,
+    val iterator: String? = null,
+    val status: MessageStatus? = null,
+    val statusCodeClass: StatusCodeClass? = null,
+    val channel: String? = null,
+    val tag: String? = null,
+    val endpointId: String? = null,
+    val before: Instant? = null,
+    val after: Instant? = null,
+    val withContent: Boolean? = null,
+    val eventTypes: Set<String>? = null,
+)
 
-    /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
+data class MessageAttemptListAttemptedMessagesOptions(
+    val limit: ULong? = null,
+    val iterator: String? = null,
+    val channel: String? = null,
+    val tag: String? = null,
+    val status: MessageStatus? = null,
+    val before: Instant? = null,
+    val after: Instant? = null,
+    val withContent: Boolean? = null,
+    val eventTypes: Set<String>? = null,
+)
 
-    /**
-     * Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or
-     * Sending (3)
-     */
-    fun status(status: MessageStatus) = apply { this.status = status }
+data class MessageAttemptListAttemptedDestinationsOptions(
+    val limit: ULong? = null,
+    val iterator: String? = null,
+)
 
-    /** Filter response based on the HTTP status code */
-    fun statusCodeClass(statusCodeClass: StatusCodeClass) = apply {
-        this.statusCodeClass = statusCodeClass
-    }
+data class MessageAttemptResendOptions(val idempotencyKey: String? = null)
 
-    /** Filter response based on the channel */
-    fun channel(channel: String) = apply { this.channel = channel }
-
-    /** Filter response based on the tag */
-    fun tag(tag: String) = apply { this.tag = tag }
-
-    /** Only include items created before a certain date */
-    fun before(before: OffsetDateTime) = apply { this.before = before }
-
-    /** Only include items created after a certain date */
-    fun after(after: OffsetDateTime) = apply { this.after = after }
-
-    /** When `true` attempt content is included in the response */
-    fun withContent(withContent: Boolean) = apply { this.withContent = withContent }
-
-    /** When `true`, the message information is included in the response */
-    fun withMsg(withMsg: Boolean) = apply { this.withMsg = withMsg }
-
-    /** Filter response based on the event type */
-    fun eventTypes(eventTypes: List<String>) = apply { this.eventTypes = eventTypes }
-}
-
-class MessageAttemptListByMsgOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var status: MessageStatus? = null
-    var statusCodeClass: StatusCodeClass? = null
-    var channel: String? = null
-    var tag: String? = null
-    var endpointId: String? = null
-    var before: OffsetDateTime? = null
-    var after: OffsetDateTime? = null
-    var withContent: Boolean? = null
-    var eventTypes: List<String>? = null
-
-    /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
-    /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
-    /**
-     * Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or
-     * Sending (3)
-     */
-    fun status(status: MessageStatus) = apply { this.status = status }
-
-    /** Filter response based on the HTTP status code */
-    fun statusCodeClass(statusCodeClass: StatusCodeClass) = apply {
-        this.statusCodeClass = statusCodeClass
-    }
-
-    /** Filter response based on the channel */
-    fun channel(channel: String) = apply { this.channel = channel }
-
-    /** Filter response based on the tag */
-    fun tag(tag: String) = apply { this.tag = tag }
-
-    /** Filter the attempts based on the attempted endpoint */
-    fun endpointId(endpointId: String) = apply { this.endpointId = endpointId }
-
-    /** Only include items created before a certain date */
-    fun before(before: OffsetDateTime) = apply { this.before = before }
-
-    /** Only include items created after a certain date */
-    fun after(after: OffsetDateTime) = apply { this.after = after }
-
-    /** When `true` attempt content is included in the response */
-    fun withContent(withContent: Boolean) = apply { this.withContent = withContent }
-
-    /** Filter response based on the event type */
-    fun eventTypes(eventTypes: List<String>) = apply { this.eventTypes = eventTypes }
-}
-
-class MessageAttemptListAttemptedMessagesOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var channel: String? = null
-    var tag: String? = null
-    var status: MessageStatus? = null
-    var before: OffsetDateTime? = null
-    var after: OffsetDateTime? = null
-    var withContent: Boolean? = null
-    var eventTypes: List<String>? = null
-
-    /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
-    /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
-    /** Filter response based on the channel */
-    fun channel(channel: String) = apply { this.channel = channel }
-
-    /** Filter response based on the message tags */
-    fun tag(tag: String) = apply { this.tag = tag }
-
-    /**
-     * Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or
-     * Sending (3)
-     */
-    fun status(status: MessageStatus) = apply { this.status = status }
-
-    /** Only include items created before a certain date */
-    fun before(before: OffsetDateTime) = apply { this.before = before }
-
-    /** Only include items created after a certain date */
-    fun after(after: OffsetDateTime) = apply { this.after = after }
-
-    /** When `true` message payloads are included in the response */
-    fun withContent(withContent: Boolean) = apply { this.withContent = withContent }
-
-    /** Filter response based on the event type */
-    fun eventTypes(eventTypes: List<String>) = apply { this.eventTypes = eventTypes }
-}
-
-class MessageAttemptListAttemptedDestinationsOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-
-    /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
-    /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-}
-
-class MessageAttemptListOptions(
-    var iterator: String? = null,
-    var limit: Int? = null,
-    var messageStatus: MessageStatus? = null,
-    var before: OffsetDateTime? = null,
-    var after: OffsetDateTime? = null,
-    var eventTypes: List<String>? = null,
-    var statusCodeClass: StatusCodeClass? = null,
-    var channel: String? = null,
-    var tag: String? = null,
-    var endpointId: String? = null,
-    var withContent: Boolean? = null,
-    var withMsg: Boolean? = null,
-) {
-    fun messageStatus(messageStatus: MessageStatus) = apply { this.messageStatus = messageStatus }
-
-    fun before(before: OffsetDateTime) = apply { this.before = before }
-
-    fun after(after: OffsetDateTime) = apply { this.after = after }
-
-    fun statusCodeClass(statusCodeClass: StatusCodeClass) = apply {
-        this.statusCodeClass = statusCodeClass
-    }
-
-    fun eventTypes(eventTypes: List<String>) = apply { this.eventTypes = eventTypes }
-
-    fun channel(channel: String) = apply { this.channel = channel }
-
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
-    fun limit(limit: Int) = apply { this.limit = limit }
-
-    fun endpointId(endpointId: String) = apply { this.endpointId = endpointId }
-
-    fun withContent(withContent: Boolean) = apply { this.withContent = withContent }
-
-    fun withMsg(withMsg: Boolean) = apply { this.withMsg = withMsg }
-
-    fun tag(tag: String) = apply { this.tag = tag }
-}
-
-class MessageAttempt internal constructor(token: String, options: SvixOptions) {
-    private val api = MessageAttemptApi(options.serverUrl)
-
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
-
-    /** @deprecated use listByMsg instead. */
-    @Deprecated(message = "use listByMsg instead.")
-    suspend fun list(
-        appId: String,
-        msgId: String,
-        options: MessageAttemptListByMsgOptions = MessageAttemptListByMsgOptions(),
-    ): ListResponseMessageAttemptOut {
-        return this.listByMsg(appId, msgId, options)
-    }
+class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
+    SvixHttpClient(baseUrl, defaultHeaders) {
 
     /**
      * List attempts by endpoint id
@@ -243,25 +74,22 @@ class MessageAttempt internal constructor(token: String, options: SvixOptions) {
         endpointId: String,
         options: MessageAttemptListByEndpointOptions = MessageAttemptListByEndpointOptions(),
     ): ListResponseMessageAttemptOut {
-        try {
-            return api.v1MessageAttemptListByEndpoint(
-                appId,
-                endpointId,
-                options.limit,
-                options.iterator,
-                options.status,
-                options.statusCodeClass,
-                options.channel,
-                options.tag,
-                options.before,
-                options.after,
-                options.withContent,
-                options.withMsg,
-                HashSet(options.eventTypes),
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
+        var url =
+            this.newUrlBuilder().encodedPath("/api/v1/app/$appId/attempt/endpoint/$endpointId")
+        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
+        options.status?.let { url = url.addQueryParameter("status", it.toString()) }
+        options.statusCodeClass?.let {
+            url = url.addQueryParameter("status_code_class", it.toString())
         }
+        options.channel?.let { url = url.addQueryParameter("channel", it) }
+        options.tag?.let { url = url.addQueryParameter("tag", it) }
+        options.before?.let { url = url.addQueryParameter("before", it.toString()) }
+        options.after?.let { url = url.addQueryParameter("after", it.toString()) }
+        options.withContent?.let { url = url.addQueryParameter("with_content", it.toString()) }
+        options.withMsg?.let { url = url.addQueryParameter("with_msg", it.toString()) }
+        options.eventTypes?.let { url = url.addQueryParameter("event_types", it.toString()) }
+        return this.executeRequest<Any, ListResponseMessageAttemptOut>("GET", url.build())
     }
 
     /**
@@ -277,25 +105,21 @@ class MessageAttempt internal constructor(token: String, options: SvixOptions) {
         msgId: String,
         options: MessageAttemptListByMsgOptions = MessageAttemptListByMsgOptions(),
     ): ListResponseMessageAttemptOut {
-        try {
-            return api.v1MessageAttemptListByMsg(
-                appId,
-                msgId,
-                options.limit,
-                options.iterator,
-                options.status,
-                options.statusCodeClass,
-                options.channel,
-                options.tag,
-                options.endpointId,
-                options.before,
-                options.after,
-                options.withContent,
-                HashSet(options.eventTypes),
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
+        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/attempt/msg/$msgId")
+        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
+        options.status?.let { url = url.addQueryParameter("status", it.toString()) }
+        options.statusCodeClass?.let {
+            url = url.addQueryParameter("status_code_class", it.toString())
         }
+        options.channel?.let { url = url.addQueryParameter("channel", it) }
+        options.tag?.let { url = url.addQueryParameter("tag", it) }
+        options.endpointId?.let { url = url.addQueryParameter("endpoint_id", it) }
+        options.before?.let { url = url.addQueryParameter("before", it.toString()) }
+        options.after?.let { url = url.addQueryParameter("after", it.toString()) }
+        options.withContent?.let { url = url.addQueryParameter("with_content", it.toString()) }
+        options.eventTypes?.let { url = url.addQueryParameter("event_types", it.toString()) }
+        return this.executeRequest<Any, ListResponseMessageAttemptOut>("GET", url.build())
     }
 
     /**
@@ -316,32 +140,24 @@ class MessageAttempt internal constructor(token: String, options: SvixOptions) {
         options: MessageAttemptListAttemptedMessagesOptions =
             MessageAttemptListAttemptedMessagesOptions(),
     ): ListResponseEndpointMessageOut {
-        try {
-            return api.v1MessageAttemptListAttemptedMessages(
-                appId,
-                endpointId,
-                options.limit,
-                options.iterator,
-                options.channel,
-                options.tag,
-                options.status,
-                options.before,
-                options.after,
-                options.withContent,
-                HashSet(options.eventTypes),
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/msg")
+        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
+        options.channel?.let { url = url.addQueryParameter("channel", it) }
+        options.tag?.let { url = url.addQueryParameter("tag", it) }
+        options.status?.let { url = url.addQueryParameter("status", it.toString()) }
+        options.before?.let { url = url.addQueryParameter("before", it.toString()) }
+        options.after?.let { url = url.addQueryParameter("after", it.toString()) }
+        options.withContent?.let { url = url.addQueryParameter("with_content", it.toString()) }
+        options.eventTypes?.let { url = url.addQueryParameter("event_types", it.toString()) }
+        return this.executeRequest<Any, ListResponseEndpointMessageOut>("GET", url.build())
     }
 
     /** `msg_id`: Use a message id or a message `eventId` */
     suspend fun get(appId: String, msgId: String, attemptId: String): MessageAttemptOut {
-        try {
-            return api.v1MessageAttemptGet(appId, msgId, attemptId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/attempt/$attemptId")
+        return this.executeRequest<Any, MessageAttemptOut>("GET", url.build())
     }
 
     /**
@@ -351,11 +167,10 @@ class MessageAttempt internal constructor(token: String, options: SvixOptions) {
      * replayed or resent once its payload has been deleted or expired.
      */
     suspend fun expungeContent(appId: String, msgId: String, attemptId: String) {
-        try {
-            api.v1MessageAttemptExpungeContent(appId, msgId, attemptId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder()
+                .encodedPath("/api/v1/app/$appId/msg/$msgId/attempt/$attemptId/content")
+        this.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /**
@@ -370,37 +185,10 @@ class MessageAttempt internal constructor(token: String, options: SvixOptions) {
         options: MessageAttemptListAttemptedDestinationsOptions =
             MessageAttemptListAttemptedDestinationsOptions(),
     ): ListResponseMessageEndpointOut {
-        try {
-            return api.v1MessageAttemptListAttemptedDestinations(
-                appId,
-                msgId,
-                options.limit,
-                options.iterator,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
-    }
-
-    @Deprecated(message = "use listByMsg instead, passing the endpoint ID through options.")
-    suspend fun listAttemptsForEndpoint(
-        appId: String,
-        endpointId: String,
-        msgId: String,
-        options: MessageAttemptListOptions = MessageAttemptListOptions(),
-    ): ListResponseMessageAttemptOut {
-        val listByMsgOptions = MessageAttemptListByMsgOptions()
-        listByMsgOptions.limit = options.limit
-        listByMsgOptions.iterator = options.iterator
-        listByMsgOptions.channel = options.channel
-        listByMsgOptions.tag = options.tag
-        listByMsgOptions.status = options.messageStatus
-        listByMsgOptions.before = options.before
-        listByMsgOptions.after = options.after
-        listByMsgOptions.eventTypes = options.eventTypes
-        listByMsgOptions.endpointId = endpointId
-
-        return listByMsg(appId, msgId, listByMsgOptions)
+        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/endpoint")
+        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
+        return this.executeRequest<Any, ListResponseMessageEndpointOut>("GET", url.build())
     }
 
     /** Resend a message to the specified endpoint. */
@@ -408,12 +196,13 @@ class MessageAttempt internal constructor(token: String, options: SvixOptions) {
         appId: String,
         msgId: String,
         endpointId: String,
-        options: PostOptions = PostOptions(),
+        options: MessageAttemptResendOptions = MessageAttemptResendOptions(),
     ) {
-        try {
-            api.v1MessageAttemptResend(appId, msgId, endpointId, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder()
+                .encodedPath("/api/v1/app/$appId/msg/$msgId/endpoint/$endpointId/resend")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        this.executeRequest<Any, Boolean>("POST", url.build(), headers = headers.build())
     }
 }

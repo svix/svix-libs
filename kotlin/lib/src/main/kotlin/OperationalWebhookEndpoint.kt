@@ -1,8 +1,6 @@
 // this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.WebhookEndpointApi as OperationalWebhookEndpointApi
 import com.svix.kotlin.models.ListResponseOperationalWebhookEndpointOut
 import com.svix.kotlin.models.OperationalWebhookEndpointHeadersIn
 import com.svix.kotlin.models.OperationalWebhookEndpointHeadersOut
@@ -12,69 +10,58 @@ import com.svix.kotlin.models.OperationalWebhookEndpointSecretIn
 import com.svix.kotlin.models.OperationalWebhookEndpointSecretOut
 import com.svix.kotlin.models.OperationalWebhookEndpointUpdate
 import com.svix.kotlin.models.Ordering
+import okhttp3.Headers
+import okhttp3.HttpUrl
 
-class OperationalWebhookEndpointListOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var order: Ordering? = null
+data class OperationalWebhookEndpointListOptions(
+    val limit: ULong? = null,
+    val iterator: String? = null,
+    val order: Ordering? = null,
+)
 
-    /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
+data class OperationalWebhookEndpointCreateOptions(val idempotencyKey: String? = null)
 
-    /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
+data class OperationalWebhookEndpointRotateSecretOptions(val idempotencyKey: String? = null)
 
-    /** The sorting order of the returned items */
-    fun order(order: Ordering) = apply { this.order = order }
-}
-
-class OperationalWebhookEndpoint internal constructor(token: String, options: SvixOptions) {
-    private val api = OperationalWebhookEndpointApi(options.serverUrl)
-
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
+    SvixHttpClient(baseUrl, defaultHeaders) {
 
     /** List operational webhook endpoints. */
     suspend fun list(
         options: OperationalWebhookEndpointListOptions = OperationalWebhookEndpointListOptions()
     ): ListResponseOperationalWebhookEndpointOut {
-        try {
-            return api.v1OperationalWebhookEndpointList(
-                options.limit,
-                options.iterator,
-                options.order,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        var url = this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint")
+        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
+        options.order?.let { url = url.addQueryParameter("order", it.toString()) }
+        return this.executeRequest<Any, ListResponseOperationalWebhookEndpointOut>(
+            "GET",
+            url.build(),
+        )
     }
 
     /** Create an operational webhook endpoint. */
     suspend fun create(
         operationalWebhookEndpointIn: OperationalWebhookEndpointIn,
-        options: PostOptions = PostOptions(),
+        options: OperationalWebhookEndpointCreateOptions = OperationalWebhookEndpointCreateOptions(),
     ): OperationalWebhookEndpointOut {
-        try {
-            return api.v1OperationalWebhookEndpointCreate(
-                operationalWebhookEndpointIn,
-                options.idempotencyKey,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+
+        return this.executeRequest<OperationalWebhookEndpointIn, OperationalWebhookEndpointOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = operationalWebhookEndpointIn,
+        )
     }
 
     /** Get an operational webhook endpoint. */
     suspend fun get(endpointId: String): OperationalWebhookEndpointOut {
-        try {
-            return api.v1OperationalWebhookEndpointGet(endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
+        return this.executeRequest<Any, OperationalWebhookEndpointOut>("GET", url.build())
     }
 
     /** Update an operational webhook endpoint. */
@@ -82,32 +69,29 @@ class OperationalWebhookEndpoint internal constructor(token: String, options: Sv
         endpointId: String,
         operationalWebhookEndpointUpdate: OperationalWebhookEndpointUpdate,
     ): OperationalWebhookEndpointOut {
-        try {
-            return api.v1OperationalWebhookEndpointUpdate(
-                endpointId,
-                operationalWebhookEndpointUpdate,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
+
+        return this.executeRequest<OperationalWebhookEndpointUpdate, OperationalWebhookEndpointOut>(
+            "PUT",
+            url.build(),
+            reqBody = operationalWebhookEndpointUpdate,
+        )
     }
 
     /** Delete an operational webhook endpoint. */
     suspend fun delete(endpointId: String) {
-        try {
-            api.v1OperationalWebhookEndpointDelete(endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
+        this.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /** Get the additional headers to be sent with the operational webhook. */
     suspend fun getHeaders(endpointId: String): OperationalWebhookEndpointHeadersOut {
-        try {
-            return api.v1OperationalWebhookEndpointGetHeaders(endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder()
+                .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/headers")
+        return this.executeRequest<Any, OperationalWebhookEndpointHeadersOut>("GET", url.build())
     }
 
     /** Set the additional headers to be sent with the operational webhook. */
@@ -115,14 +99,15 @@ class OperationalWebhookEndpoint internal constructor(token: String, options: Sv
         endpointId: String,
         operationalWebhookEndpointHeadersIn: OperationalWebhookEndpointHeadersIn,
     ) {
-        try {
-            api.v1OperationalWebhookEndpointUpdateHeaders(
-                endpointId,
-                operationalWebhookEndpointHeadersIn,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder()
+                .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/headers")
+
+        this.executeRequest<OperationalWebhookEndpointHeadersIn, Boolean>(
+            "PUT",
+            url.build(),
+            reqBody = operationalWebhookEndpointHeadersIn,
+        )
     }
 
     /**
@@ -132,11 +117,10 @@ class OperationalWebhookEndpoint internal constructor(token: String, options: Sv
      * [the consuming webhooks docs](https://docs.svix.com/consuming-webhooks/).
      */
     suspend fun getSecret(endpointId: String): OperationalWebhookEndpointSecretOut {
-        try {
-            return api.v1OperationalWebhookEndpointGetSecret(endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder()
+                .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/secret")
+        return this.executeRequest<Any, OperationalWebhookEndpointSecretOut>("GET", url.build())
     }
 
     /**
@@ -147,16 +131,20 @@ class OperationalWebhookEndpoint internal constructor(token: String, options: Sv
     suspend fun rotateSecret(
         endpointId: String,
         operationalWebhookEndpointSecretIn: OperationalWebhookEndpointSecretIn,
-        options: PostOptions = PostOptions(),
+        options: OperationalWebhookEndpointRotateSecretOptions =
+            OperationalWebhookEndpointRotateSecretOptions(),
     ) {
-        try {
-            api.v1OperationalWebhookEndpointRotateSecret(
-                endpointId,
-                operationalWebhookEndpointSecretIn,
-                options.idempotencyKey,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            this.newUrlBuilder()
+                .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/secret/rotate")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+
+        this.executeRequest<OperationalWebhookEndpointSecretIn, Boolean>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = operationalWebhookEndpointSecretIn,
+        )
     }
 }
