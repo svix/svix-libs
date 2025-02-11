@@ -1,22 +1,23 @@
 // this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.AuthenticationApi
 import com.svix.kotlin.models.AppPortalAccessIn
 import com.svix.kotlin.models.AppPortalAccessOut
 import com.svix.kotlin.models.ApplicationTokenExpireIn
 import com.svix.kotlin.models.DashboardAccessOut
+import okhttp3.Headers
+import okhttp3.HttpUrl
 
-class Authentication internal constructor(token: String, options: SvixOptions) {
-    private val api = AuthenticationApi(options.serverUrl)
+data class AuthenticationAppPortalAccessOptions(val idempotencyKey: String? = null)
 
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+data class AuthenticationExpireAllOptions(val idempotencyKey: String? = null)
+
+data class AuthenticationDashboardAccessOptions(val idempotencyKey: String? = null)
+
+data class AuthenticationLogoutOptions(val idempotencyKey: String? = null)
+
+class Authentication(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
+    SvixHttpClient(baseUrl, defaultHeaders) {
 
     /**
      * Use this function to get magic links (and authentication codes) for connecting your users to
@@ -25,30 +26,36 @@ class Authentication internal constructor(token: String, options: SvixOptions) {
     suspend fun appPortalAccess(
         appId: String,
         appPortalAccessIn: AppPortalAccessIn,
-        options: PostOptions = PostOptions(),
+        options: AuthenticationAppPortalAccessOptions = AuthenticationAppPortalAccessOptions(),
     ): AppPortalAccessOut {
-        try {
-            return api.v1AuthenticationAppPortalAccess(
-                appId,
-                appPortalAccessIn,
-                options.idempotencyKey,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/app-portal-access/$appId")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+
+        return this.executeRequest<AppPortalAccessIn, AppPortalAccessOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = appPortalAccessIn,
+        )
     }
 
     /** Expire all of the tokens associated with a specific application. */
     suspend fun expireAll(
         appId: String,
         applicationTokenExpireIn: ApplicationTokenExpireIn,
-        options: PostOptions = PostOptions(),
+        options: AuthenticationExpireAllOptions = AuthenticationExpireAllOptions(),
     ) {
-        try {
-            api.v1AuthenticationExpireAll(appId, applicationTokenExpireIn, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/app/$appId/expire-all")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+
+        this.executeRequest<ApplicationTokenExpireIn, Boolean>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = applicationTokenExpireIn,
+        )
     }
 
     /**
@@ -59,16 +66,19 @@ class Authentication internal constructor(token: String, options: SvixOptions) {
      *
      * @deprecated
      */
-    @Deprecated(message = "Use appPortalAccess instead.")
+    @Deprecated("")
     suspend fun dashboardAccess(
         appId: String,
-        options: PostOptions = PostOptions(),
+        options: AuthenticationDashboardAccessOptions = AuthenticationDashboardAccessOptions(),
     ): DashboardAccessOut {
-        try {
-            return api.v1AuthenticationDashboardAccess(appId, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/dashboard-access/$appId")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        return this.executeRequest<Any, DashboardAccessOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+        )
     }
 
     /**
@@ -76,11 +86,10 @@ class Authentication internal constructor(token: String, options: SvixOptions) {
      *
      * Trying to log out other tokens will fail.
      */
-    suspend fun logout(options: PostOptions = PostOptions()) {
-        try {
-            api.v1AuthenticationLogout(options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+    suspend fun logout(options: AuthenticationLogoutOptions = AuthenticationLogoutOptions()) {
+        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/logout")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        this.executeRequest<Any, Boolean>("POST", url.build(), headers = headers.build())
     }
 }
