@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+* Libs/Kotlin **(Breaking)**  Deprecated functions `MessageAttempt.list` and `MessageAttempt.listAttemptsForEndpoint` is removed
+* Libs/Kotlin **(Breaking)**: All uses of `java.time.OffsetDateTime` replaced with `kotlinx.datetime.Instant`
+* Libs/Kotlin **(Breaking)**: All uses of `java.net.URL` in request/response models are replaced with `String`
+* Libs/Kotlin **(Breaking)**: All uses of `Map<String,Any>` in request/response models are replaced with `kotlinx.serialization.json.JsonObject`
 * Libs/C# **(Breaking)**: All uses of `ListOptions` are removed, and renamed to `{Resource}{Operation}Options`. For example in `Endpoint.List` you would now use `EndpointListOptions`
 * Libs/C# **(Breaking)**: All `IdempotencyKey` method parameters are removed, and are now part of `{Resource}{Operation}Options`. For example in `Message.Create`; to the use `IdempotencyKey`, simply pass it in the `MessageCreateOptions`
 * Libs/C# **(Breaking)**: The `Throw` parameter is removed from `SvixOptions`
