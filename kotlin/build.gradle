@@ -37,7 +37,7 @@ repositories {
 
 sourceSets {
     main.kotlin.srcDirs += 'lib/src/main/kotlin'
-    main.kotlin.srcDirs += 'lib/generated/openapi/src/main/kotlin'        
+    // main.kotlin.srcDirs += 'lib/generated/openapi/src/main/kotlin'
     sourceSets.test.kotlin.srcDirs = ["lib/src/test/main/kotlin"]
     test.kotlin.srcDirs = ['lib/src/test']
 }
