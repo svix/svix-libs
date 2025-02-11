@@ -57,8 +57,8 @@ Creates and sends a message to the specified endpoint.
 The message attempt and response from the endpoint is returned.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiCreateMessageAttemptForEndpointRequest
 */
 func (a *MessageAPIService) CreateMessageAttemptForEndpoint(ctx context.Context, appId string, endpointId string) ApiCreateMessageAttemptForEndpointRequest {
@@ -294,8 +294,8 @@ V1EventsPublic Public Events
 Reads the stream of created messages for an application, filtered on the Sink's event types and Channels.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param sinkId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param sinkId The Endpoint's ID or UID.
  @return ApiV1EventsPublicRequest
 */
 func (a *MessageAPIService) V1EventsPublic(ctx context.Context, appId string, sinkId string) ApiV1EventsPublicRequest {
@@ -531,7 +531,7 @@ Messages can also have `channels`, which similar to event types let endpoints fi
 The `payload` property is the webhook's body (the actual webhook message). Svix supports payload sizes of up to ~350kb, though it's generally a good idea to keep webhook payloads small, probably no larger than 40kb.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1MessageCreateRequest
 */
 func (a *MessageAPIService) V1MessageCreate(ctx context.Context, appId string) ApiV1MessageCreateRequest {
@@ -775,7 +775,7 @@ V1MessageEvents Message Events
 Reads the stream of created messages for an application.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1MessageEventsRequest
 */
 func (a *MessageAPIService) V1MessageEvents(ctx context.Context, appId string) ApiV1MessageEventsRequest {
@@ -1026,8 +1026,8 @@ V1MessageEventsSubscription Message Events Subscription
 Reads the stream of created messages for an application, but using server-managed iterator tracking.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param subscriptionId The esub's ID or UID
+ @param appId The Application's ID or UID.
+ @param subscriptionId The EventsSubscription's ID or UID.
  @return ApiV1MessageEventsSubscriptionRequest
 */
 func (a *MessageAPIService) V1MessageEventsSubscription(ctx context.Context, appId string, subscriptionId string) ApiV1MessageEventsSubscriptionRequest {
@@ -1259,8 +1259,8 @@ V1MessageEventsSubscriptionCreateToken Message Events Create Token
 Creates an auth token that can be used with the `v1.message.events-subscription` endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param subscriptionId The esub's ID or UID
+ @param appId The Application's ID or UID.
+ @param subscriptionId The EventsSubscription's ID or UID.
  @return ApiV1MessageEventsSubscriptionCreateTokenRequest
 */
 func (a *MessageAPIService) V1MessageEventsSubscriptionCreateToken(ctx context.Context, appId string, subscriptionId string) ApiV1MessageEventsSubscriptionCreateTokenRequest {
@@ -1460,8 +1460,8 @@ Useful in cases when a message was accidentally sent with sensitive content.
 The message can't be replayed or resent once its payload has been deleted or expired.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
  @return ApiV1MessageExpungeContentRequest
 */
 func (a *MessageAPIService) V1MessageExpungeContent(ctx context.Context, appId string, msgId string) ApiV1MessageExpungeContentRequest {
@@ -1651,8 +1651,8 @@ V1MessageGet Get Message
 Get a message by its ID or eventID.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
  @return ApiV1MessageGetRequest
 */
 func (a *MessageAPIService) V1MessageGet(ctx context.Context, appId string, msgId string) ApiV1MessageGetRequest {
@@ -1852,8 +1852,8 @@ V1MessageGetRawPayload Get Raw Message Payload
 Get a message raw payload by its ID or eventID.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
  @return ApiV1MessageGetRawPayloadRequest
 */
 func (a *MessageAPIService) V1MessageGetRawPayload(ctx context.Context, appId string, msgId string) ApiV1MessageGetRawPayloadRequest {
@@ -2110,7 +2110,7 @@ by the iterator ID. If you require data beyond those time ranges, you will need 
 set the `before` or `after` parameter as appropriate.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1MessageListRequest
 */
 func (a *MessageAPIService) V1MessageList(ctx context.Context, appId string) ApiV1MessageListRequest {
@@ -2201,6 +2201,213 @@ func (a *MessageAPIService) V1MessageListExecute(r ApiV1MessageListRequest) (*Li
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v HTTPValidationError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v HttpErrorOut
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiV1MessagePrecheckRequest struct {
+	ctx context.Context
+	ApiService *MessageAPIService
+	appId string
+	messagePrecheckIn *MessagePrecheckIn
+	idempotencyKey *string
+}
+
+func (r ApiV1MessagePrecheckRequest) MessagePrecheckIn(messagePrecheckIn MessagePrecheckIn) ApiV1MessagePrecheckRequest {
+	r.messagePrecheckIn = &messagePrecheckIn
+	return r
+}
+
+// The request&#39;s idempotency key
+func (r ApiV1MessagePrecheckRequest) IdempotencyKey(idempotencyKey string) ApiV1MessagePrecheckRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiV1MessagePrecheckRequest) Execute() (*MessagePrecheckOut, *http.Response, error) {
+	return r.ApiService.V1MessagePrecheckExecute(r)
+}
+
+/*
+V1MessagePrecheck Create Message Precheck
+
+A pre-check call for `create.message` that checks whether endpoints are actively listening to
+this message.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param appId The Application's ID or UID.
+ @return ApiV1MessagePrecheckRequest
+*/
+func (a *MessageAPIService) V1MessagePrecheck(ctx context.Context, appId string) ApiV1MessagePrecheckRequest {
+	return ApiV1MessagePrecheckRequest{
+		ApiService: a,
+		ctx: ctx,
+		appId: appId,
+	}
+}
+
+// Execute executes the request
+//  @return MessagePrecheckOut
+func (a *MessageAPIService) V1MessagePrecheckExecute(r ApiV1MessagePrecheckRequest) (*MessagePrecheckOut, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *MessagePrecheckOut
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MessageAPIService.V1MessagePrecheck")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/app/{app_id}/msg/precheck/active"
+	localVarPath = strings.Replace(localVarPath, "{"+"app_id"+"}", url.PathEscape(parameterValueToString(r.appId, "appId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if strlen(r.appId) < 1 {
+		return localVarReturnValue, nil, reportError("appId must have at least 1 elements")
+	}
+	if strlen(r.appId) > 256 {
+		return localVarReturnValue, nil, reportError("appId must have less than 256 elements")
+	}
+	if r.messagePrecheckIn == nil {
+		return localVarReturnValue, nil, reportError("messagePrecheckIn is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "idempotency-key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.messagePrecheckIn
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

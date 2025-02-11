@@ -27,7 +27,7 @@ type StreamOut struct {
 	Description *string `json:"description,omitempty"`
 	// The stream's ID.
 	Id string `json:"id" validate:"regexp=^strm_[A-Za-z0-9]{22}$"`
-	// The Stream's UID.
+	// The stream's UID.
 	Uid *string `json:"uid,omitempty" validate:"regexp=^(?!strm_)[a-zA-Z0-9_-]+$"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }

@@ -29,8 +29,8 @@ type EndpointOut struct {
 	Description string `json:"description"`
 	Disabled *bool `json:"disabled,omitempty"`
 	FilterTypes []string `json:"filterTypes,omitempty"`
-	// The ep's ID
-	Id string `json:"id"`
+	// The Endpoint's ID.
+	Id string `json:"id" validate:"regexp=^ep_[A-Za-z0-9]{27}$"`
 	Metadata map[string]string `json:"metadata"`
 	RateLimit *int32 `json:"rateLimit,omitempty"`
 	// Optional unique identifier for the endpoint.

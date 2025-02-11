@@ -21,7 +21,7 @@ var _ MappedNullable = &InboundPathParams{}
 
 // InboundPathParams struct for InboundPathParams
 type InboundPathParams struct {
-	// The app's ID or UID
+	// The Application's ID or UID.
 	AppId string `json:"app_id" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	InboundToken string `json:"inbound_token"`
 }

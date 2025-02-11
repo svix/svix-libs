@@ -22,7 +22,7 @@ type ApplicationPatch struct {
 	Metadata *map[string]string `json:"metadata,omitempty"`
 	Name *string `json:"name,omitempty"`
 	RateLimit NullableInt32 `json:"rateLimit,omitempty"`
-	// The app's UID
+	// The Application's UID.
 	Uid NullableString `json:"uid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 }
 

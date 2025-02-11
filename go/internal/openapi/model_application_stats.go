@@ -21,9 +21,9 @@ var _ MappedNullable = &ApplicationStats{}
 
 // ApplicationStats struct for ApplicationStats
 type ApplicationStats struct {
-	// The app's ID
-	AppId string `json:"appId"`
-	// The app's UID
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
+	// The Application's UID.
 	AppUid *string `json:"appUid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	MessageDestinations int32 `json:"messageDestinations"`
 }

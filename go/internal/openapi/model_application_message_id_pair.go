@@ -21,10 +21,10 @@ var _ MappedNullable = &ApplicationMessageIdPair{}
 
 // ApplicationMessageIdPair struct for ApplicationMessageIdPair
 type ApplicationMessageIdPair struct {
-	// The app's ID
-	AppId string `json:"appId"`
-	// The msg's ID
-	MsgId string `json:"msgId"`
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
+	// The Message's ID.
+	MsgId string `json:"msgId" validate:"regexp=^msg_[A-Za-z0-9]{27}$"`
 }
 
 type _ApplicationMessageIdPair ApplicationMessageIdPair

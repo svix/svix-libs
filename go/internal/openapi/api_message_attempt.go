@@ -91,8 +91,8 @@ V1MessageAttemptCountByEndpoint Count Attempts By Endpoint
 Like `v1.message-attempt.list-by-endpoint` but returning a count only.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1MessageAttemptCountByEndpointRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptCountByEndpoint(ctx context.Context, appId string, endpointId string) ApiV1MessageAttemptCountByEndpointRequest {
@@ -319,9 +319,9 @@ Useful when an endpoint accidentally returned sensitive content.
 The message can't be replayed or resent once its payload has been deleted or expired.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
- @param attemptId The attempt's ID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
+ @param attemptId The MessageAttempt's ID.
  @return ApiV1MessageAttemptExpungeContentRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptExpungeContent(ctx context.Context, appId string, msgId string, attemptId string) ApiV1MessageAttemptExpungeContentRequest {
@@ -366,6 +366,12 @@ func (a *MessageAttemptAPIService) V1MessageAttemptExpungeContentExecute(r ApiV1
 	}
 	if strlen(r.msgId) > 256 {
 		return nil, reportError("msgId must have less than 256 elements")
+	}
+	if strlen(r.attemptId) < 33 {
+		return nil, reportError("attemptId must have at least 33 elements")
+	}
+	if strlen(r.attemptId) > 33 {
+		return nil, reportError("attemptId must have less than 33 elements")
 	}
 
 	// to determine the Content-Type header
@@ -507,9 +513,9 @@ V1MessageAttemptGet Get Attempt
 `msg_id`: Use a message id or a message `eventId`
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
- @param attemptId The attempt's ID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
+ @param attemptId The MessageAttempt's ID.
  @return ApiV1MessageAttemptGetRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptGet(ctx context.Context, appId string, msgId string, attemptId string) ApiV1MessageAttemptGetRequest {
@@ -556,6 +562,12 @@ func (a *MessageAttemptAPIService) V1MessageAttemptGetExecute(r ApiV1MessageAtte
 	}
 	if strlen(r.msgId) > 256 {
 		return localVarReturnValue, nil, reportError("msgId must have less than 256 elements")
+	}
+	if strlen(r.attemptId) < 33 {
+		return localVarReturnValue, nil, reportError("attemptId must have at least 33 elements")
+	}
+	if strlen(r.attemptId) > 33 {
+		return localVarReturnValue, nil, reportError("attemptId must have less than 33 elements")
 	}
 
 	// to determine the Content-Type header
@@ -706,9 +718,9 @@ V1MessageAttemptGetHeaders Get Attempt Headers
 Calculate and return headers used on a given message attempt
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
- @param attemptId The attempt's ID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
+ @param attemptId The MessageAttempt's ID.
  @return ApiV1MessageAttemptGetHeadersRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptGetHeaders(ctx context.Context, appId string, msgId string, attemptId string) ApiV1MessageAttemptGetHeadersRequest {
@@ -755,6 +767,12 @@ func (a *MessageAttemptAPIService) V1MessageAttemptGetHeadersExecute(r ApiV1Mess
 	}
 	if strlen(r.msgId) > 256 {
 		return localVarReturnValue, nil, reportError("msgId must have less than 256 elements")
+	}
+	if strlen(r.attemptId) < 33 {
+		return localVarReturnValue, nil, reportError("attemptId must have at least 33 elements")
+	}
+	if strlen(r.attemptId) > 33 {
+		return localVarReturnValue, nil, reportError("attemptId must have less than 33 elements")
 	}
 
 	// to determine the Content-Type header
@@ -921,8 +939,8 @@ Additionally includes metadata about the latest message attempt.
 By default, endpoints are listed in ascending order by ID.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
  @return ApiV1MessageAttemptListAttemptedDestinationsRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptListAttemptedDestinations(ctx context.Context, appId string, msgId string) ApiV1MessageAttemptListAttemptedDestinationsRequest {
@@ -1193,8 +1211,8 @@ set the `before` or `after` parameter as appropriate.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1MessageAttemptListAttemptedMessagesRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptListAttemptedMessages(ctx context.Context, appId string, endpointId string) ApiV1MessageAttemptListAttemptedMessagesRequest {
@@ -1509,8 +1527,8 @@ set the `before` or `after` parameter as appropriate.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1MessageAttemptListByEndpointRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptListByEndpoint(ctx context.Context, appId string, endpointId string) ApiV1MessageAttemptListByEndpointRequest {
@@ -1833,8 +1851,8 @@ by the iterator ID. If you require data beyond those time ranges, you will need 
 set the `before` or `after` parameter as appropriate.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
  @return ApiV1MessageAttemptListByMsgRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptListByMsg(ctx context.Context, appId string, msgId string) ApiV1MessageAttemptListByMsgRequest {
@@ -2080,9 +2098,9 @@ V1MessageAttemptResend Resend Webhook
 Resend a message to the specified endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param msgId The msg's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param msgId The Message's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1MessageAttemptResendRequest
 */
 func (a *MessageAttemptAPIService) V1MessageAttemptResend(ctx context.Context, appId string, msgId string, endpointId string) ApiV1MessageAttemptResendRequest {

@@ -21,17 +21,17 @@ var _ MappedNullable = &MessageAttemptExhaustedEventData{}
 
 // MessageAttemptExhaustedEventData Sent when a message delivery has failed (all of the retry attempts have been exhausted) as a \"message.attempt.exhausted\" type or after it's failed four times as a \"message.attempt.failing\" event.
 type MessageAttemptExhaustedEventData struct {
-	// The app's ID
-	AppId string `json:"appId"`
-	// The app's UID
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
+	// The Application's UID.
 	AppUid *string `json:"appUid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
-	// The ep's ID
-	EndpointId string `json:"endpointId"`
+	// The Endpoint's ID.
+	EndpointId string `json:"endpointId" validate:"regexp=^ep_[A-Za-z0-9]{27}$"`
 	LastAttempt MessageAttemptFailedData `json:"lastAttempt"`
-	// The msg's UID
+	// The Message's UID.
 	MsgEventId *string `json:"msgEventId,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
-	// The msg's ID
-	MsgId string `json:"msgId"`
+	// The Message's ID.
+	MsgId string `json:"msgId" validate:"regexp=^msg_[A-Za-z0-9]{27}$"`
 }
 
 type _MessageAttemptExhaustedEventData MessageAttemptExhaustedEventData

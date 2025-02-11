@@ -52,7 +52,7 @@ V1AuthenticationAppPortalAccess Get Consumer App Portal Access
 Use this function to get magic links (and authentication codes) for connecting your users to the Consumer Application Portal.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1AuthenticationAppPortalAccessRequest
 */
 func (a *AuthenticationAPIService) V1AuthenticationAppPortalAccess(ctx context.Context, appId string) ApiV1AuthenticationAppPortalAccessRequest {
@@ -258,7 +258,7 @@ V1AuthenticationCreateMessageToken Create Cmg Token
 Create a new access token that only allows creating messages inside this application.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1AuthenticationCreateMessageTokenRequest
 */
 func (a *AuthenticationAPIService) V1AuthenticationCreateMessageToken(ctx context.Context, appId string) ApiV1AuthenticationCreateMessageTokenRequest {
@@ -460,7 +460,7 @@ DEPRECATED: Please use `app-portal-access` instead.
 Use this function to get magic links (and authentication codes) for connecting your users to the Consumer Application Portal.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1AuthenticationDashboardAccessRequest
 
 Deprecated
@@ -860,7 +860,7 @@ V1AuthenticationExpireAll Expire All
 Expire all of the tokens associated with a specific application.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1AuthenticationExpireAllRequest
 */
 func (a *AuthenticationAPIService) V1AuthenticationExpireAll(ctx context.Context, appId string) ApiV1AuthenticationExpireAllRequest {
@@ -1043,8 +1043,8 @@ V1AuthenticationGetPollerToken Get Poller Token
 Get the current auth token for the poller.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1AuthenticationGetPollerTokenRequest
 */
 func (a *AuthenticationAPIService) V1AuthenticationGetPollerToken(ctx context.Context, appId string, endpointId string) ApiV1AuthenticationGetPollerTokenRequest {
@@ -1427,8 +1427,8 @@ V1AuthenticationRotatePollerToken Rotate Poller Token
 Create a new auth token that can for the poller API.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1AuthenticationRotatePollerTokenRequest
 */
 func (a *AuthenticationAPIService) V1AuthenticationRotatePollerToken(ctx context.Context, appId string, endpointId string) ApiV1AuthenticationRotatePollerTokenRequest {
@@ -1642,7 +1642,7 @@ V1AuthenticationStreamPortalAccess Get Stream Portal Access
 Use this function to get magic links (and authentication codes) for connecting your users to the Stream Consumer Portal.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param streamId
+ @param streamId The Stream's ID or UID.
  @return ApiV1AuthenticationStreamPortalAccessRequest
 */
 func (a *AuthenticationAPIService) V1AuthenticationStreamPortalAccess(ctx context.Context, streamId string) ApiV1AuthenticationStreamPortalAccessRequest {

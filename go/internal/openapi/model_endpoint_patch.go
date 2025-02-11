@@ -27,7 +27,7 @@ type EndpointPatch struct {
 	RateLimit NullableInt32 `json:"rateLimit,omitempty"`
 	// The endpoint's verification secret.  Format: `base64` encoded random bytes optionally prefixed with `whsec_`. It is recommended to not set this and let the server generate the secret.
 	Secret NullableString `json:"secret,omitempty" validate:"regexp=^(whsec_)?[a-zA-Z0-9+\\/=]{32,100}$"`
-	// The ep's UID
+	// The Endpoint's UID.
 	Uid NullableString `json:"uid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	Url *string `json:"url,omitempty"`
 	// Deprecated

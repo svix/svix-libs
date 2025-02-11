@@ -22,13 +22,13 @@ var _ MappedNullable = &EndpointDisabledEventData{}
 
 // EndpointDisabledEventData Sent when an endpoint has been automatically disabled after continuous failures, or manually via an API call.
 type EndpointDisabledEventData struct {
-	// The app's ID
-	AppId string `json:"appId"`
-	// The app's UID
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
+	// The Application's UID.
 	AppUid *string `json:"appUid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
-	// The ep's ID
-	EndpointId string `json:"endpointId"`
-	// The ep's UID
+	// The Endpoint's ID.
+	EndpointId string `json:"endpointId" validate:"regexp=^ep_[A-Za-z0-9]{27}$"`
+	// The Endpoint's UID.
 	EndpointUid *string `json:"endpointUid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	FailSince *time.Time `json:"failSince,omitempty"`
 	Trigger *EndpointDisabledTrigger `json:"trigger,omitempty"`

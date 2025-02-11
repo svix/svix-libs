@@ -16,41 +16,41 @@ import (
 	"fmt"
 )
 
-// checks if the MessageBroadcastOut type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &MessageBroadcastOut{}
+// checks if the PurgeContentOut type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &PurgeContentOut{}
 
-// MessageBroadcastOut struct for MessageBroadcastOut
-type MessageBroadcastOut struct {
+// PurgeContentOut struct for PurgeContentOut
+type PurgeContentOut struct {
 	// The QueueBackgroundTask's ID.
 	Id string `json:"id" validate:"regexp=^qtask_[A-Za-z0-9]{27}$"`
 	Status BackgroundTaskStatus `json:"status"`
 	Task BackgroundTaskType `json:"task"`
 }
 
-type _MessageBroadcastOut MessageBroadcastOut
+type _PurgeContentOut PurgeContentOut
 
-// NewMessageBroadcastOut instantiates a new MessageBroadcastOut object
+// NewPurgeContentOut instantiates a new PurgeContentOut object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMessageBroadcastOut(id string, status BackgroundTaskStatus, task BackgroundTaskType) *MessageBroadcastOut {
-	this := MessageBroadcastOut{}
+func NewPurgeContentOut(id string, status BackgroundTaskStatus, task BackgroundTaskType) *PurgeContentOut {
+	this := PurgeContentOut{}
 	this.Id = id
 	this.Status = status
 	this.Task = task
 	return &this
 }
 
-// NewMessageBroadcastOutWithDefaults instantiates a new MessageBroadcastOut object
+// NewPurgeContentOutWithDefaults instantiates a new PurgeContentOut object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewMessageBroadcastOutWithDefaults() *MessageBroadcastOut {
-	this := MessageBroadcastOut{}
+func NewPurgeContentOutWithDefaults() *PurgeContentOut {
+	this := PurgeContentOut{}
 	return &this
 }
 
 // GetId returns the Id field value
-func (o *MessageBroadcastOut) GetId() string {
+func (o *PurgeContentOut) GetId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -61,7 +61,7 @@ func (o *MessageBroadcastOut) GetId() string {
 
 // GetIdOk returns a tuple with the Id field value
 // and a boolean to check if the value has been set.
-func (o *MessageBroadcastOut) GetIdOk() (*string, bool) {
+func (o *PurgeContentOut) GetIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -69,12 +69,12 @@ func (o *MessageBroadcastOut) GetIdOk() (*string, bool) {
 }
 
 // SetId sets field value
-func (o *MessageBroadcastOut) SetId(v string) {
+func (o *PurgeContentOut) SetId(v string) {
 	o.Id = v
 }
 
 // GetStatus returns the Status field value
-func (o *MessageBroadcastOut) GetStatus() BackgroundTaskStatus {
+func (o *PurgeContentOut) GetStatus() BackgroundTaskStatus {
 	if o == nil {
 		var ret BackgroundTaskStatus
 		return ret
@@ -85,7 +85,7 @@ func (o *MessageBroadcastOut) GetStatus() BackgroundTaskStatus {
 
 // GetStatusOk returns a tuple with the Status field value
 // and a boolean to check if the value has been set.
-func (o *MessageBroadcastOut) GetStatusOk() (*BackgroundTaskStatus, bool) {
+func (o *PurgeContentOut) GetStatusOk() (*BackgroundTaskStatus, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -93,12 +93,12 @@ func (o *MessageBroadcastOut) GetStatusOk() (*BackgroundTaskStatus, bool) {
 }
 
 // SetStatus sets field value
-func (o *MessageBroadcastOut) SetStatus(v BackgroundTaskStatus) {
+func (o *PurgeContentOut) SetStatus(v BackgroundTaskStatus) {
 	o.Status = v
 }
 
 // GetTask returns the Task field value
-func (o *MessageBroadcastOut) GetTask() BackgroundTaskType {
+func (o *PurgeContentOut) GetTask() BackgroundTaskType {
 	if o == nil {
 		var ret BackgroundTaskType
 		return ret
@@ -109,7 +109,7 @@ func (o *MessageBroadcastOut) GetTask() BackgroundTaskType {
 
 // GetTaskOk returns a tuple with the Task field value
 // and a boolean to check if the value has been set.
-func (o *MessageBroadcastOut) GetTaskOk() (*BackgroundTaskType, bool) {
+func (o *PurgeContentOut) GetTaskOk() (*BackgroundTaskType, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -117,11 +117,11 @@ func (o *MessageBroadcastOut) GetTaskOk() (*BackgroundTaskType, bool) {
 }
 
 // SetTask sets field value
-func (o *MessageBroadcastOut) SetTask(v BackgroundTaskType) {
+func (o *PurgeContentOut) SetTask(v BackgroundTaskType) {
 	o.Task = v
 }
 
-func (o MessageBroadcastOut) MarshalJSON() ([]byte, error) {
+func (o PurgeContentOut) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -129,7 +129,7 @@ func (o MessageBroadcastOut) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o MessageBroadcastOut) ToMap() (map[string]interface{}, error) {
+func (o PurgeContentOut) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["status"] = o.Status
@@ -137,7 +137,7 @@ func (o MessageBroadcastOut) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *MessageBroadcastOut) UnmarshalJSON(data []byte) (err error) {
+func (o *PurgeContentOut) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -161,53 +161,53 @@ func (o *MessageBroadcastOut) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varMessageBroadcastOut := _MessageBroadcastOut{}
+	varPurgeContentOut := _PurgeContentOut{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varMessageBroadcastOut)
+	err = decoder.Decode(&varPurgeContentOut)
 
 	if err != nil {
 		return err
 	}
 
-	*o = MessageBroadcastOut(varMessageBroadcastOut)
+	*o = PurgeContentOut(varPurgeContentOut)
 
 	return err
 }
 
-type NullableMessageBroadcastOut struct {
-	value *MessageBroadcastOut
+type NullablePurgeContentOut struct {
+	value *PurgeContentOut
 	isSet bool
 }
 
-func (v NullableMessageBroadcastOut) Get() *MessageBroadcastOut {
+func (v NullablePurgeContentOut) Get() *PurgeContentOut {
 	return v.value
 }
 
-func (v *NullableMessageBroadcastOut) Set(val *MessageBroadcastOut) {
+func (v *NullablePurgeContentOut) Set(val *PurgeContentOut) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableMessageBroadcastOut) IsSet() bool {
+func (v NullablePurgeContentOut) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableMessageBroadcastOut) Unset() {
+func (v *NullablePurgeContentOut) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableMessageBroadcastOut(val *MessageBroadcastOut) *NullableMessageBroadcastOut {
-	return &NullableMessageBroadcastOut{value: val, isSet: true}
+func NewNullablePurgeContentOut(val *PurgeContentOut) *NullablePurgeContentOut {
+	return &NullablePurgeContentOut{value: val, isSet: true}
 }
 
-func (v NullableMessageBroadcastOut) MarshalJSON() ([]byte, error) {
+func (v NullablePurgeContentOut) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableMessageBroadcastOut) UnmarshalJSON(src []byte) error {
+func (v *NullablePurgeContentOut) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

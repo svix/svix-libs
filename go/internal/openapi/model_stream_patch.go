@@ -21,8 +21,8 @@ var _ MappedNullable = &StreamPatch{}
 type StreamPatch struct {
 	// The Stream's description.
 	Description *string `json:"description,omitempty"`
-	// The Stream's UID.
-	Uid *string `json:"uid,omitempty" validate:"regexp=^(?!strm_)[a-zA-Z0-9_-]+$"`
+	// An optional unique identifier for the stream.
+	Uid NullableString `json:"uid,omitempty" validate:"regexp=^(?!strm_)[a-zA-Z0-9_-]+$"`
 }
 
 // NewStreamPatch instantiates a new StreamPatch object
@@ -74,36 +74,46 @@ func (o *StreamPatch) SetDescription(v string) {
 	o.Description = &v
 }
 
-// GetUid returns the Uid field value if set, zero value otherwise.
+// GetUid returns the Uid field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *StreamPatch) GetUid() string {
-	if o == nil || IsNil(o.Uid) {
+	if o == nil || IsNil(o.Uid.Get()) {
 		var ret string
 		return ret
 	}
-	return *o.Uid
+	return *o.Uid.Get()
 }
 
 // GetUidOk returns a tuple with the Uid field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *StreamPatch) GetUidOk() (*string, bool) {
-	if o == nil || IsNil(o.Uid) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Uid, true
+	return o.Uid.Get(), o.Uid.IsSet()
 }
 
 // HasUid returns a boolean if a field has been set.
 func (o *StreamPatch) HasUid() bool {
-	if o != nil && !IsNil(o.Uid) {
+	if o != nil && o.Uid.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetUid gets a reference to the given string and assigns it to the Uid field.
+// SetUid gets a reference to the given NullableString and assigns it to the Uid field.
 func (o *StreamPatch) SetUid(v string) {
-	o.Uid = &v
+	o.Uid.Set(&v)
+}
+// SetUidNil sets the value for Uid to be an explicit nil
+func (o *StreamPatch) SetUidNil() {
+	o.Uid.Set(nil)
+}
+
+// UnsetUid ensures that no value is present for Uid, not even an explicit nil
+func (o *StreamPatch) UnsetUid() {
+	o.Uid.Unset()
 }
 
 func (o StreamPatch) MarshalJSON() ([]byte, error) {
@@ -119,8 +129,8 @@ func (o StreamPatch) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if !IsNil(o.Uid) {
-		toSerialize["uid"] = o.Uid
+	if o.Uid.IsSet() {
+		toSerialize["uid"] = o.Uid.Get()
 	}
 	return toSerialize, nil
 }

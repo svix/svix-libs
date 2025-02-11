@@ -53,7 +53,7 @@ V1StreamEventsCreate Create Events
 Creates events on the Stream.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param streamId
+ @param streamId The Stream's ID or UID.
  @return ApiV1StreamEventsCreateRequest
 */
 func (a *StreamAPIService) V1StreamEventsCreate(ctx context.Context, streamId string) ApiV1StreamEventsCreateRequest {
@@ -266,7 +266,7 @@ V1StreamEventsGet Stream Events
 Iterate over a stream of events.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param streamId
+ @param streamId The Stream's ID or UID.
  @return ApiV1StreamEventsGetRequest
 */
 func (a *StreamAPIService) V1StreamEventsGet(ctx context.Context, streamId string) ApiV1StreamEventsGetRequest {
@@ -656,7 +656,7 @@ V1StreamStreamDelete Delete Stream
 Delete a stream.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param streamId
+ @param streamId The Stream's ID or UID.
  @return ApiV1StreamStreamDeleteRequest
 */
 func (a *StreamAPIService) V1StreamStreamDelete(ctx context.Context, streamId string) ApiV1StreamStreamDeleteRequest {
@@ -830,7 +830,7 @@ V1StreamStreamGet Get Stream
 Get a stream by id or uid.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param streamId
+ @param streamId The Stream's ID or UID.
  @return ApiV1StreamStreamGetRequest
 */
 func (a *StreamAPIService) V1StreamStreamGet(ctx context.Context, streamId string) ApiV1StreamStreamGetRequest {
@@ -1226,7 +1226,7 @@ V1StreamStreamPatch Patch Stream
 Partially update a stream.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param streamId
+ @param streamId The Stream's ID or UID.
  @return ApiV1StreamStreamPatchRequest
 */
 func (a *StreamAPIService) V1StreamStreamPatch(ctx context.Context, streamId string) ApiV1StreamStreamPatchRequest {
@@ -1422,7 +1422,7 @@ V1StreamStreamUpdate Update Stream
 Update a stream.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param streamId
+ @param streamId The Stream's ID or UID.
  @return ApiV1StreamStreamUpdateRequest
 */
 func (a *StreamAPIService) V1StreamStreamUpdate(ctx context.Context, streamId string) ApiV1StreamStreamUpdateRequest {

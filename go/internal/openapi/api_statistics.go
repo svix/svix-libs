@@ -431,7 +431,7 @@ V1StatsAppAttempts Get App Attempt Stats
 Returns application-level statistics on message attempts
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
+ @param appId The Application's ID or UID.
  @return ApiV1StatsAppAttemptsRequest
 */
 func (a *StatisticsAPIService) V1StatsAppAttempts(ctx context.Context, appId string) ApiV1StatsAppAttemptsRequest {
@@ -637,8 +637,8 @@ V1StatsEndpointAttempts Get Ep Stats
 Returns endpoint-level statistics on message attempts.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1StatsEndpointAttemptsRequest
 */
 func (a *StatisticsAPIService) V1StatsEndpointAttempts(ctx context.Context, appId string, endpointId string) ApiV1StatsEndpointAttemptsRequest {

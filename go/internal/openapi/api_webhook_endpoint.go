@@ -235,7 +235,7 @@ V1OperationalWebhookEndpointDelete Delete Operational Webhook Endpoint
 Delete an operational webhook endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param endpointId The ep's ID or UID
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1OperationalWebhookEndpointDeleteRequest
 */
 func (a *WebhookEndpointAPIService) V1OperationalWebhookEndpointDelete(ctx context.Context, endpointId string) ApiV1OperationalWebhookEndpointDeleteRequest {
@@ -409,7 +409,7 @@ V1OperationalWebhookEndpointGet Get Operational Webhook Endpoint
 Get an operational webhook endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param endpointId The ep's ID or UID
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1OperationalWebhookEndpointGetRequest
 */
 func (a *WebhookEndpointAPIService) V1OperationalWebhookEndpointGet(ctx context.Context, endpointId string) ApiV1OperationalWebhookEndpointGetRequest {
@@ -594,7 +594,7 @@ V1OperationalWebhookEndpointGetHeaders Get Operational Webhook Endpoint Headers
 Get the additional headers to be sent with the operational webhook.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param endpointId The ep's ID or UID
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1OperationalWebhookEndpointGetHeadersRequest
 */
 func (a *WebhookEndpointAPIService) V1OperationalWebhookEndpointGetHeaders(ctx context.Context, endpointId string) ApiV1OperationalWebhookEndpointGetHeadersRequest {
@@ -782,7 +782,7 @@ This is used to verify the authenticity of the webhook.
 For more information please refer to [the consuming webhooks docs](https://docs.svix.com/consuming-webhooks/).
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param endpointId The ep's ID or UID
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1OperationalWebhookEndpointGetSecretRequest
 */
 func (a *WebhookEndpointAPIService) V1OperationalWebhookEndpointGetSecret(ctx context.Context, endpointId string) ApiV1OperationalWebhookEndpointGetSecretRequest {
@@ -1187,7 +1187,7 @@ Rotates an operational webhook endpoint's signing secret.
 The previous secret will remain valid for the next 24 hours.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param endpointId The ep's ID or UID
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1OperationalWebhookEndpointRotateSecretRequest
 */
 func (a *WebhookEndpointAPIService) V1OperationalWebhookEndpointRotateSecret(ctx context.Context, endpointId string) ApiV1OperationalWebhookEndpointRotateSecretRequest {
@@ -1375,7 +1375,7 @@ V1OperationalWebhookEndpointUpdate Update Operational Webhook Endpoint
 Update an operational webhook endpoint.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param endpointId The ep's ID or UID
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1OperationalWebhookEndpointUpdateRequest
 */
 func (a *WebhookEndpointAPIService) V1OperationalWebhookEndpointUpdate(ctx context.Context, endpointId string) ApiV1OperationalWebhookEndpointUpdateRequest {
@@ -1571,7 +1571,7 @@ V1OperationalWebhookEndpointUpdateHeaders Update Operational Webhook Endpoint He
 Set the additional headers to be sent with the operational webhook.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param endpointId The ep's ID or UID
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1OperationalWebhookEndpointUpdateHeadersRequest
 */
 func (a *WebhookEndpointAPIService) V1OperationalWebhookEndpointUpdateHeaders(ctx context.Context, endpointId string) ApiV1OperationalWebhookEndpointUpdateHeadersRequest {

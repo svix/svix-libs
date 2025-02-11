@@ -48,8 +48,8 @@ Create / update endpoint Hubspot OAuth configuration.
 Specific private endpoint just for us, to avoid exposing the Hubspot secret to the client.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param appId The app's ID or UID
- @param endpointId The ep's ID or UID
+ @param appId The Application's ID or UID.
+ @param endpointId The Endpoint's ID or UID.
  @return ApiV1EndpointUpdateHubspotOauthConfigRequest
 */
 func (a *TransformationTemplateAPIService) V1EndpointUpdateHubspotOauthConfig(ctx context.Context, appId string, endpointId string) ApiV1EndpointUpdateHubspotOauthConfigRequest {
@@ -432,7 +432,7 @@ V1TransformationTemplateDelete Delete Transformation Template
 Delete a transformation template.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param transformationTemplateId
+ @param transformationTemplateId The TransformationTemplate's ID.
  @return ApiV1TransformationTemplateDeleteRequest
 */
 func (a *TransformationTemplateAPIService) V1TransformationTemplateDelete(ctx context.Context, transformationTemplateId string) ApiV1TransformationTemplateDeleteRequest {
@@ -462,6 +462,12 @@ func (a *TransformationTemplateAPIService) V1TransformationTemplateDeleteExecute
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.transformationTemplateId) < 34 {
+		return nil, reportError("transformationTemplateId must have at least 34 elements")
+	}
+	if strlen(r.transformationTemplateId) > 34 {
+		return nil, reportError("transformationTemplateId must have less than 34 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -796,7 +802,7 @@ V1TransformationTemplateGet Get Transformation Template
 Get a transformation template.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param transformationTemplateId
+ @param transformationTemplateId The TransformationTemplate's ID.
  @return ApiV1TransformationTemplateGetRequest
 */
 func (a *TransformationTemplateAPIService) V1TransformationTemplateGet(ctx context.Context, transformationTemplateId string) ApiV1TransformationTemplateGetRequest {
@@ -828,6 +834,12 @@ func (a *TransformationTemplateAPIService) V1TransformationTemplateGetExecute(r 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.transformationTemplateId) < 34 {
+		return localVarReturnValue, nil, reportError("transformationTemplateId must have at least 34 elements")
+	}
+	if strlen(r.transformationTemplateId) > 34 {
+		return localVarReturnValue, nil, reportError("transformationTemplateId must have less than 34 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1774,7 +1786,7 @@ V1TransformationTemplatePatch Patch Transformation Template
 Partially update a transformation template.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param transformationTemplateId
+ @param transformationTemplateId The TransformationTemplate's ID.
  @return ApiV1TransformationTemplatePatchRequest
 */
 func (a *TransformationTemplateAPIService) V1TransformationTemplatePatch(ctx context.Context, transformationTemplateId string) ApiV1TransformationTemplatePatchRequest {
@@ -1806,6 +1818,12 @@ func (a *TransformationTemplateAPIService) V1TransformationTemplatePatchExecute(
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.transformationTemplateId) < 34 {
+		return localVarReturnValue, nil, reportError("transformationTemplateId must have at least 34 elements")
+	}
+	if strlen(r.transformationTemplateId) > 34 {
+		return localVarReturnValue, nil, reportError("transformationTemplateId must have less than 34 elements")
+	}
 	if r.templatePatch == nil {
 		return localVarReturnValue, nil, reportError("templatePatch is required and must be specified")
 	}
@@ -2160,7 +2178,7 @@ V1TransformationTemplateUpdate Update Transformation Template
 Update a transformation template.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param transformationTemplateId
+ @param transformationTemplateId The TransformationTemplate's ID.
  @return ApiV1TransformationTemplateUpdateRequest
 */
 func (a *TransformationTemplateAPIService) V1TransformationTemplateUpdate(ctx context.Context, transformationTemplateId string) ApiV1TransformationTemplateUpdateRequest {
@@ -2192,6 +2210,12 @@ func (a *TransformationTemplateAPIService) V1TransformationTemplateUpdateExecute
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.transformationTemplateId) < 34 {
+		return localVarReturnValue, nil, reportError("transformationTemplateId must have at least 34 elements")
+	}
+	if strlen(r.transformationTemplateId) > 34 {
+		return localVarReturnValue, nil, reportError("transformationTemplateId must have less than 34 elements")
+	}
 	if r.templateUpdate == nil {
 		return localVarReturnValue, nil, reportError("templateUpdate is required and must be specified")
 	}

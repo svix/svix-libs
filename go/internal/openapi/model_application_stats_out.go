@@ -21,9 +21,9 @@ var _ MappedNullable = &ApplicationStatsOut{}
 
 // ApplicationStatsOut A copy of  [`backgroundtask::ApplicationStats`], but serialized with camelCase fields for customers.
 type ApplicationStatsOut struct {
-	// The app's ID
-	AppId string `json:"appId"`
-	// The app's UID
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
+	// The Application's UID.
 	AppUid *string `json:"appUid,omitempty" validate:"regexp=^[a-zA-Z0-9\\\\-_.]+$"`
 	MessageDestinations int64 `json:"messageDestinations"`
 }

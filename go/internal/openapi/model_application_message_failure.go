@@ -21,8 +21,8 @@ var _ MappedNullable = &ApplicationMessageFailure{}
 
 // ApplicationMessageFailure struct for ApplicationMessageFailure
 type ApplicationMessageFailure struct {
-	// The app's ID
-	AppId string `json:"appId"`
+	// The Application's ID.
+	AppId string `json:"appId" validate:"regexp=^app_[A-Za-z0-9]{27}$"`
 	Reason string `json:"reason"`
 }
 

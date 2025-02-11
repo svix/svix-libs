@@ -21,7 +21,8 @@ var _ MappedNullable = &AggregateEventTypesOut{}
 
 // AggregateEventTypesOut struct for AggregateEventTypesOut
 type AggregateEventTypesOut struct {
-	Id string `json:"id"`
+	// The QueueBackgroundTask's ID.
+	Id string `json:"id" validate:"regexp=^qtask_[A-Za-z0-9]{27}$"`
 	Status BackgroundTaskStatus `json:"status"`
 	Task BackgroundTaskType `json:"task"`
 }
