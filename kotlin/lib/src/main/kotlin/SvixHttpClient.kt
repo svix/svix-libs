@@ -24,6 +24,8 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         if (reqBody != null) {
             val jsonBody = Json.encodeToString(reqBody)
             reqBuilder = reqBuilder.method(method, jsonBody.toRequestBody())
+        } else {
+            reqBuilder = reqBuilder.method(method, null)
         }
 
         for ((k, v) in defaultHeaders) {
@@ -65,7 +67,7 @@ fun dbgRequest(request: Request) {
     println("Url: ${request.url}")
     println("Method ${request.method} path: ${request.url.encodedPath}")
     for ((k, v) in request.headers) {
-        println("$k: $v}")
+        println("$k: $v")
     }
     println()
     if (request.body != null) {
