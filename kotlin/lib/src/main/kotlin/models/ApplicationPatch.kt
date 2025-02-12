@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class ApplicationPatch(
     val metadata: Map<String, String>? = null,
     val name: String? = null,
-    val rateLimit: MaybeUnset<UShort> = MaybeUnset.Undefined,
-    val uid: MaybeUnset<String> = MaybeUnset.Undefined,
+    val rateLimit: MaybeUnset<UShort> = MaybeUnset.Unset,
+    val uid: MaybeUnset<String> = MaybeUnset.Unset,
 )

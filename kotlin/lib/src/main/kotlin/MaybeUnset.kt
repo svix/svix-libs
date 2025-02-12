@@ -12,7 +12,7 @@ import kotlinx.serialization.encoding.Encoder
 sealed class MaybeUnset<out T> {
     data object Null : MaybeUnset<Nothing>()
 
-    data object Undefined : MaybeUnset<Nothing>()
+    data object Unset : MaybeUnset<Nothing>()
 
     data class Present<out T>(val value: T) : MaybeUnset<T>()
 }
@@ -25,8 +25,9 @@ class MaybeUnsetSerializer<T>(private val dataSerializer: KSerializer<T>) :
     @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: MaybeUnset<T>) {
         when (value) {
-            is MaybeUnset.Undefined ->
-                throw SerializationException("MaybeUnset.Undefined should not be serialized")
+            is MaybeUnset.Unset ->
+                throw SerializationException("MaybeUnset.Unset should not be serialized")
+
             is MaybeUnset.Null -> encoder.encodeNull()
             is MaybeUnset.Present -> encoder.encodeSerializableValue(dataSerializer, value.value)
             else -> throw SerializationException("Unreachable")
