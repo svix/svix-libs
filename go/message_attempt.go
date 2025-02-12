@@ -1,50 +1,102 @@
-// this file is @generated (with manual changes)
+// Package svix this file is @generated DO NOT EDIT
 package svix
 
 import (
 	"context"
 	"time"
 
-	"github.com/svix/svix-webhooks/go/internal/openapi"
+	"github.com/svix/svix-webhooks/go/models"
 )
 
 type MessageAttempt struct {
-	api *openapi.APIClient
+	client *SvixHttpClient
 }
 
-type MessageAttemptListOptions struct {
+type MessageAttemptListByEndpointOptions struct {
 	// Limit the number of returned items
-	Limit *int32
+	Limit *uint64
 	// The iterator returned from a prior invocation
 	Iterator *string
+
 	// Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or Sending (3)
-	Status          *MessageStatus
-	EventTypes      *[]string
-	Before          *time.Time
-	After           *time.Time
-	StatusCodeClass *StatusCodeClass
-	Channel         *string
-	EndpointId      *string
-	WithContent     *bool
-	WithMsg         *bool
-	Tag             *string
+	Status *models.MessageStatus
+
+	// Filter response based on the HTTP status code
+	StatusCodeClass *models.StatusCodeClass
+	// Filter response based on the channel
+	Channel *string
+	// Filter response based on the tag
+	Tag *string
+	// Only include items created before a certain date
+	Before *time.Time
+	// Only include items created after a certain date
+	After *time.Time
+	// When `true` attempt content is included in the response
+	WithContent *bool
+	// When `true`, the message information is included in the response
+	WithMsg *bool
+	// Filter response based on the event type
+	EventTypes *[]string
+}
+
+type MessageAttemptListByMsgOptions struct {
+	// Limit the number of returned items
+	Limit *uint64
+	// The iterator returned from a prior invocation
+	Iterator *string
+
+	// Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or Sending (3)
+	Status *models.MessageStatus
+
+	// Filter response based on the HTTP status code
+	StatusCodeClass *models.StatusCodeClass
+	// Filter response based on the channel
+	Channel *string
+	// Filter response based on the tag
+	Tag *string
+	// Filter the attempts based on the attempted endpoint
+	EndpointId *string
+	// Only include items created before a certain date
+	Before *time.Time
+	// Only include items created after a certain date
+	After *time.Time
+	// When `true` attempt content is included in the response
+	WithContent *bool
+	// Filter response based on the event type
+	EventTypes *[]string
+}
+
+type MessageAttemptListAttemptedMessagesOptions struct {
+	// Limit the number of returned items
+	Limit *uint64
+	// The iterator returned from a prior invocation
+	Iterator *string
+	// Filter response based on the channel
+	Channel *string
+	// Filter response based on the message tags
+	Tag *string
+
+	// Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or Sending (3)
+	Status *models.MessageStatus
+	// Only include items created before a certain date
+	Before *time.Time
+	// Only include items created after a certain date
+	After *time.Time
+	// When `true` message payloads are included in the response
+	WithContent *bool
+	// Filter response based on the event type
+	EventTypes *[]string
 }
 
 type MessageAttemptListAttemptedDestinationsOptions struct {
 	// Limit the number of returned items
-	Limit *int32
+	Limit *uint64
 	// The iterator returned from a prior invocation
 	Iterator *string
 }
 
-// Deprecated: use `ListByMsg` or `ListByEndpoint` instead
-func (messageAttempt *MessageAttempt) List(
-	ctx context.Context,
-	appId string,
-	msgId string,
-	options *MessageAttemptListOptions,
-) (*ListResponseMessageAttemptOut, error) {
-	return messageAttempt.ListByMsg(ctx, appId, msgId, options)
+type MessageAttemptResendOptions struct {
+	IdempotencyKey *string
 }
 
 // List attempts by endpoint id
@@ -57,56 +109,42 @@ func (messageAttempt *MessageAttempt) ListByEndpoint(
 	ctx context.Context,
 	appId string,
 	endpointId string,
-	options *MessageAttemptListOptions,
-) (*ListResponseMessageAttemptOut, error) {
-	req := messageAttempt.api.MessageAttemptAPI.V1MessageAttemptListByEndpoint(
+	o *MessageAttemptListByEndpointOptions,
+) (*models.ListResponseMessageAttemptOut, error) {
+	pathMap := map[string]string{
+		"app_id":      appId,
+		"endpoint_id": endpointId,
+	}
+	queryMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("limit", o.Limit, queryMap, &err)
+		serializeParamToMap("iterator", o.Iterator, queryMap, &err)
+		serializeParamToMap("status", o.Status, queryMap, &err)
+		serializeParamToMap("status_code_class", o.StatusCodeClass, queryMap, &err)
+		serializeParamToMap("channel", o.Channel, queryMap, &err)
+		serializeParamToMap("tag", o.Tag, queryMap, &err)
+		serializeParamToMap("before", o.Before, queryMap, &err)
+		serializeParamToMap("after", o.After, queryMap, &err)
+		serializeParamToMap("with_content", o.WithContent, queryMap, &err)
+		serializeParamToMap("with_msg", o.WithMsg, queryMap, &err)
+		serializeParamToMap("event_types", o.EventTypes, queryMap, &err)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return executeRequest[any, models.ListResponseMessageAttemptOut](
 		ctx,
-		appId,
-		endpointId,
+		messageAttempt.client,
+		"GET",
+		"/api/v1/app/{app_id}/attempt/endpoint/{endpoint_id}",
+		pathMap,
+		queryMap,
+		nil,
+		nil,
 	)
 
-	if options != nil {
-		if options.Limit != nil {
-			req = req.Limit(*options.Limit)
-		}
-		if options.Iterator != nil {
-			req = req.Iterator(*options.Iterator)
-		}
-		if options.Status != nil {
-			req = req.Status(*options.Status)
-		}
-		if options.StatusCodeClass != nil {
-			req = req.StatusCodeClass(*options.StatusCodeClass)
-		}
-		if options.Channel != nil {
-			req = req.Channel(*options.Channel)
-		}
-		if options.Tag != nil {
-			req = req.Tag(*options.Tag)
-		}
-		if options.Before != nil {
-			req = req.Before(*options.Before)
-		}
-		if options.After != nil {
-			req = req.After(*options.After)
-		}
-		if options.WithContent != nil {
-			req = req.WithContent(*options.WithContent)
-		}
-		if options.WithMsg != nil {
-			req = req.WithMsg(*options.WithMsg)
-		}
-		if options.EventTypes != nil {
-			req = req.EventTypes(*options.EventTypes)
-		}
-	}
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
-	}
-
-	return ret, nil
 }
 
 // List attempts by message ID.
@@ -119,56 +157,42 @@ func (messageAttempt *MessageAttempt) ListByMsg(
 	ctx context.Context,
 	appId string,
 	msgId string,
-	options *MessageAttemptListOptions,
-) (*ListResponseMessageAttemptOut, error) {
-	req := messageAttempt.api.MessageAttemptAPI.V1MessageAttemptListByMsg(
+	o *MessageAttemptListByMsgOptions,
+) (*models.ListResponseMessageAttemptOut, error) {
+	pathMap := map[string]string{
+		"app_id": appId,
+		"msg_id": msgId,
+	}
+	queryMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("limit", o.Limit, queryMap, &err)
+		serializeParamToMap("iterator", o.Iterator, queryMap, &err)
+		serializeParamToMap("status", o.Status, queryMap, &err)
+		serializeParamToMap("status_code_class", o.StatusCodeClass, queryMap, &err)
+		serializeParamToMap("channel", o.Channel, queryMap, &err)
+		serializeParamToMap("tag", o.Tag, queryMap, &err)
+		serializeParamToMap("endpoint_id", o.EndpointId, queryMap, &err)
+		serializeParamToMap("before", o.Before, queryMap, &err)
+		serializeParamToMap("after", o.After, queryMap, &err)
+		serializeParamToMap("with_content", o.WithContent, queryMap, &err)
+		serializeParamToMap("event_types", o.EventTypes, queryMap, &err)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return executeRequest[any, models.ListResponseMessageAttemptOut](
 		ctx,
-		appId,
-		msgId,
+		messageAttempt.client,
+		"GET",
+		"/api/v1/app/{app_id}/attempt/msg/{msg_id}",
+		pathMap,
+		queryMap,
+		nil,
+		nil,
 	)
 
-	if options != nil {
-		if options.Limit != nil {
-			req = req.Limit(*options.Limit)
-		}
-		if options.Iterator != nil {
-			req = req.Iterator(*options.Iterator)
-		}
-		if options.Status != nil {
-			req = req.Status(*options.Status)
-		}
-		if options.StatusCodeClass != nil {
-			req = req.StatusCodeClass(*options.StatusCodeClass)
-		}
-		if options.Channel != nil {
-			req = req.Channel(*options.Channel)
-		}
-		if options.Tag != nil {
-			req = req.Tag(*options.Tag)
-		}
-		if options.EndpointId != nil {
-			req = req.EndpointId(*options.EndpointId)
-		}
-		if options.Before != nil {
-			req = req.Before(*options.Before)
-		}
-		if options.After != nil {
-			req = req.After(*options.After)
-		}
-		if options.WithContent != nil {
-			req = req.WithContent(*options.WithContent)
-		}
-		if options.EventTypes != nil {
-			req = req.EventTypes(*options.EventTypes)
-		}
-	}
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
-	}
-
-	return ret, nil
 }
 
 // List messages for a particular endpoint. Additionally includes metadata about the latest message attempt.
@@ -183,50 +207,40 @@ func (messageAttempt *MessageAttempt) ListAttemptedMessages(
 	ctx context.Context,
 	appId string,
 	endpointId string,
-	options *MessageAttemptListOptions,
-) (*ListResponseEndpointMessageOut, error) {
-	req := messageAttempt.api.MessageAttemptAPI.V1MessageAttemptListAttemptedMessages(
+	o *MessageAttemptListAttemptedMessagesOptions,
+) (*models.ListResponseEndpointMessageOut, error) {
+	pathMap := map[string]string{
+		"app_id":      appId,
+		"endpoint_id": endpointId,
+	}
+	queryMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("limit", o.Limit, queryMap, &err)
+		serializeParamToMap("iterator", o.Iterator, queryMap, &err)
+		serializeParamToMap("channel", o.Channel, queryMap, &err)
+		serializeParamToMap("tag", o.Tag, queryMap, &err)
+		serializeParamToMap("status", o.Status, queryMap, &err)
+		serializeParamToMap("before", o.Before, queryMap, &err)
+		serializeParamToMap("after", o.After, queryMap, &err)
+		serializeParamToMap("with_content", o.WithContent, queryMap, &err)
+		serializeParamToMap("event_types", o.EventTypes, queryMap, &err)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return executeRequest[any, models.ListResponseEndpointMessageOut](
 		ctx,
-		appId,
-		endpointId,
+		messageAttempt.client,
+		"GET",
+		"/api/v1/app/{app_id}/endpoint/{endpoint_id}/msg",
+		pathMap,
+		queryMap,
+		nil,
+		nil,
 	)
 
-	if options != nil {
-		if options.Limit != nil {
-			req = req.Limit(*options.Limit)
-		}
-		if options.Iterator != nil {
-			req = req.Iterator(*options.Iterator)
-		}
-		if options.Channel != nil {
-			req = req.Channel(*options.Channel)
-		}
-		if options.Tag != nil {
-			req = req.Tag(*options.Tag)
-		}
-		if options.Status != nil {
-			req = req.Status(*options.Status)
-		}
-		if options.Before != nil {
-			req = req.Before(*options.Before)
-		}
-		if options.After != nil {
-			req = req.After(*options.After)
-		}
-		if options.WithContent != nil {
-			req = req.WithContent(*options.WithContent)
-		}
-		if options.EventTypes != nil {
-			req = req.EventTypes(*options.EventTypes)
-		}
-	}
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
-	}
-
-	return ret, nil
 }
 
 // `msg_id`: Use a message id or a message `eventId`
@@ -235,20 +249,24 @@ func (messageAttempt *MessageAttempt) Get(
 	appId string,
 	msgId string,
 	attemptId string,
-) (*MessageAttemptOut, error) {
-	req := messageAttempt.api.MessageAttemptAPI.V1MessageAttemptGet(
-		ctx,
-		appId,
-		msgId,
-		attemptId,
-	)
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+) (*models.MessageAttemptOut, error) {
+	pathMap := map[string]string{
+		"app_id":     appId,
+		"msg_id":     msgId,
+		"attempt_id": attemptId,
 	}
 
-	return ret, nil
+	return executeRequest[any, models.MessageAttemptOut](
+		ctx,
+		messageAttempt.client,
+		"GET",
+		"/api/v1/app/{app_id}/msg/{msg_id}/attempt/{attempt_id}",
+		pathMap,
+		nil,
+		nil,
+		nil,
+	)
+
 }
 
 // Deletes the given attempt's response body.
@@ -261,15 +279,24 @@ func (messageAttempt *MessageAttempt) ExpungeContent(
 	msgId string,
 	attemptId string,
 ) error {
-	req := messageAttempt.api.MessageAttemptAPI.V1MessageAttemptExpungeContent(
-		ctx,
-		appId,
-		msgId,
-		attemptId,
-	)
+	pathMap := map[string]string{
+		"app_id":     appId,
+		"msg_id":     msgId,
+		"attempt_id": attemptId,
+	}
 
-	res, err := req.Execute()
-	return wrapError(err, res)
+	_, err := executeRequest[any, any](
+		ctx,
+		messageAttempt.client,
+		"DELETE",
+		"/api/v1/app/{app_id}/msg/{msg_id}/attempt/{attempt_id}/content",
+		pathMap,
+		nil,
+		nil,
+		nil,
+	)
+	return err
+
 }
 
 // List endpoints attempted by a given message.
@@ -280,41 +307,33 @@ func (messageAttempt *MessageAttempt) ListAttemptedDestinations(
 	ctx context.Context,
 	appId string,
 	msgId string,
-	options *MessageAttemptListAttemptedDestinationsOptions,
-) (*ListResponseMessageEndpointOut, error) {
-	req := messageAttempt.api.MessageAttemptAPI.V1MessageAttemptListAttemptedDestinations(
+	o *MessageAttemptListAttemptedDestinationsOptions,
+) (*models.ListResponseMessageEndpointOut, error) {
+	pathMap := map[string]string{
+		"app_id": appId,
+		"msg_id": msgId,
+	}
+	queryMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("limit", o.Limit, queryMap, &err)
+		serializeParamToMap("iterator", o.Iterator, queryMap, &err)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return executeRequest[any, models.ListResponseMessageEndpointOut](
 		ctx,
-		appId,
-		msgId,
+		messageAttempt.client,
+		"GET",
+		"/api/v1/app/{app_id}/msg/{msg_id}/endpoint",
+		pathMap,
+		queryMap,
+		nil,
+		nil,
 	)
 
-	if options != nil {
-		if options.Limit != nil {
-			req = req.Limit(*options.Limit)
-		}
-		if options.Iterator != nil {
-			req = req.Iterator(*options.Iterator)
-		}
-	}
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
-	}
-
-	return ret, nil
-}
-
-// Deprecated: use `ListByMsg` instead, passing the endpoint ID through options
-func (messageAttempt *MessageAttempt) ListAttemptsForEndpoint(
-	ctx context.Context,
-	appId string,
-	msgId string,
-	endpointId string,
-	options *MessageAttemptListOptions,
-) (*ListResponseMessageAttemptEndpointOut, error) {
-	options.EndpointId = &endpointId
-	return messageAttempt.ListByMsg(ctx, appId, msgId, options)
 }
 
 // Resend a message to the specified endpoint.
@@ -323,37 +342,32 @@ func (messageAttempt *MessageAttempt) Resend(
 	appId string,
 	msgId string,
 	endpointId string,
+	o *MessageAttemptResendOptions,
 ) error {
-	return messageAttempt.ResendWithOptions(
-		ctx,
-		appId,
-		msgId,
-		endpointId,
-		nil,
-	)
-}
-
-// Resend a message to the specified endpoint.
-func (messageAttempt *MessageAttempt) ResendWithOptions(
-	ctx context.Context,
-	appId string,
-	msgId string,
-	endpointId string,
-	options *PostOptions,
-) error {
-	req := messageAttempt.api.MessageAttemptAPI.V1MessageAttemptResend(
-		ctx,
-		appId,
-		msgId,
-		endpointId,
-	)
-
-	if options != nil {
-		if options.IdempotencyKey != nil {
-			req = req.IdempotencyKey(*options.IdempotencyKey)
+	pathMap := map[string]string{
+		"app_id":      appId,
+		"msg_id":      msgId,
+		"endpoint_id": endpointId,
+	}
+	headerMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("idempotency-key", o.IdempotencyKey, headerMap, &err)
+		if err != nil {
+			return err
 		}
 	}
 
-	res, err := req.Execute()
-	return wrapError(err, res)
+	_, err = executeRequest[any, any](
+		ctx,
+		messageAttempt.client,
+		"POST",
+		"/api/v1/app/{app_id}/msg/{msg_id}/endpoint/{endpoint_id}/resend",
+		pathMap,
+		nil,
+		headerMap,
+		nil,
+	)
+	return err
+
 }

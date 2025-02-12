@@ -1,125 +1,164 @@
-// this file is @generated
+// Package svix this file is @generated DO NOT EDIT
 package svix
 
 import (
 	"context"
 
-	"github.com/svix/svix-webhooks/go/internal/openapi"
+	"github.com/svix/svix-webhooks/go/models"
 )
 
 type Application struct {
-	api *openapi.APIClient
+	client *SvixHttpClient
 }
 
 type ApplicationListOptions struct {
 	// Limit the number of returned items
-	Limit *int32
+	Limit *uint64
 	// The iterator returned from a prior invocation
 	Iterator *string
+
 	// The sorting order of the returned items
-	Order *Ordering
+	Order *models.Ordering
+}
+
+type ApplicationCreateOptions struct {
+	IdempotencyKey *string
 }
 
 // List of all the organization's applications.
 func (application *Application) List(
 	ctx context.Context,
-	options *ApplicationListOptions,
-) (*ListResponseApplicationOut, error) {
-	req := application.api.ApplicationAPI.V1ApplicationList(
+	o *ApplicationListOptions,
+) (*models.ListResponseApplicationOut, error) {
+	queryMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("limit", o.Limit, queryMap, &err)
+		serializeParamToMap("iterator", o.Iterator, queryMap, &err)
+		serializeParamToMap("order", o.Order, queryMap, &err)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return executeRequest[any, models.ListResponseApplicationOut](
 		ctx,
+		application.client,
+		"GET",
+		"/api/v1/app",
+		nil,
+		queryMap,
+		nil,
+		nil,
 	)
 
-	if options != nil {
-		if options.Limit != nil {
-			req = req.Limit(*options.Limit)
-		}
-		if options.Iterator != nil {
-			req = req.Iterator(*options.Iterator)
-		}
-		if options.Order != nil {
-			req = req.Order(*options.Order)
-		}
-	}
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
-	}
-
-	return ret, nil
 }
 
 // Create a new application.
 func (application *Application) Create(
 	ctx context.Context,
-	applicationIn *ApplicationIn,
-) (*ApplicationOut, error) {
-	return application.CreateWithOptions(
-		ctx,
-		applicationIn,
-		nil,
-	)
-}
-
-// Create a new application.
-func (application *Application) CreateWithOptions(
-	ctx context.Context,
-	applicationIn *ApplicationIn,
-	options *PostOptions,
-) (*ApplicationOut, error) {
-	req := application.api.ApplicationAPI.V1ApplicationCreate(
-		ctx,
-	).ApplicationIn(*applicationIn)
-
-	if options != nil {
-		if options.IdempotencyKey != nil {
-			req = req.IdempotencyKey(*options.IdempotencyKey)
+	applicationIn models.ApplicationIn,
+	o *ApplicationCreateOptions,
+) (*models.ApplicationOut, error) {
+	queryMap := map[string]string{
+		"get_if_exists": "false",
+	}
+	headerMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("idempotency-key", o.IdempotencyKey, headerMap, &err)
+		if err != nil {
+			return nil, err
 		}
 	}
 
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+	return executeRequest[models.ApplicationIn, models.ApplicationOut](
+		ctx,
+		application.client,
+		"POST",
+		"/api/v1/app",
+		nil,
+		queryMap,
+		headerMap,
+		&applicationIn,
+	)
+
+}
+
+// Get or create a new application.
+func (application *Application) GetOrCreate(
+	ctx context.Context,
+	applicationIn models.ApplicationIn,
+	o *ApplicationCreateOptions,
+) (*models.ApplicationOut, error) {
+	queryMap := map[string]string{
+		"get_if_exists": "true",
+	}
+	headerMap := map[string]string{}
+
+	var err error
+	if o != nil {
+		serializeParamToMap("idempotency-key", o.IdempotencyKey, headerMap, &err)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return ret, nil
+	return executeRequest[models.ApplicationIn, models.ApplicationOut](
+		ctx,
+		application.client,
+		"POST",
+		"/api/v1/app",
+		nil,
+		queryMap,
+		headerMap,
+		&applicationIn,
+	)
 }
 
 // Get an application.
 func (application *Application) Get(
 	ctx context.Context,
 	appId string,
-) (*ApplicationOut, error) {
-	req := application.api.ApplicationAPI.V1ApplicationGet(
-		ctx,
-		appId,
-	)
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+) (*models.ApplicationOut, error) {
+	pathMap := map[string]string{
+		"app_id": appId,
 	}
 
-	return ret, nil
+	return executeRequest[any, models.ApplicationOut](
+		ctx,
+		application.client,
+		"GET",
+		"/api/v1/app/{app_id}",
+		pathMap,
+		nil,
+		nil,
+		nil,
+	)
+
 }
 
 // Update an application.
 func (application *Application) Update(
 	ctx context.Context,
 	appId string,
-	applicationIn *ApplicationIn,
-) (*ApplicationOut, error) {
-	req := application.api.ApplicationAPI.V1ApplicationUpdate(
-		ctx,
-		appId,
-	).ApplicationIn(*applicationIn)
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+	applicationIn models.ApplicationIn,
+) (*models.ApplicationOut, error) {
+	pathMap := map[string]string{
+		"app_id": appId,
 	}
 
-	return ret, nil
+	return executeRequest[models.ApplicationIn, models.ApplicationOut](
+		ctx,
+		application.client,
+		"PUT",
+		"/api/v1/app/{app_id}",
+		pathMap,
+		nil,
+		nil,
+		&applicationIn,
+	)
+
 }
 
 // Delete an application.
@@ -127,30 +166,43 @@ func (application *Application) Delete(
 	ctx context.Context,
 	appId string,
 ) error {
-	req := application.api.ApplicationAPI.V1ApplicationDelete(
-		ctx,
-		appId,
-	)
+	pathMap := map[string]string{
+		"app_id": appId,
+	}
 
-	res, err := req.Execute()
-	return wrapError(err, res)
+	_, err := executeRequest[any, any](
+		ctx,
+		application.client,
+		"DELETE",
+		"/api/v1/app/{app_id}",
+		pathMap,
+		nil,
+		nil,
+		nil,
+	)
+	return err
+
 }
 
 // Partially update an application.
 func (application *Application) Patch(
 	ctx context.Context,
 	appId string,
-	applicationPatch *ApplicationPatch,
-) (*ApplicationOut, error) {
-	req := application.api.ApplicationAPI.V1ApplicationPatch(
-		ctx,
-		appId,
-	).ApplicationPatch(*applicationPatch)
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+	applicationPatch models.ApplicationPatch,
+) (*models.ApplicationOut, error) {
+	pathMap := map[string]string{
+		"app_id": appId,
 	}
 
-	return ret, nil
+	return executeRequest[models.ApplicationPatch, models.ApplicationOut](
+		ctx,
+		application.client,
+		"PATCH",
+		"/api/v1/app/{app_id}",
+		pathMap,
+		nil,
+		nil,
+		&applicationPatch,
+	)
+
 }

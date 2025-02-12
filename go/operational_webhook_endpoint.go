@@ -1,125 +1,134 @@
-// this file is @generated (with some manual changes)
+// Package svix this file is @generated DO NOT EDIT
 package svix
 
 import (
 	"context"
 
-	"github.com/svix/svix-webhooks/go/internal/openapi"
+	"github.com/svix/svix-webhooks/go/models"
 )
 
 type OperationalWebhookEndpoint struct {
-	api *openapi.APIClient
+	client *SvixHttpClient
 }
 
 type OperationalWebhookEndpointListOptions struct {
 	// Limit the number of returned items
-	Limit *int32
+	Limit *uint64
 	// The iterator returned from a prior invocation
 	Iterator *string
+
 	// The sorting order of the returned items
-	Order *Ordering
+	Order *models.Ordering
+}
+
+type OperationalWebhookEndpointCreateOptions struct {
+	IdempotencyKey *string
+}
+
+type OperationalWebhookEndpointRotateSecretOptions struct {
+	IdempotencyKey *string
 }
 
 // List operational webhook endpoints.
 func (operationalWebhookEndpoint *OperationalWebhookEndpoint) List(
 	ctx context.Context,
-	options *OperationalWebhookEndpointListOptions,
-) (*ListResponseOperationalWebhookEndpointOut, error) {
-	req := operationalWebhookEndpoint.api.WebhookEndpointAPI.V1OperationalWebhookEndpointList(
+	o *OperationalWebhookEndpointListOptions,
+) (*models.ListResponseOperationalWebhookEndpointOut, error) {
+	queryMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("limit", o.Limit, queryMap, &err)
+		serializeParamToMap("iterator", o.Iterator, queryMap, &err)
+		serializeParamToMap("order", o.Order, queryMap, &err)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return executeRequest[any, models.ListResponseOperationalWebhookEndpointOut](
 		ctx,
+		operationalWebhookEndpoint.client,
+		"GET",
+		"/api/v1/operational-webhook/endpoint",
+		nil,
+		queryMap,
+		nil,
+		nil,
 	)
 
-	if options != nil {
-		if options.Limit != nil {
-			req = req.Limit(*options.Limit)
-		}
-		if options.Iterator != nil {
-			req = req.Iterator(*options.Iterator)
-		}
-		if options.Order != nil {
-			req = req.Order(*options.Order)
-		}
-	}
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
-	}
-
-	return ret, nil
 }
 
 // Create an operational webhook endpoint.
 func (operationalWebhookEndpoint *OperationalWebhookEndpoint) Create(
 	ctx context.Context,
-	operationalWebhookEndpointIn *OperationalWebhookEndpointIn,
-) (*OperationalWebhookEndpointOut, error) {
-	return operationalWebhookEndpoint.CreateWithOptions(
-		ctx,
-		operationalWebhookEndpointIn,
-		nil,
-	)
-}
-
-// Create an operational webhook endpoint.
-func (operationalWebhookEndpoint *OperationalWebhookEndpoint) CreateWithOptions(
-	ctx context.Context,
-	operationalWebhookEndpointIn *OperationalWebhookEndpointIn,
-	options *PostOptions,
-) (*OperationalWebhookEndpointOut, error) {
-	req := operationalWebhookEndpoint.api.WebhookEndpointAPI.V1OperationalWebhookEndpointCreate(
-		ctx,
-	).OperationalWebhookEndpointIn(*operationalWebhookEndpointIn)
-
-	if options != nil {
-		if options.IdempotencyKey != nil {
-			req = req.IdempotencyKey(*options.IdempotencyKey)
+	operationalWebhookEndpointIn models.OperationalWebhookEndpointIn,
+	o *OperationalWebhookEndpointCreateOptions,
+) (*models.OperationalWebhookEndpointOut, error) {
+	headerMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("idempotency-key", o.IdempotencyKey, headerMap, &err)
+		if err != nil {
+			return nil, err
 		}
 	}
 
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
-	}
+	return executeRequest[models.OperationalWebhookEndpointIn, models.OperationalWebhookEndpointOut](
+		ctx,
+		operationalWebhookEndpoint.client,
+		"POST",
+		"/api/v1/operational-webhook/endpoint",
+		nil,
+		nil,
+		headerMap,
+		&operationalWebhookEndpointIn,
+	)
 
-	return ret, nil
 }
 
 // Get an operational webhook endpoint.
 func (operationalWebhookEndpoint *OperationalWebhookEndpoint) Get(
 	ctx context.Context,
 	endpointId string,
-) (*OperationalWebhookEndpointOut, error) {
-	req := operationalWebhookEndpoint.api.WebhookEndpointAPI.V1OperationalWebhookEndpointGet(
-		ctx,
-		endpointId,
-	)
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+) (*models.OperationalWebhookEndpointOut, error) {
+	pathMap := map[string]string{
+		"endpoint_id": endpointId,
 	}
 
-	return ret, nil
+	return executeRequest[any, models.OperationalWebhookEndpointOut](
+		ctx,
+		operationalWebhookEndpoint.client,
+		"GET",
+		"/api/v1/operational-webhook/endpoint/{endpoint_id}",
+		pathMap,
+		nil,
+		nil,
+		nil,
+	)
+
 }
 
 // Update an operational webhook endpoint.
 func (operationalWebhookEndpoint *OperationalWebhookEndpoint) Update(
 	ctx context.Context,
 	endpointId string,
-	operationalWebhookEndpointUpdate *OperationalWebhookEndpointUpdate,
-) (*OperationalWebhookEndpointOut, error) {
-	req := operationalWebhookEndpoint.api.WebhookEndpointAPI.V1OperationalWebhookEndpointUpdate(
-		ctx,
-		endpointId,
-	).OperationalWebhookEndpointUpdate(*operationalWebhookEndpointUpdate)
-
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+	operationalWebhookEndpointUpdate models.OperationalWebhookEndpointUpdate,
+) (*models.OperationalWebhookEndpointOut, error) {
+	pathMap := map[string]string{
+		"endpoint_id": endpointId,
 	}
 
-	return ret, nil
+	return executeRequest[models.OperationalWebhookEndpointUpdate, models.OperationalWebhookEndpointOut](
+		ctx,
+		operationalWebhookEndpoint.client,
+		"PUT",
+		"/api/v1/operational-webhook/endpoint/{endpoint_id}",
+		pathMap,
+		nil,
+		nil,
+		&operationalWebhookEndpointUpdate,
+	)
+
 }
 
 // Delete an operational webhook endpoint.
@@ -127,13 +136,68 @@ func (operationalWebhookEndpoint *OperationalWebhookEndpoint) Delete(
 	ctx context.Context,
 	endpointId string,
 ) error {
-	req := operationalWebhookEndpoint.api.WebhookEndpointAPI.V1OperationalWebhookEndpointDelete(
+	pathMap := map[string]string{
+		"endpoint_id": endpointId,
+	}
+
+	_, err := executeRequest[any, any](
 		ctx,
-		endpointId,
+		operationalWebhookEndpoint.client,
+		"DELETE",
+		"/api/v1/operational-webhook/endpoint/{endpoint_id}",
+		pathMap,
+		nil,
+		nil,
+		nil,
+	)
+	return err
+
+}
+
+// Get the additional headers to be sent with the operational webhook.
+func (operationalWebhookEndpoint *OperationalWebhookEndpoint) GetHeaders(
+	ctx context.Context,
+	endpointId string,
+) (*models.OperationalWebhookEndpointHeadersOut, error) {
+	pathMap := map[string]string{
+		"endpoint_id": endpointId,
+	}
+
+	return executeRequest[any, models.OperationalWebhookEndpointHeadersOut](
+		ctx,
+		operationalWebhookEndpoint.client,
+		"GET",
+		"/api/v1/operational-webhook/endpoint/{endpoint_id}/headers",
+		pathMap,
+		nil,
+		nil,
+		nil,
 	)
 
-	res, err := req.Execute()
-	return wrapError(err, res)
+}
+
+// Set the additional headers to be sent with the operational webhook.
+func (operationalWebhookEndpoint *OperationalWebhookEndpoint) UpdateHeaders(
+	ctx context.Context,
+	endpointId string,
+	operationalWebhookEndpointHeadersIn models.OperationalWebhookEndpointHeadersIn,
+) error {
+	pathMap := map[string]string{
+		"endpoint_id": endpointId,
+	}
+
+	_, err := executeRequest[models.OperationalWebhookEndpointHeadersIn, any](
+		ctx,
+		operationalWebhookEndpoint.client,
+		"PUT",
+		"/api/v1/operational-webhook/endpoint/{endpoint_id}/headers",
+		pathMap,
+		nil,
+		nil,
+		&operationalWebhookEndpointHeadersIn,
+	)
+	return err
+
 }
 
 // Get an operational webhook endpoint's signing secret.
@@ -143,16 +207,22 @@ func (operationalWebhookEndpoint *OperationalWebhookEndpoint) Delete(
 func (operationalWebhookEndpoint *OperationalWebhookEndpoint) GetSecret(
 	ctx context.Context,
 	endpointId string,
-) (*OperationalWebhookEndpointSecretOut, error) {
-	req := operationalWebhookEndpoint.api.WebhookEndpointAPI.V1OperationalWebhookEndpointGetSecret(
-		ctx,
-		endpointId,
-	)
-	ret, res, err := req.Execute()
-	if err != nil {
-		return nil, wrapError(err, res)
+) (*models.OperationalWebhookEndpointSecretOut, error) {
+	pathMap := map[string]string{
+		"endpoint_id": endpointId,
 	}
-	return ret, nil
+
+	return executeRequest[any, models.OperationalWebhookEndpointSecretOut](
+		ctx,
+		operationalWebhookEndpoint.client,
+		"GET",
+		"/api/v1/operational-webhook/endpoint/{endpoint_id}/secret",
+		pathMap,
+		nil,
+		nil,
+		nil,
+	)
+
 }
 
 // Rotates an operational webhook endpoint's signing secret.
@@ -161,36 +231,31 @@ func (operationalWebhookEndpoint *OperationalWebhookEndpoint) GetSecret(
 func (operationalWebhookEndpoint *OperationalWebhookEndpoint) RotateSecret(
 	ctx context.Context,
 	endpointId string,
-	operationalWebhookEndpointSecretIn *OperationalWebhookEndpointSecretIn,
+	operationalWebhookEndpointSecretIn models.OperationalWebhookEndpointSecretIn,
+	o *OperationalWebhookEndpointRotateSecretOptions,
 ) error {
-	return operationalWebhookEndpoint.RotateSecretWithOptions(
-		ctx,
-		endpointId,
-		operationalWebhookEndpointSecretIn,
-		nil,
-	)
-}
-
-// Rotates an operational webhook endpoint's signing secret.
-//
-// The previous secret will remain valid for the next 24 hours.
-func (operationalWebhookEndpoint *OperationalWebhookEndpoint) RotateSecretWithOptions(
-	ctx context.Context,
-	endpointId string,
-	operationalWebhookEndpointSecretIn *OperationalWebhookEndpointSecretIn,
-	options *PostOptions,
-) error {
-	req := operationalWebhookEndpoint.api.WebhookEndpointAPI.V1OperationalWebhookEndpointRotateSecret(
-		ctx,
-		endpointId,
-	)
-	req = req.OperationalWebhookEndpointSecretIn(*operationalWebhookEndpointSecretIn)
-	if options != nil {
-		if options.IdempotencyKey != nil {
-			req = req.IdempotencyKey(*options.IdempotencyKey)
+	pathMap := map[string]string{
+		"endpoint_id": endpointId,
+	}
+	headerMap := map[string]string{}
+	var err error
+	if o != nil {
+		serializeParamToMap("idempotency-key", o.IdempotencyKey, headerMap, &err)
+		if err != nil {
+			return err
 		}
 	}
 
-	res, err := req.Execute()
-	return wrapError(err, res)
+	_, err = executeRequest[models.OperationalWebhookEndpointSecretIn, any](
+		ctx,
+		operationalWebhookEndpoint.client,
+		"POST",
+		"/api/v1/operational-webhook/endpoint/{endpoint_id}/secret/rotate",
+		pathMap,
+		nil,
+		headerMap,
+		&operationalWebhookEndpointSecretIn,
+	)
+	return err
+
 }

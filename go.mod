@@ -16,3 +16,5 @@ retract (
 )
 
 require gopkg.in/validator.v2 v2.0.1
+
+require github.com/jarcoal/httpmock v1.3.1 // indirect

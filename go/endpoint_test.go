@@ -2,21 +2,22 @@ package svix_test
 
 import (
 	"encoding/json"
-	svix "github.com/svix/svix-webhooks/go"
 	"strings"
 	"testing"
+
+	"github.com/svix/svix-webhooks/go/models"
 )
 
 func TestEndpoint_Serialization(t *testing.T) {
 	testCases := []struct {
 		name            string
-		testEndpoint    *svix.EndpointIn
+		testEndpoint    *models.EndpointIn
 		wantChannels    bool
 		wantFilterTypes bool
 	}{
 		{
 			name: "neither channels or filter types",
-			testEndpoint: &svix.EndpointIn{
+			testEndpoint: &models.EndpointIn{
 				Url: "https://example.svix.com/",
 			},
 			wantChannels:    false,
@@ -24,7 +25,7 @@ func TestEndpoint_Serialization(t *testing.T) {
 		},
 		{
 			name: "channels but not filter types",
-			testEndpoint: &svix.EndpointIn{
+			testEndpoint: &models.EndpointIn{
 				Url:      "https://example.svix.com/",
 				Channels: []string{"ch1", "ch2"},
 			},
@@ -33,7 +34,7 @@ func TestEndpoint_Serialization(t *testing.T) {
 		},
 		{
 			name: "filter types but not channels",
-			testEndpoint: &svix.EndpointIn{
+			testEndpoint: &models.EndpointIn{
 				Url:         "https://example.svix.com/",
 				FilterTypes: []string{"et1", "et2"},
 			},
@@ -42,7 +43,7 @@ func TestEndpoint_Serialization(t *testing.T) {
 		},
 		{
 			name: "both channels and filter types",
-			testEndpoint: &svix.EndpointIn{
+			testEndpoint: &models.EndpointIn{
 				Url:         "https://example.svix.com/",
 				Channels:    []string{"ch1", "ch2"},
 				FilterTypes: []string{"et1", "et2"},

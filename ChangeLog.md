@@ -1,7 +1,12 @@
 # Changelog
 
 ## Unreleased
-* Libs/C# **(Breaking)**: All uses of `ListOptions` are removed, and renamed to `{Resource}{Operation}Options`. For example in `Endpoint.List` you would now use `EndpointListOptions`
+* Libs/Go: Add `Authentication.ExpireAll` (and `ExpireAllWithOptions`)
+* Libs/Go **(Breaking)**: Excluding specific fields on the *Patch models (`ApplicationPatch` for example), all `Nullable{Type}` removed from the models
+* Libs/Go **(Breaking)**: All `Nullable{Type}` (for example `NullableString`) are replaced with a new generic `Nullable[T]` type, the new type can be imported from `github.com/svix/svix-webhooks/go/utils`
+* Libs/Go **(Breaking)**: All custom model types are now imported from `github.com/svix/svix-webhooks/go/models` instead of `github.com/svix/svix-webhooks/go`
+* Libs/Go **(Breaking)**: All `-WithOptions` methods are now removed. Their regular counterparts now take a pointer to an Options type which can be nil when not needed. For example in `Endpoint.RecoverWithOptions` is now `Endpoint.Recover`
+* Libs/C# and Libs/Go **(Breaking)**: All uses of `ListOptions`/`PostOptions` are removed, and renamed to `{Resource}{Operation}Options`. For example in `Endpoint.List` you would now use `EndpointListOptions`
 * Libs/C# **(Breaking)**: All `IdempotencyKey` method parameters are removed, and are now part of `{Resource}{Operation}Options`. For example in `Message.Create`; to the use `IdempotencyKey`, simply pass it in the `MessageCreateOptions`
 * Libs/C# **(Breaking)**: The `Throw` parameter is removed from `SvixOptions`
 * Libs/C# **(Breaking)**: All redundant interfaces along with the `Svix.Abstractions` namespace are removed
@@ -34,15 +39,6 @@
 * Libs/Rust **(Breaking)**: Replace `PostOptions` with operation-specific options structs
 * Libs/Rust **(Breaking)**: Remove `Period` from `BackgroundTaskType` variant names; this was
   introduced by accident a few releases ago
-* Libs/Go **(Breaking)**: Rename `Statistics.AggregateAppStats` to `AggregateAppStatsWithOptions`;
-  the old name is used for a version of the method without the `PostOptions`, like elsewhere
-* Libs/Go **(Breaking)**: Change the type of `Message.CreateWithOptions`' parameter `options` from
-  `PostOptions` to `MessageCreateOptions` - this type has an extra boolean `WithContent` field
-* Libs/Go **(Breaking**: Change the type of `MessageAttempt.ListAttemptedDestinations`' parameter
-  `option` from `*MessageAttemptListOptions` to `*MessageAttemptListAttemptedDestinationsOptions` -
-  this type only has `Limit` and `Iterator` fields because all other fields of the previous type
-  are not supported on this endpoint and were ignored
-* Libs/Go: Add `Authentication.ExpireAll` (and `ExpireAllWithOptions`)
 
 ## Version 1.56.0
 * Skipping versions: we had an issue with our CI that created duplicated Go
