@@ -18,9 +18,15 @@ internal fun serializeQueryParam(v: Any): String {
     return if (isEnum(v)) {
         (v as ToQueryParam).toQueryParam()
     } else if (isList(v)) {
-        (v as List<*>).joinToString(",")
+        // sort before comma separating the values (helps me assert when testing)
+        (v as List<Any>).map { serializeQueryParam(it) }.sorted().joinToString(",")
     } else if (isSet(v)) {
-        (v as Set<*>).joinToString(",")
+        (v as Set<Any>)
+            .asSequence()
+            .map { serializeQueryParam(it) }
+            .toList()
+            .sorted()
+            .joinToString(",")
     } else {
         v.toString()
     }
