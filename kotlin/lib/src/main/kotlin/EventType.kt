@@ -34,13 +34,15 @@ class EventType(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: EventTypeListOptions = EventTypeListOptions()
     ): ListResponseEventTypeOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/event-type")
-        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
         options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", it.toString()) }
+        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
         options.includeArchived?.let {
-            url = url.addQueryParameter("include_archived", it.toString())
+            url = url.addQueryParameter("include_archived", serializeQueryParam(it))
         }
-        options.withContent?.let { url = url.addQueryParameter("with_content", it.toString()) }
+        options.withContent?.let {
+            url = url.addQueryParameter("with_content", serializeQueryParam(it))
+        }
         return this.executeRequest<Any, ListResponseEventTypeOut>("GET", url.build())
     }
 
@@ -120,7 +122,7 @@ class EventType(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: EventTypeDeleteOptions = EventTypeDeleteOptions(),
     ) {
         var url = this.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
-        options.expunge?.let { url = url.addQueryParameter("expunge", it.toString()) }
+        options.expunge?.let { url = url.addQueryParameter("expunge", serializeQueryParam(it)) }
         this.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 

@@ -24,11 +24,11 @@ class BackgroundTask(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: BackgroundTaskListOptions = BackgroundTaskListOptions()
     ): ListResponseBackgroundTaskOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/background-task")
-        options.status?.let { url = url.addQueryParameter("status", it.toString()) }
-        options.task?.let { url = url.addQueryParameter("task", it.toString()) }
-        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.status?.let { url = url.addQueryParameter("status", serializeQueryParam(it)) }
+        options.task?.let { url = url.addQueryParameter("task", serializeQueryParam(it)) }
+        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
         options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", it.toString()) }
+        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
         return this.executeRequest<Any, ListResponseBackgroundTaskOut>("GET", url.build())
     }
 

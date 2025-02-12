@@ -29,9 +29,9 @@ class Integration(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: IntegrationListOptions = IntegrationListOptions(),
     ): ListResponseIntegrationOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/integration")
-        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
         options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", it.toString()) }
+        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
         return this.executeRequest<Any, ListResponseIntegrationOut>("GET", url.build())
     }
 

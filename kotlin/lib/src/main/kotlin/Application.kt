@@ -25,9 +25,9 @@ class Application(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: ApplicationListOptions = ApplicationListOptions()
     ): ListResponseApplicationOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/app")
-        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
         options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", it.toString()) }
+        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
         return this.executeRequest<Any, ListResponseApplicationOut>("GET", url.build())
     }
 

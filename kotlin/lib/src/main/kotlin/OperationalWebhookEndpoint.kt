@@ -31,9 +31,9 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
         options: OperationalWebhookEndpointListOptions = OperationalWebhookEndpointListOptions()
     ): ListResponseOperationalWebhookEndpointOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint")
-        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
         options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", it.toString()) }
+        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
         return this.executeRequest<Any, ListResponseOperationalWebhookEndpointOut>(
             "GET",
             url.build(),

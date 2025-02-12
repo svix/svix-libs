@@ -46,14 +46,18 @@ class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: MessageListOptions = MessageListOptions(),
     ): ListResponseMessageOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
-        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
         options.iterator?.let { url = url.addQueryParameter("iterator", it) }
         options.channel?.let { url = url.addQueryParameter("channel", it) }
-        options.before?.let { url = url.addQueryParameter("before", it.toString()) }
-        options.after?.let { url = url.addQueryParameter("after", it.toString()) }
-        options.withContent?.let { url = url.addQueryParameter("with_content", it.toString()) }
+        options.before?.let { url = url.addQueryParameter("before", serializeQueryParam(it)) }
+        options.after?.let { url = url.addQueryParameter("after", serializeQueryParam(it)) }
+        options.withContent?.let {
+            url = url.addQueryParameter("with_content", serializeQueryParam(it))
+        }
         options.tag?.let { url = url.addQueryParameter("tag", it) }
-        options.eventTypes?.let { url = url.addQueryParameter("event_types", it.toString()) }
+        options.eventTypes?.let {
+            url = url.addQueryParameter("event_types", serializeQueryParam(it))
+        }
         return this.executeRequest<Any, ListResponseMessageOut>("GET", url.build())
     }
 
@@ -80,7 +84,9 @@ class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: MessageCreateOptions = MessageCreateOptions(),
     ): MessageOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
-        options.withContent?.let { url = url.addQueryParameter("with_content", it.toString()) }
+        options.withContent?.let {
+            url = url.addQueryParameter("with_content", serializeQueryParam(it))
+        }
         var headers = Headers.Builder()
         options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
 
@@ -99,7 +105,9 @@ class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: MessageGetOptions = MessageGetOptions(),
     ): MessageOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId")
-        options.withContent?.let { url = url.addQueryParameter("with_content", it.toString()) }
+        options.withContent?.let {
+            url = url.addQueryParameter("with_content", serializeQueryParam(it))
+        }
         return this.executeRequest<Any, MessageOut>("GET", url.build())
     }
 

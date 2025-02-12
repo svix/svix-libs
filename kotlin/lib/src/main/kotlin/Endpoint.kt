@@ -52,9 +52,9 @@ class Endpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: EndpointListOptions = EndpointListOptions(),
     ): ListResponseEndpointOut {
         var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint")
-        options.limit?.let { url = url.addQueryParameter("limit", it.toString()) }
+        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
         options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", it.toString()) }
+        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
         return this.executeRequest<Any, ListResponseEndpointOut>("GET", url.build())
     }
 
@@ -274,8 +274,8 @@ class Endpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: EndpointGetStatsOptions = EndpointGetStatsOptions(),
     ): EndpointStats {
         var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/stats")
-        options.since?.let { url = url.addQueryParameter("since", it.toString()) }
-        options.until?.let { url = url.addQueryParameter("until", it.toString()) }
+        options.since?.let { url = url.addQueryParameter("since", serializeQueryParam(it)) }
+        options.until?.let { url = url.addQueryParameter("until", serializeQueryParam(it)) }
         return this.executeRequest<Any, EndpointStats>("GET", url.build())
     }
 
