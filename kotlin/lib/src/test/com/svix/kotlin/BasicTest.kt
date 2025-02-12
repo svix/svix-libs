@@ -39,11 +39,13 @@ class BasicTest {
                 MessageIn(
                     eventType = "invoice.paid",
                     payload =
-                        JsonObject(mapOf<String, JsonElement>(
-                            "id" to JsonPrimitive( "invoice_WF7WtCLFFtd8ubcTgboSFNql"),
-                            "status" to JsonPrimitive("paid"),
-                            "attempt" to JsonPrimitive(2),
-                        )),
+                        JsonObject(
+                            mapOf<String, JsonElement>(
+                                "id" to JsonPrimitive("invoice_WF7WtCLFFtd8ubcTgboSFNql"),
+                                "status" to JsonPrimitive("paid"),
+                                "attempt" to JsonPrimitive(2),
+                            )
+                        ),
                 ),
             )
             svix.application.delete(applicationOut.id)
@@ -82,10 +84,7 @@ class BasicTest {
             val epOut =
                 svix.endpoint.create(
                     appOut.id,
-                    EndpointIn(
-                        url = "https://example.svix.com",
-                        channels = setOf("ch0", "ch1"),
-                    ),
+                    EndpointIn(url = "https://example.svix.com", channels = setOf("ch0", "ch1")),
                 )
             assertEquals(setOf("ch0", "ch1"), epOut.channels, "initial ep should have 2 channels")
             assertEquals(0, epOut.filterTypes?.size ?: 0, "initial ep should have 0 filter types")
@@ -93,7 +92,9 @@ class BasicTest {
                 svix.endpoint.patch(
                     appOut.id,
                     epOut.id,
-                    EndpointPatch(filterTypes = MaybeUnset.Present(setOf("event.started", "event.ended"))),
+                    EndpointPatch(
+                        filterTypes = MaybeUnset.Present(setOf("event.started", "event.ended"))
+                    ),
                 )
             assertEquals(
                 setOf("ch0", "ch1"),
