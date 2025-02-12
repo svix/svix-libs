@@ -20,9 +20,9 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         reqBody: Req? = null,
     ): Res {
         var reqBuilder = Request.Builder().url(url)
-
+        var jsonBody :String?=null
         if (reqBody != null) {
-            val jsonBody = Json.encodeToString(reqBody)
+            jsonBody = Json.encodeToString(reqBody)
             reqBuilder = reqBuilder.method(method, jsonBody.toRequestBody())
         } else {
             reqBuilder = reqBuilder.method(method, null)
@@ -40,7 +40,7 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         val request = reqBuilder.build()
         val debug: String = System.getenv("DEBUG") ?: "no"
         if (debug == "yes") {
-            dbgRequest(request)
+            dbgRequest(request,jsonBody)
         }
         val res = client.newCall(request).execute()
 
@@ -62,23 +62,22 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
     }
 }
 
-fun dbgRequest(request: Request) {
-    println("____ start req ____")
+fun dbgRequest(request: Request,jsonBody:String?) {
+    println("_____ start dbg _____")
     println("Url: ${request.url}")
     println("Method ${request.method} path: ${request.url.encodedPath}")
     for ((k, v) in request.headers) {
         println("$k: $v")
     }
     println()
-    if (request.body != null) {
-        println(request.body.toString())
+    if (jsonBody != null) {
+        println(jsonBody)
+        println()
     }
-    println("_____ end req _____")
 }
 
 fun dbgResponse(response: Response, bodyString: String?) {
-    println("____ start res ____")
-    println("Status: ${response.code}")
+    println("Status code: ${response.code}")
     for ((k, v) in response.headers) {
         println("$k: $v")
     }
@@ -86,6 +85,6 @@ fun dbgResponse(response: Response, bodyString: String?) {
 
     if (response.body != null) {
         println(bodyString)
+        println()
     }
-    println("_____ end res _____")
 }
