@@ -2,10 +2,12 @@
 package com.svix.kotlin.models
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
 
+@Serializable(with = MessageAttemptTriggerTypeSerializer::class)
 public enum class MessageAttemptTriggerType {
     SCHEDULED,
     MANUAL,
