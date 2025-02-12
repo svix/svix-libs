@@ -6,12 +6,14 @@ import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.svix.kotlin.models.Ordering
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Instant
 import org.junit.jupiter.api.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class WiremockTests {
 
-    private val wireMockServer = WireMockServer(options().port(0).withRootDirectory("lib/src/test/resources"))
+    private val wireMockServer =
+        WireMockServer(options().port(0).withRootDirectory("lib/src/test/resources"))
 
     @BeforeAll
     fun beforeAll() {
@@ -74,6 +76,32 @@ class WiremockTests {
         wireMockServer.verify(
             1,
             getRequestedFor(urlEqualTo("/api/v1/app/app_asd123/msg?event_types=key1%2Ckey3%2Ckey4")),
+        )
+    }
+
+    @Test
+    fun testInstantAndBoolQueryParamEncodedCorrectly() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.get(urlMatching("/api/v1/app/app_asd123/msg.*"))
+                .willReturn(WireMock.ok().withBodyFile("ListResponseMessageOut.json"))
+        )
+        runBlocking {
+            svx.message.list(
+                "app_asd123",
+                MessageListOptions(
+                    before = Instant.fromEpochSeconds(1739399072, 864755000),
+                    withContent = true,
+                ),
+            )
+        }
+        wireMockServer.verify(
+            1,
+            getRequestedFor(
+                urlEqualTo(
+                    "/api/v1/app/app_asd123/msg?before=2025-02-12T22%3A24%3A32.864755Z&with_content=true"
+                )
+            ),
         )
     }
 }
