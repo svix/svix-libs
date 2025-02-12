@@ -20,7 +20,7 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         reqBody: Req? = null,
     ): Res {
         var reqBuilder = Request.Builder().url(url)
-        var jsonBody :String?=null
+        var jsonBody: String? = null
         if (reqBody != null) {
             jsonBody = Json.encodeToString(reqBody)
             reqBuilder = reqBuilder.method(method, jsonBody.toRequestBody())
@@ -40,7 +40,7 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         val request = reqBuilder.build()
         val debug: String = System.getenv("DEBUG") ?: "no"
         if (debug == "yes") {
-            dbgRequest(request,jsonBody)
+            dbgRequest(request, jsonBody)
         }
         val res = client.newCall(request).execute()
 
@@ -62,10 +62,10 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
     }
 }
 
-fun dbgRequest(request: Request,jsonBody:String?) {
+fun dbgRequest(request: Request, jsonBody: String?) {
     println("_____ start dbg _____")
     println("Url: ${request.url}")
-    println("Method ${request.method} path: ${request.url.encodedPath}")
+    println("${request.method} /${request.url.toString().split("/").drop(3).joinToString("/")}")
     for ((k, v) in request.headers) {
         println("$k: $v")
     }

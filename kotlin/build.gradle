@@ -55,6 +55,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:1.5.21'
+    testImplementation "org.wiremock:wiremock:3.12.0"
 }
 
 jar {
