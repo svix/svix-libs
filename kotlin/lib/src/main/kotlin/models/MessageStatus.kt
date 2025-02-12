@@ -1,18 +1,24 @@
 // This file is @generated
 package com.svix.kotlin.models
 
+import com.svix.kotlin.ToQueryParam
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonPrimitive
 
 @Serializable(with = MessageStatusSerializer::class)
-public enum class MessageStatus {
+enum class MessageStatus : ToQueryParam {
     SUCCESS,
     PENDING,
     FAIL,
-    SENDING,
+    SENDING;
+
+    override fun toQueryParam() = Json.encodeToJsonElement(this).jsonPrimitive.content
 }
 
 object MessageStatusSerializer : KSerializer<MessageStatus> {
