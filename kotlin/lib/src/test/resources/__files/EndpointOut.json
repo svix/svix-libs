@@ -1,0 +1,1 @@
+{"id":"ep_1srOrx2ZWZBpBUvZwXKQmoEYga2","metadata":{"property1":"string","property2":"string"},"description":"string","rateLimit":0,"uid":"unique-identifier","url":"https://example.com/webhook/","version":1,"disabled":false,"filterTypes":["user.signup","user.deleted"],"channels":["project_123","group_2"],"createdAt":"2019-08-24T14:15:22Z","updatedAt":"2019-08-24T14:15:22Z"  }
