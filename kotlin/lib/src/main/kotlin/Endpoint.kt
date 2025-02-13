@@ -25,8 +25,11 @@ import kotlinx.datetime.Instant
 import okhttp3.Headers
 
 data class EndpointListOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /** The sorting order of the returned items */
     val order: Ordering? = null,
 )
 
@@ -40,7 +43,12 @@ data class EndpointRotateSecretOptions(val idempotencyKey: String? = null)
 
 data class EndpointSendExampleOptions(val idempotencyKey: String? = null)
 
-data class EndpointGetStatsOptions(val since: Instant? = null, val until: Instant? = null)
+data class EndpointGetStatsOptions(
+    /** Filter the range to data starting from this date. */
+    val since: Instant? = null,
+    /** Filter the range to data ending by this date. */
+    val until: Instant? = null,
+)
 
 class Endpoint(private val client: SvixHttpClient) {
 

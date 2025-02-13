@@ -11,47 +11,89 @@ import kotlinx.datetime.Instant
 import okhttp3.Headers
 
 data class MessageAttemptListByEndpointOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /**
+     * Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or
+     * Sending (3)
+     */
     val status: MessageStatus? = null,
+    /** Filter response based on the HTTP status code */
     val statusCodeClass: StatusCodeClass? = null,
+    /** Filter response based on the channel */
     val channel: String? = null,
+    /** Filter response based on the tag */
     val tag: String? = null,
+    /** Only include items created before a certain date */
     val before: Instant? = null,
+    /** Only include items created after a certain date */
     val after: Instant? = null,
+    /** When `true` attempt content is included in the response */
     val withContent: Boolean? = null,
+    /** When `true`, the message information is included in the response */
     val withMsg: Boolean? = null,
+    /** Filter response based on the event type */
     val eventTypes: Set<String>? = null,
 )
 
 data class MessageAttemptListByMsgOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /**
+     * Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or
+     * Sending (3)
+     */
     val status: MessageStatus? = null,
+    /** Filter response based on the HTTP status code */
     val statusCodeClass: StatusCodeClass? = null,
+    /** Filter response based on the channel */
     val channel: String? = null,
+    /** Filter response based on the tag */
     val tag: String? = null,
+    /** Filter the attempts based on the attempted endpoint */
     val endpointId: String? = null,
+    /** Only include items created before a certain date */
     val before: Instant? = null,
+    /** Only include items created after a certain date */
     val after: Instant? = null,
+    /** When `true` attempt content is included in the response */
     val withContent: Boolean? = null,
+    /** Filter response based on the event type */
     val eventTypes: Set<String>? = null,
 )
 
 data class MessageAttemptListAttemptedMessagesOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /** Filter response based on the channel */
     val channel: String? = null,
+    /** Filter response based on the message tags */
     val tag: String? = null,
+    /**
+     * Filter response based on the status of the attempt: Success (0), Pending (1), Failed (2), or
+     * Sending (3)
+     */
     val status: MessageStatus? = null,
+    /** Only include items created before a certain date */
     val before: Instant? = null,
+    /** Only include items created after a certain date */
     val after: Instant? = null,
+    /** When `true` message payloads are included in the response */
     val withContent: Boolean? = null,
+    /** Filter response based on the event type */
     val eventTypes: Set<String>? = null,
 )
 
 data class MessageAttemptListAttemptedDestinationsOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
 )
 

@@ -12,22 +12,34 @@ import kotlinx.serialization.json.JsonPrimitive
 import okhttp3.Headers
 
 data class MessageListOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /** Filter response based on the channel. */
     val channel: String? = null,
+    /** Only include items created before a certain date. */
     val before: Instant? = null,
+    /** Only include items created after a certain date. */
     val after: Instant? = null,
+    /** When `true` message payloads are included in the response. */
     val withContent: Boolean? = null,
+    /** Filter messages matching the provided tag. */
     val tag: String? = null,
+    /** Filter response based on the event type */
     val eventTypes: Set<String>? = null,
 )
 
 data class MessageCreateOptions(
+    /** When `true`, message payloads are included in the response. */
     val withContent: Boolean? = null,
     val idempotencyKey: String? = null,
 )
 
-data class MessageGetOptions(val withContent: Boolean? = null)
+data class MessageGetOptions(
+    /** When `true` message payloads are included in the response. */
+    val withContent: Boolean? = null
+)
 
 class Message(private val client: SvixHttpClient) {
 

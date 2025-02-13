@@ -12,10 +12,15 @@ import com.svix.kotlin.models.Ordering
 import okhttp3.Headers
 
 data class EventTypeListOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /** The sorting order of the returned items */
     val order: Ordering? = null,
+    /** When `true` archived (deleted but not expunged) items are included in the response. */
     val includeArchived: Boolean? = null,
+    /** When `true` the full item (including the schema) is included in the response. */
     val withContent: Boolean? = null,
 )
 
@@ -23,7 +28,13 @@ data class EventTypeCreateOptions(val idempotencyKey: String? = null)
 
 data class EventTypeImportOpenapiOptions(val idempotencyKey: String? = null)
 
-data class EventTypeDeleteOptions(val expunge: Boolean? = null)
+data class EventTypeDeleteOptions(
+    /**
+     * By default event types are archived when "deleted". Passing this to `true` deletes them
+     * entirely.
+     */
+    val expunge: Boolean? = null
+)
 
 class EventType(private val client: SvixHttpClient) {
 

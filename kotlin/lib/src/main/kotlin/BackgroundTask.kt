@@ -8,10 +8,15 @@ import com.svix.kotlin.models.ListResponseBackgroundTaskOut
 import com.svix.kotlin.models.Ordering
 
 data class BackgroundTaskListOptions(
+    /** Filter the response based on the status. */
     val status: BackgroundTaskStatus? = null,
+    /** Filter the response based on the type. */
     val task: BackgroundTaskType? = null,
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /** The sorting order of the returned items */
     val order: Ordering? = null,
 )
 

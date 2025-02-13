@@ -10,8 +10,11 @@ import com.svix.kotlin.models.Ordering
 import okhttp3.Headers
 
 data class IntegrationListOptions(
+    /** Limit the number of returned items */
     val limit: ULong? = null,
+    /** The iterator returned from a prior invocation */
     val iterator: String? = null,
+    /** The sorting order of the returned items */
     val order: Ordering? = null,
 )
 
