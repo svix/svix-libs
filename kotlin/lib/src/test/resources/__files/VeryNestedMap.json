@@ -1,0 +1,81 @@
+{
+    "description": "",
+    "name": "",
+    "schemas": {
+        "nestedMap": {
+            "l1": {
+                "l2": {
+                    "l3": {
+                        "str_key": "val",
+                        "int_key": 1,
+                        "bool_key": false,
+                        "list_key": [
+                            "val1",
+                            "val2",
+                            [
+                                "l1",
+                                [
+                                    "l2",
+                                    [
+                                        "l3"
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "map_key": {
+                            "key": "val",
+                            "list": [
+                                "l1",
+                                [
+                                    "l2",
+                                    [
+                                        "l3"
+                                    ]
+                                ]
+                            ]
+                        }
+                    },
+                    "more_list": [
+                        "l1",
+                        [
+                            "l2",
+                            [
+                                "l3"
+                            ]
+                        ]
+                    ]
+                }
+            },
+            "m2": {
+                "str_key": "val",
+                "int_key": 1,
+                "bool_key": false,
+                "list_key": [
+                    "val1",
+                    "val2",
+                    [
+                        "l1",
+                        [
+                            "l2",
+                            [
+                                "l3"
+                            ]
+                        ]
+                    ]
+                ],
+                "map_key": {
+                    "key": "val",
+                    "list": [
+                        "l1",
+                        [
+                            "l2",
+                            [
+                                "l3"
+                            ]
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

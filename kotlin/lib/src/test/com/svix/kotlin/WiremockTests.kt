@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.svix.kotlin.exceptions.ApiException
 import com.svix.kotlin.models.AppUsageStatsIn
 import com.svix.kotlin.models.EndpointPatch
+import com.svix.kotlin.models.EventTypeIn
 import com.svix.kotlin.models.EventTypePatch
 import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.Ordering
@@ -151,6 +152,47 @@ class WiremockTests {
             1,
             patchRequestedFor(urlEqualTo("/api/v1/app/ap/endpoint/endp"))
                 .withRequestBody(equalTo("""{"version":42}""")),
+        )
+    }
+
+    @Test
+    fun deeplyNestedMapStringAnyIsCorrectlySerialized() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.post(urlMatching("/api/v1/event-type"))
+                .willReturn(WireMock.ok().withBodyFile("EventTypeOut.json"))
+        )
+        val nestedList = listOf("l1", listOf("l2", listOf("l3")))
+        val sampleMap =
+            mapOf(
+                "str_key" to "val",
+                "int_key" to 1,
+                "bool_key" to false,
+                "list_key" to listOf("val1", "val2", nestedList),
+                "map_key" to mapOf("key" to "val", "list" to nestedList),
+            )
+        val nestedMap =
+            mapOf(
+                "l1" to mapOf("l2" to mapOf("l3" to sampleMap, "more_list" to nestedList)),
+                "m2" to sampleMap,
+            )
+
+        runBlocking {
+            svx.eventType.create(
+                EventTypeIn(description = "", name = "", schemas = mapOf("nestedMap" to nestedMap))
+            )
+        }
+        wireMockServer.verify(
+            1,
+            postRequestedFor(urlEqualTo("/api/v1/event-type"))
+                .withRequestBody(
+                    equalToJson(
+                        wireMockServer.options.stores.filesBlobStore
+                            .get("VeryNestedMap.json")
+                            .get()
+                            .toString(Charsets.UTF_8)
+                    )
+                ),
         )
     }
 
