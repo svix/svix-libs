@@ -1,8 +1,8 @@
 // This file is @generated
 package com.svix.kotlin.models
 
+import com.svix.kotlin.StringAnyMapSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class MessageIn(
@@ -10,9 +10,10 @@ data class MessageIn(
     val channels: Set<String>? = null,
     val eventId: String? = null,
     val eventType: String,
-    val payload: JsonObject,
+    @Serializable(with = StringAnyMapSerializer::class) val payload: Map<String, Any>,
     val payloadRetentionHours: Long? = null,
     val payloadRetentionPeriod: Long? = null,
     val tags: Set<String>? = null,
-    val transformationsParams: JsonObject? = null,
+    @Serializable(with = StringAnyMapSerializer::class)
+    val transformationsParams: Map<String, Any>? = null,
 )

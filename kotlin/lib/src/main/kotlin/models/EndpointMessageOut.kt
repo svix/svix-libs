@@ -1,9 +1,9 @@
 // This file is @generated
 package com.svix.kotlin.models
 
+import com.svix.kotlin.StringAnyMapSerializer
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class EndpointMessageOut(
@@ -12,7 +12,7 @@ data class EndpointMessageOut(
     val eventType: String,
     val id: String,
     val nextAttempt: Instant? = null,
-    val payload: JsonObject,
+    @Serializable(with = StringAnyMapSerializer::class) val payload: Map<String, Any>,
     val status: MessageStatus,
     val tags: Set<String>? = null,
     val timestamp: Instant,

@@ -1,12 +1,12 @@
 // This file is @generated
 package com.svix.kotlin.models
 
+import com.svix.kotlin.StringAnyMapSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class BackgroundTaskOut(
-    val data: JsonObject,
+    @Serializable(with = StringAnyMapSerializer::class) val data: Map<String, Any>,
     val id: String,
     val status: BackgroundTaskStatus,
     val task: BackgroundTaskType,

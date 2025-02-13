@@ -9,9 +9,6 @@ import com.svix.kotlin.models.MessageIn
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 
 class BasicTest {
     companion object {
@@ -39,12 +36,10 @@ class BasicTest {
                 MessageIn(
                     eventType = "invoice.paid",
                     payload =
-                        JsonObject(
-                            mapOf<String, JsonElement>(
-                                "id" to JsonPrimitive("invoice_WF7WtCLFFtd8ubcTgboSFNql"),
-                                "status" to JsonPrimitive("paid"),
-                                "attempt" to JsonPrimitive(2),
-                            )
+                        mapOf<String, Any>(
+                            "id" to "invoice_WF7WtCLFFtd8ubcTgboSFNql",
+                            "status" to "paid",
+                            "attempt" to 2,
                         ),
                 ),
             )

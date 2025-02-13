@@ -1,8 +1,8 @@
 // This file is @generated
 package com.svix.kotlin.models
 
+import com.svix.kotlin.StringAnyMapSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class EventTypeUpdate(
@@ -11,5 +11,5 @@ data class EventTypeUpdate(
     val description: String,
     val featureFlag: String? = null,
     val groupName: String? = null,
-    val schemas: JsonObject? = null,
+    @Serializable(with = StringAnyMapSerializer::class) val schemas: Map<String, Any>? = null,
 )

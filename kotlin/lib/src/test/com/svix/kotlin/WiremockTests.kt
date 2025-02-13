@@ -12,8 +12,6 @@ import com.svix.kotlin.models.Ordering
 import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -165,10 +163,7 @@ class WiremockTests {
         runBlocking {
             svx.message.create(
                 "ap",
-                MessageIn(
-                    eventType = "event.test",
-                    payload = JsonObject(mapOf("key" to JsonPrimitive("val"))),
-                ),
+                MessageIn(eventType = "event.test", payload = mapOf("key" to "val")),
                 MessageCreateOptions(idempotencyKey = "key123"),
             )
         }

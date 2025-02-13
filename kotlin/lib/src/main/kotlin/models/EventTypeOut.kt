@@ -1,9 +1,9 @@
 // This file is @generated
 package com.svix.kotlin.models
 
+import com.svix.kotlin.StringAnyMapSerializer
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class EventTypeOut(
@@ -14,6 +14,6 @@ data class EventTypeOut(
     val featureFlag: String? = null,
     val groupName: String? = null,
     val name: String,
-    val schemas: JsonObject? = null,
+    @Serializable(with = StringAnyMapSerializer::class) val schemas: Map<String, Any>? = null,
     val updatedAt: Instant,
 )
