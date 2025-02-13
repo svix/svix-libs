@@ -175,4 +175,19 @@ class WiremockTests {
                 .withHeader("idempotency-key", equalTo("key123")),
         )
     }
+
+    @Test
+    fun userAgentHeaderIsSent() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.get(urlMatching("/api/v1/app/ap/msg"))
+                .willReturn(WireMock.ok().withBodyFile("ListResponseMessageOut.json"))
+        )
+        runBlocking { svx.message.list("ap") }
+        wireMockServer.verify(
+            1,
+            getRequestedFor(urlEqualTo("/api/v1/app/ap/msg"))
+                .withHeader("User-Agent", matching("svix-libs/.*/kotlin")),
+        )
+    }
 }

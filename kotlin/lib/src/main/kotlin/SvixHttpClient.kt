@@ -13,7 +13,7 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         return HttpUrl.Builder().scheme(baseUrl.scheme).host(baseUrl.host).port(baseUrl.port)
     }
 
-    internal inline fun <reified Req, reified Res> executeRequest(
+    internal suspend inline fun <reified Req, reified Res> executeRequest(
         method: String,
         url: HttpUrl,
         headers: Headers? = null,
@@ -42,7 +42,7 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         if (debug == "yes") {
             dbgRequest(request, jsonBody)
         }
-        val res = client.newCall(request).execute()
+        val res = executeRequestWithRetry(request)
 
         // if body is null panic
         if (res.body == null) {
@@ -59,6 +59,10 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
             return Json.decodeFromString<Res>(bodyString)
         }
         throw ApiException("None 200 status code", res.code, bodyString)
+    }
+
+    suspend fun executeRequestWithRetry(request: Request): Response {
+        return client.newCall(request).execute()
     }
 }
 
