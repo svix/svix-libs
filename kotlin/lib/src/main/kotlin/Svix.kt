@@ -4,7 +4,6 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 class Svix(token: String, options: SvixOptions = SvixOptions()) {
 
-    private val version = "1.21.0"
     val application: Application
     val authentication: Authentication
     val endpoint: Endpoint
@@ -28,7 +27,7 @@ class Svix(token: String, options: SvixOptions = SvixOptions()) {
         }
         val parsedUrl = options.baseUrl?.toHttpUrlOrNull() ?: throw Exception("Invalid base url")
         val defaultHeaders =
-            mapOf("User-Agent" to "svix-libs/$version/kotlin", "Authorization" to "Bearer $token")
+            mapOf("User-Agent" to "svix-libs/${Version}/kotlin", "Authorization" to "Bearer $token")
         val httpClient = SvixHttpClient(parsedUrl, defaultHeaders, options.retrySchedule)
         application = Application(httpClient)
         authentication = Authentication(httpClient)
