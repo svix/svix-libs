@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.svix.kotlin.exceptions.ApiException
+import com.svix.kotlin.models.AppUsageStatsIn
 import com.svix.kotlin.models.EndpointPatch
 import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.Ordering
@@ -223,5 +224,53 @@ class WiremockTests {
                     .withHeader("svix-retry-count", equalTo("$retryCount")),
             )
         }
+    }
+
+    @Test
+    fun instantSerializedCorrectly() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.get(urlMatching("/api/v1/app/ap/msg/msg_asd123"))
+                // this file includes a string timestamp `2025-02-12T22:24:32.864755Z`
+                .willReturn(WireMock.ok().withBodyFile("MessageOut.json"))
+        )
+        runBlocking {
+            val res = svx.message.get("ap", "msg_asd123")
+            assertEquals(Instant.fromEpochSeconds(1739399072, 864755000), res.timestamp)
+        }
+
+        wireMockServer.verify(1, getRequestedFor(urlEqualTo("/api/v1/app/ap/msg/msg_asd123")))
+    }
+
+    @Test
+    fun instantDeserializedCorrectly() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.post(urlMatching("/api/v1/stats/usage/app"))
+                .willReturn(
+                    WireMock.ok()
+                        .withBody(
+                            """{"unresolvedAppIds":["unique-identifier"],"id":"qtask_1srOrx2ZWZBpBUvZwXKQmoEYga2","status":"running","task":"endpoint.replay"}"""
+                        )
+                )
+        )
+        runBlocking {
+            svx.statistics.aggregateAppStats(
+                AppUsageStatsIn(
+                    since = Instant.fromEpochSeconds(1739399072, 864755000),
+                    until = Instant.fromEpochSeconds(1739399072, 864755000),
+                )
+            )
+        }
+
+        wireMockServer.verify(
+            1,
+            postRequestedFor(urlEqualTo("/api/v1/stats/usage/app"))
+                .withRequestBody(
+                    equalTo(
+                        """{"since":"2025-02-12T22:24:32.864755Z","until":"2025-02-12T22:24:32.864755Z"}"""
+                    )
+                ),
+        )
     }
 }
