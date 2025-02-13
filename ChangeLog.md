@@ -1,10 +1,10 @@
 # Changelog
 
 ## Unreleased
+
+* Libs/Kotlin **(VERY IMPORTANT)**: The parameter order `appId` and `msgId` were swapped on `Message.get` and `Message.expungeContent`
 * Libs/Kotlin **(Breaking)**: All uses of `ListOptions`/`PostOptions` are removed, and renamed to `{Resource}{Operation}Options`. For example in `Endpoint.List` you would now use `EndpointListOptions`
 * Libs/Kotlin **(Breaking)**: `SvixOptions` no longer has `initialRetryDelayMillis` or `numRetries` instead use `retrySchedule`
-* Libs/Kotlin **(Breaking)**: Fix the parameter names of `Endpoint.get` - `appId` and `endpointId` were swapped
-* Libs/Kotlin **(Breaking)**: Fix the parameter names of `Message.get` and `Message.expungeContent` - `appId` and `msgId` were swapped
 * Libs/Kotlin **(Breaking)**: All `{Resource}{Operation}Options` and model classes (`ApplicationIn`/`MessageOut`) are now data classes
 * Libs/Kotlin **(Breaking)**: Deprecated functions `MessageAttempt.list` and `MessageAttempt.listAttemptsForEndpoint` are removed
 * Libs/Kotlin **(Breaking)**: All uses of `java.time.OffsetDateTime` replaced with `kotlinx.datetime.Instant`
