@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.svix.kotlin.exceptions.ApiException
 import com.svix.kotlin.models.AppUsageStatsIn
 import com.svix.kotlin.models.EndpointPatch
+import com.svix.kotlin.models.EventTypePatch
 import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.Ordering
 import kotlin.test.assertEquals
@@ -150,6 +151,62 @@ class WiremockTests {
             1,
             patchRequestedFor(urlEqualTo("/api/v1/app/ap/endpoint/endp"))
                 .withRequestBody(equalTo("""{"version":42}""")),
+        )
+    }
+
+    @Test
+    fun maybeUnsetOnMapStringAnyIsCorrectlySerialized() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.patch(urlMatching("/api/v1/event-type/event"))
+                .willReturn(WireMock.ok().withBodyFile("EventTypeOut.json"))
+        )
+        runBlocking {
+            // MaybeUnset.Present
+            svx.eventType.patch(
+                "event",
+                EventTypePatch(
+                    schemas =
+                        MaybeUnset.Present(
+                            mapOf(
+                                "str_key" to "val",
+                                "int_key" to 1,
+                                "bool_key" to false,
+                                "list_key" to listOf("val1", "val2"),
+                                "map_key" to mapOf("key" to "val"),
+                            )
+                        )
+                ),
+            )
+            // MaybeUnset.Null
+            svx.eventType.patch("event", EventTypePatch(schemas = MaybeUnset.Null))
+            // MaybeUnset.Unset
+            svx.eventType.patch(
+                "event",
+                EventTypePatch(description = "42", schemas = MaybeUnset.Unset),
+            )
+        }
+        // MaybeUnset.Present
+        wireMockServer.verify(
+            1,
+            patchRequestedFor(urlEqualTo("/api/v1/event-type/event"))
+                .withRequestBody(
+                    equalTo(
+                        """{"schemas":{"str_key":"val","int_key":1,"bool_key":false,"list_key":["val1","val2"],"map_key":{"key":"val"}}}"""
+                    )
+                ),
+        )
+        // MaybeUnset.Null
+        wireMockServer.verify(
+            1,
+            patchRequestedFor(urlEqualTo("/api/v1/event-type/event"))
+                .withRequestBody(equalTo("""{"schemas":null}""")),
+        )
+        // MaybeUnset.Unset
+        wireMockServer.verify(
+            1,
+            patchRequestedFor(urlEqualTo("/api/v1/event-type/event"))
+                .withRequestBody(equalTo("""{"description":"42"}""")),
         )
     }
 
