@@ -6,7 +6,6 @@ import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.MessageOut
 import kotlinx.datetime.Instant
 import okhttp3.Headers
-import okhttp3.HttpUrl
 
 data class MessageListOptions(
     val limit: ULong? = null,
@@ -26,8 +25,7 @@ data class MessageCreateOptions(
 
 data class MessageGetOptions(val withContent: Boolean? = null)
 
-class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class Message(private val client: SvixHttpClient) {
 
     /**
      * List all of the application's messages.
@@ -45,20 +43,16 @@ class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         appId: String,
         options: MessageListOptions = MessageListOptions(),
     ): ListResponseMessageOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.channel?.let { url = url.addQueryParameter("channel", it) }
-        options.before?.let { url = url.addQueryParameter("before", serializeQueryParam(it)) }
-        options.after?.let { url = url.addQueryParameter("after", serializeQueryParam(it)) }
-        options.withContent?.let {
-            url = url.addQueryParameter("with_content", serializeQueryParam(it))
-        }
-        options.tag?.let { url = url.addQueryParameter("tag", it) }
-        options.eventTypes?.let {
-            url = url.addQueryParameter("event_types", serializeQueryParam(it))
-        }
-        return this.executeRequest<Any, ListResponseMessageOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.channel?.let { url.addQueryParameter("channel", it) }
+        options.before?.let { url.addQueryParameter("before", serializeQueryParam(it)) }
+        options.after?.let { url.addQueryParameter("after", serializeQueryParam(it)) }
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        options.tag?.let { url.addQueryParameter("tag", it) }
+        options.eventTypes?.let { url.addQueryParameter("event_types", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseMessageOut>("GET", url.build())
     }
 
     /**
@@ -83,14 +77,12 @@ class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         messageIn: MessageIn,
         options: MessageCreateOptions = MessageCreateOptions(),
     ): MessageOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
-        options.withContent?.let {
-            url = url.addQueryParameter("with_content", serializeQueryParam(it))
-        }
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        return this.executeRequest<MessageIn, MessageOut>(
+        return client.executeRequest<MessageIn, MessageOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -104,11 +96,9 @@ class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         msgId: String,
         options: MessageGetOptions = MessageGetOptions(),
     ): MessageOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId")
-        options.withContent?.let {
-            url = url.addQueryParameter("with_content", serializeQueryParam(it))
-        }
-        return this.executeRequest<Any, MessageOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId")
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        return client.executeRequest<Any, MessageOut>("GET", url.build())
     }
 
     /**
@@ -118,7 +108,7 @@ class Message(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
      * can't be replayed or resent once its payload has been deleted or expired.
      */
     suspend fun expungeContent(appId: String, msgId: String) {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/content")
-        this.executeRequest<Any, Boolean>("DELETE", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/content")
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 }

@@ -6,7 +6,6 @@ import com.svix.kotlin.models.AppPortalAccessOut
 import com.svix.kotlin.models.ApplicationTokenExpireIn
 import com.svix.kotlin.models.DashboardAccessOut
 import okhttp3.Headers
-import okhttp3.HttpUrl
 
 data class AuthenticationAppPortalAccessOptions(val idempotencyKey: String? = null)
 
@@ -16,8 +15,7 @@ data class AuthenticationDashboardAccessOptions(val idempotencyKey: String? = nu
 
 data class AuthenticationLogoutOptions(val idempotencyKey: String? = null)
 
-class Authentication(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class Authentication(private val client: SvixHttpClient) {
 
     /**
      * Use this function to get magic links (and authentication codes) for connecting your users to
@@ -28,11 +26,11 @@ class Authentication(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         appPortalAccessIn: AppPortalAccessIn,
         options: AuthenticationAppPortalAccessOptions = AuthenticationAppPortalAccessOptions(),
     ): AppPortalAccessOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/app-portal-access/$appId")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/auth/app-portal-access/$appId")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        return this.executeRequest<AppPortalAccessIn, AppPortalAccessOut>(
+        return client.executeRequest<AppPortalAccessIn, AppPortalAccessOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -46,11 +44,11 @@ class Authentication(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         applicationTokenExpireIn: ApplicationTokenExpireIn,
         options: AuthenticationExpireAllOptions = AuthenticationExpireAllOptions(),
     ) {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/app/$appId/expire-all")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/auth/app/$appId/expire-all")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        this.executeRequest<ApplicationTokenExpireIn, Boolean>(
+        client.executeRequest<ApplicationTokenExpireIn, Boolean>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -71,10 +69,10 @@ class Authentication(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         appId: String,
         options: AuthenticationDashboardAccessOptions = AuthenticationDashboardAccessOptions(),
     ): DashboardAccessOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/dashboard-access/$appId")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
-        return this.executeRequest<Any, DashboardAccessOut>(
+        val url = client.newUrlBuilder().encodedPath("/api/v1/auth/dashboard-access/$appId")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+        return client.executeRequest<Any, DashboardAccessOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -87,9 +85,9 @@ class Authentication(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
      * Trying to log out other tokens will fail.
      */
     suspend fun logout(options: AuthenticationLogoutOptions = AuthenticationLogoutOptions()) {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/auth/logout")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
-        this.executeRequest<Any, Boolean>("POST", url.build(), headers = headers.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/auth/logout")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+        client.executeRequest<Any, Boolean>("POST", url.build(), headers = headers.build())
     }
 }

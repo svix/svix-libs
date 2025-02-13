@@ -5,12 +5,10 @@ import com.svix.kotlin.models.AggregateEventTypesOut
 import com.svix.kotlin.models.AppUsageStatsIn
 import com.svix.kotlin.models.AppUsageStatsOut
 import okhttp3.Headers
-import okhttp3.HttpUrl
 
 data class StatisticsAggregateAppStatsOptions(val idempotencyKey: String? = null)
 
-class Statistics(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class Statistics(private val client: SvixHttpClient) {
 
     /**
      * Creates a background task to calculate the message destinations for all applications in the
@@ -23,11 +21,11 @@ class Statistics(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         appUsageStatsIn: AppUsageStatsIn,
         options: StatisticsAggregateAppStatsOptions = StatisticsAggregateAppStatsOptions(),
     ): AppUsageStatsOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/stats/usage/app")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/stats/usage/app")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        return this.executeRequest<AppUsageStatsIn, AppUsageStatsOut>(
+        return client.executeRequest<AppUsageStatsIn, AppUsageStatsOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -43,7 +41,7 @@ class Statistics(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
      * endpoint to retrieve the results of the operation.
      */
     suspend fun aggregateEventTypes(): AggregateEventTypesOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/stats/usage/event-types")
-        return this.executeRequest<Any, AggregateEventTypesOut>("PUT", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/stats/usage/event-types")
+        return client.executeRequest<Any, AggregateEventTypesOut>("PUT", url.build())
     }
 }

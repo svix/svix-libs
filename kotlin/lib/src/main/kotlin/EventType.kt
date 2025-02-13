@@ -10,7 +10,6 @@ import com.svix.kotlin.models.EventTypeUpdate
 import com.svix.kotlin.models.ListResponseEventTypeOut
 import com.svix.kotlin.models.Ordering
 import okhttp3.Headers
-import okhttp3.HttpUrl
 
 data class EventTypeListOptions(
     val limit: ULong? = null,
@@ -26,24 +25,21 @@ data class EventTypeImportOpenapiOptions(val idempotencyKey: String? = null)
 
 data class EventTypeDeleteOptions(val expunge: Boolean? = null)
 
-class EventType(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class EventType(private val client: SvixHttpClient) {
 
     /** Return the list of event types. */
     suspend fun list(
         options: EventTypeListOptions = EventTypeListOptions()
     ): ListResponseEventTypeOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/event-type")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
         options.includeArchived?.let {
-            url = url.addQueryParameter("include_archived", serializeQueryParam(it))
+            url.addQueryParameter("include_archived", serializeQueryParam(it))
         }
-        options.withContent?.let {
-            url = url.addQueryParameter("with_content", serializeQueryParam(it))
-        }
-        return this.executeRequest<Any, ListResponseEventTypeOut>("GET", url.build())
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseEventTypeOut>("GET", url.build())
     }
 
     /**
@@ -57,11 +53,11 @@ class EventType(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         eventTypeIn: EventTypeIn,
         options: EventTypeCreateOptions = EventTypeCreateOptions(),
     ): EventTypeOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/event-type")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        return this.executeRequest<EventTypeIn, EventTypeOut>(
+        return client.executeRequest<EventTypeIn, EventTypeOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -80,11 +76,11 @@ class EventType(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         eventTypeImportOpenApiIn: EventTypeImportOpenApiIn,
         options: EventTypeImportOpenapiOptions = EventTypeImportOpenapiOptions(),
     ): EventTypeImportOpenApiOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/event-type/import/openapi")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/import/openapi")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        return this.executeRequest<EventTypeImportOpenApiIn, EventTypeImportOpenApiOut>(
+        return client.executeRequest<EventTypeImportOpenApiIn, EventTypeImportOpenApiOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -94,15 +90,15 @@ class EventType(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
 
     /** Get an event type. */
     suspend fun get(eventTypeName: String): EventTypeOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
-        return this.executeRequest<Any, EventTypeOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+        return client.executeRequest<Any, EventTypeOut>("GET", url.build())
     }
 
     /** Update an event type. */
     suspend fun update(eventTypeName: String, eventTypeUpdate: EventTypeUpdate): EventTypeOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
 
-        return this.executeRequest<EventTypeUpdate, EventTypeOut>(
+        return client.executeRequest<EventTypeUpdate, EventTypeOut>(
             "PUT",
             url.build(),
             reqBody = eventTypeUpdate,
@@ -121,16 +117,16 @@ class EventType(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         eventTypeName: String,
         options: EventTypeDeleteOptions = EventTypeDeleteOptions(),
     ) {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
-        options.expunge?.let { url = url.addQueryParameter("expunge", serializeQueryParam(it)) }
-        this.executeRequest<Any, Boolean>("DELETE", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+        options.expunge?.let { url.addQueryParameter("expunge", serializeQueryParam(it)) }
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /** Partially update an event type. */
     suspend fun patch(eventTypeName: String, eventTypePatch: EventTypePatch): EventTypeOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
 
-        return this.executeRequest<EventTypePatch, EventTypeOut>(
+        return client.executeRequest<EventTypePatch, EventTypeOut>(
             "PATCH",
             url.build(),
             reqBody = eventTypePatch,

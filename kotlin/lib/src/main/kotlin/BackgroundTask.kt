@@ -6,7 +6,6 @@ import com.svix.kotlin.models.BackgroundTaskStatus
 import com.svix.kotlin.models.BackgroundTaskType
 import com.svix.kotlin.models.ListResponseBackgroundTaskOut
 import com.svix.kotlin.models.Ordering
-import okhttp3.HttpUrl
 
 data class BackgroundTaskListOptions(
     val status: BackgroundTaskStatus? = null,
@@ -16,25 +15,24 @@ data class BackgroundTaskListOptions(
     val order: Ordering? = null,
 )
 
-class BackgroundTask(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class BackgroundTask(private val client: SvixHttpClient) {
 
     /** List background tasks executed in the past 90 days. */
     suspend fun list(
         options: BackgroundTaskListOptions = BackgroundTaskListOptions()
     ): ListResponseBackgroundTaskOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/background-task")
-        options.status?.let { url = url.addQueryParameter("status", serializeQueryParam(it)) }
-        options.task?.let { url = url.addQueryParameter("task", serializeQueryParam(it)) }
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
-        return this.executeRequest<Any, ListResponseBackgroundTaskOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/background-task")
+        options.status?.let { url.addQueryParameter("status", serializeQueryParam(it)) }
+        options.task?.let { url.addQueryParameter("task", serializeQueryParam(it)) }
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseBackgroundTaskOut>("GET", url.build())
     }
 
     /** Get a background task by ID. */
     suspend fun get(taskId: String): BackgroundTaskOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/background-task/$taskId")
-        return this.executeRequest<Any, BackgroundTaskOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/background-task/$taskId")
+        return client.executeRequest<Any, BackgroundTaskOut>("GET", url.build())
     }
 }

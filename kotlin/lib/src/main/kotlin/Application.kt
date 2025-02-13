@@ -7,7 +7,6 @@ import com.svix.kotlin.models.ApplicationPatch
 import com.svix.kotlin.models.ListResponseApplicationOut
 import com.svix.kotlin.models.Ordering
 import okhttp3.Headers
-import okhttp3.HttpUrl
 
 data class ApplicationListOptions(
     val limit: ULong? = null,
@@ -17,18 +16,17 @@ data class ApplicationListOptions(
 
 data class ApplicationCreateOptions(val idempotencyKey: String? = null)
 
-class Application(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class Application(private val client: SvixHttpClient) {
 
     /** List of all the organization's applications. */
     suspend fun list(
         options: ApplicationListOptions = ApplicationListOptions()
     ): ListResponseApplicationOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/app")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
-        return this.executeRequest<Any, ListResponseApplicationOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseApplicationOut>("GET", url.build())
     }
 
     /** Create a new application. */
@@ -36,11 +34,11 @@ class Application(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         applicationIn: ApplicationIn,
         options: ApplicationCreateOptions = ApplicationCreateOptions(),
     ): ApplicationOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/app")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        return this.executeRequest<ApplicationIn, ApplicationOut>(
+        return client.executeRequest<ApplicationIn, ApplicationOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -54,13 +52,14 @@ class Application(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: ApplicationCreateOptions = ApplicationCreateOptions(),
     ): ApplicationOut {
         val url =
-            this.newUrlBuilder()
+            client
+                .newUrlBuilder()
                 .encodedPath("/api/v1/app")
                 .addQueryParameter("get_if_exists", "true")
         var headers = Headers.Builder()
         options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
 
-        return this.executeRequest<ApplicationIn, ApplicationOut>(
+        return client.executeRequest<ApplicationIn, ApplicationOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -70,15 +69,15 @@ class Application(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
 
     /** Get an application. */
     suspend fun get(appId: String): ApplicationOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId")
-        return this.executeRequest<Any, ApplicationOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+        return client.executeRequest<Any, ApplicationOut>("GET", url.build())
     }
 
     /** Update an application. */
     suspend fun update(appId: String, applicationIn: ApplicationIn): ApplicationOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
 
-        return this.executeRequest<ApplicationIn, ApplicationOut>(
+        return client.executeRequest<ApplicationIn, ApplicationOut>(
             "PUT",
             url.build(),
             reqBody = applicationIn,
@@ -87,15 +86,15 @@ class Application(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
 
     /** Delete an application. */
     suspend fun delete(appId: String) {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId")
-        this.executeRequest<Any, Boolean>("DELETE", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /** Partially update an application. */
     suspend fun patch(appId: String, applicationPatch: ApplicationPatch): ApplicationOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
 
-        return this.executeRequest<ApplicationPatch, ApplicationOut>(
+        return client.executeRequest<ApplicationPatch, ApplicationOut>(
             "PATCH",
             url.build(),
             reqBody = applicationPatch,

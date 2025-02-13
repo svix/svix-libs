@@ -9,7 +9,6 @@ import com.svix.kotlin.models.MessageStatus
 import com.svix.kotlin.models.StatusCodeClass
 import kotlinx.datetime.Instant
 import okhttp3.Headers
-import okhttp3.HttpUrl
 
 data class MessageAttemptListByEndpointOptions(
     val limit: ULong? = null,
@@ -58,8 +57,7 @@ data class MessageAttemptListAttemptedDestinationsOptions(
 
 data class MessageAttemptResendOptions(val idempotencyKey: String? = null)
 
-class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class MessageAttempt(private val client: SvixHttpClient) {
 
     /**
      * List attempts by endpoint id
@@ -74,26 +72,22 @@ class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         endpointId: String,
         options: MessageAttemptListByEndpointOptions = MessageAttemptListByEndpointOptions(),
     ): ListResponseMessageAttemptOut {
-        var url =
-            this.newUrlBuilder().encodedPath("/api/v1/app/$appId/attempt/endpoint/$endpointId")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.status?.let { url = url.addQueryParameter("status", serializeQueryParam(it)) }
+        val url =
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/attempt/endpoint/$endpointId")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.status?.let { url.addQueryParameter("status", serializeQueryParam(it)) }
         options.statusCodeClass?.let {
-            url = url.addQueryParameter("status_code_class", serializeQueryParam(it))
+            url.addQueryParameter("status_code_class", serializeQueryParam(it))
         }
-        options.channel?.let { url = url.addQueryParameter("channel", it) }
-        options.tag?.let { url = url.addQueryParameter("tag", it) }
-        options.before?.let { url = url.addQueryParameter("before", serializeQueryParam(it)) }
-        options.after?.let { url = url.addQueryParameter("after", serializeQueryParam(it)) }
-        options.withContent?.let {
-            url = url.addQueryParameter("with_content", serializeQueryParam(it))
-        }
-        options.withMsg?.let { url = url.addQueryParameter("with_msg", serializeQueryParam(it)) }
-        options.eventTypes?.let {
-            url = url.addQueryParameter("event_types", serializeQueryParam(it))
-        }
-        return this.executeRequest<Any, ListResponseMessageAttemptOut>("GET", url.build())
+        options.channel?.let { url.addQueryParameter("channel", it) }
+        options.tag?.let { url.addQueryParameter("tag", it) }
+        options.before?.let { url.addQueryParameter("before", serializeQueryParam(it)) }
+        options.after?.let { url.addQueryParameter("after", serializeQueryParam(it)) }
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        options.withMsg?.let { url.addQueryParameter("with_msg", serializeQueryParam(it)) }
+        options.eventTypes?.let { url.addQueryParameter("event_types", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseMessageAttemptOut>("GET", url.build())
     }
 
     /**
@@ -109,25 +103,21 @@ class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         msgId: String,
         options: MessageAttemptListByMsgOptions = MessageAttemptListByMsgOptions(),
     ): ListResponseMessageAttemptOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/attempt/msg/$msgId")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.status?.let { url = url.addQueryParameter("status", serializeQueryParam(it)) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/attempt/msg/$msgId")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.status?.let { url.addQueryParameter("status", serializeQueryParam(it)) }
         options.statusCodeClass?.let {
-            url = url.addQueryParameter("status_code_class", serializeQueryParam(it))
+            url.addQueryParameter("status_code_class", serializeQueryParam(it))
         }
-        options.channel?.let { url = url.addQueryParameter("channel", it) }
-        options.tag?.let { url = url.addQueryParameter("tag", it) }
-        options.endpointId?.let { url = url.addQueryParameter("endpoint_id", it) }
-        options.before?.let { url = url.addQueryParameter("before", serializeQueryParam(it)) }
-        options.after?.let { url = url.addQueryParameter("after", serializeQueryParam(it)) }
-        options.withContent?.let {
-            url = url.addQueryParameter("with_content", serializeQueryParam(it))
-        }
-        options.eventTypes?.let {
-            url = url.addQueryParameter("event_types", serializeQueryParam(it))
-        }
-        return this.executeRequest<Any, ListResponseMessageAttemptOut>("GET", url.build())
+        options.channel?.let { url.addQueryParameter("channel", it) }
+        options.tag?.let { url.addQueryParameter("tag", it) }
+        options.endpointId?.let { url.addQueryParameter("endpoint_id", it) }
+        options.before?.let { url.addQueryParameter("before", serializeQueryParam(it)) }
+        options.after?.let { url.addQueryParameter("after", serializeQueryParam(it)) }
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        options.eventTypes?.let { url.addQueryParameter("event_types", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseMessageAttemptOut>("GET", url.build())
     }
 
     /**
@@ -148,28 +138,24 @@ class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: MessageAttemptListAttemptedMessagesOptions =
             MessageAttemptListAttemptedMessagesOptions(),
     ): ListResponseEndpointMessageOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/msg")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.channel?.let { url = url.addQueryParameter("channel", it) }
-        options.tag?.let { url = url.addQueryParameter("tag", it) }
-        options.status?.let { url = url.addQueryParameter("status", serializeQueryParam(it)) }
-        options.before?.let { url = url.addQueryParameter("before", serializeQueryParam(it)) }
-        options.after?.let { url = url.addQueryParameter("after", serializeQueryParam(it)) }
-        options.withContent?.let {
-            url = url.addQueryParameter("with_content", serializeQueryParam(it))
-        }
-        options.eventTypes?.let {
-            url = url.addQueryParameter("event_types", serializeQueryParam(it))
-        }
-        return this.executeRequest<Any, ListResponseEndpointMessageOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/msg")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.channel?.let { url.addQueryParameter("channel", it) }
+        options.tag?.let { url.addQueryParameter("tag", it) }
+        options.status?.let { url.addQueryParameter("status", serializeQueryParam(it)) }
+        options.before?.let { url.addQueryParameter("before", serializeQueryParam(it)) }
+        options.after?.let { url.addQueryParameter("after", serializeQueryParam(it)) }
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        options.eventTypes?.let { url.addQueryParameter("event_types", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseEndpointMessageOut>("GET", url.build())
     }
 
     /** `msg_id`: Use a message id or a message `eventId` */
     suspend fun get(appId: String, msgId: String, attemptId: String): MessageAttemptOut {
         val url =
-            this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/attempt/$attemptId")
-        return this.executeRequest<Any, MessageAttemptOut>("GET", url.build())
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/attempt/$attemptId")
+        return client.executeRequest<Any, MessageAttemptOut>("GET", url.build())
     }
 
     /**
@@ -180,9 +166,10 @@ class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
      */
     suspend fun expungeContent(appId: String, msgId: String, attemptId: String) {
         val url =
-            this.newUrlBuilder()
+            client
+                .newUrlBuilder()
                 .encodedPath("/api/v1/app/$appId/msg/$msgId/attempt/$attemptId/content")
-        this.executeRequest<Any, Boolean>("DELETE", url.build())
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /**
@@ -197,10 +184,10 @@ class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: MessageAttemptListAttemptedDestinationsOptions =
             MessageAttemptListAttemptedDestinationsOptions(),
     ): ListResponseMessageEndpointOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/endpoint")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        return this.executeRequest<Any, ListResponseMessageEndpointOut>("GET", url.build())
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/endpoint")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        return client.executeRequest<Any, ListResponseMessageEndpointOut>("GET", url.build())
     }
 
     /** Resend a message to the specified endpoint. */
@@ -211,10 +198,11 @@ class MessageAttempt(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
         options: MessageAttemptResendOptions = MessageAttemptResendOptions(),
     ) {
         val url =
-            this.newUrlBuilder()
+            client
+                .newUrlBuilder()
                 .encodedPath("/api/v1/app/$appId/msg/$msgId/endpoint/$endpointId/resend")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
-        this.executeRequest<Any, Boolean>("POST", url.build(), headers = headers.build())
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+        client.executeRequest<Any, Boolean>("POST", url.build(), headers = headers.build())
     }
 }

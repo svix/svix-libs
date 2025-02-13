@@ -11,7 +11,6 @@ import com.svix.kotlin.models.OperationalWebhookEndpointSecretOut
 import com.svix.kotlin.models.OperationalWebhookEndpointUpdate
 import com.svix.kotlin.models.Ordering
 import okhttp3.Headers
-import okhttp3.HttpUrl
 
 data class OperationalWebhookEndpointListOptions(
     val limit: ULong? = null,
@@ -23,18 +22,17 @@ data class OperationalWebhookEndpointCreateOptions(val idempotencyKey: String? =
 
 data class OperationalWebhookEndpointRotateSecretOptions(val idempotencyKey: String? = null)
 
-class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, String>) :
-    SvixHttpClient(baseUrl, defaultHeaders) {
+class OperationalWebhookEndpoint(private val client: SvixHttpClient) {
 
     /** List operational webhook endpoints. */
     suspend fun list(
         options: OperationalWebhookEndpointListOptions = OperationalWebhookEndpointListOptions()
     ): ListResponseOperationalWebhookEndpointOut {
-        var url = this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint")
-        options.limit?.let { url = url.addQueryParameter("limit", serializeQueryParam(it)) }
-        options.iterator?.let { url = url.addQueryParameter("iterator", it) }
-        options.order?.let { url = url.addQueryParameter("order", serializeQueryParam(it)) }
-        return this.executeRequest<Any, ListResponseOperationalWebhookEndpointOut>(
+        val url = client.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseOperationalWebhookEndpointOut>(
             "GET",
             url.build(),
         )
@@ -45,11 +43,11 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
         operationalWebhookEndpointIn: OperationalWebhookEndpointIn,
         options: OperationalWebhookEndpointCreateOptions = OperationalWebhookEndpointCreateOptions(),
     ): OperationalWebhookEndpointOut {
-        val url = this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        return this.executeRequest<OperationalWebhookEndpointIn, OperationalWebhookEndpointOut>(
+        return client.executeRequest<OperationalWebhookEndpointIn, OperationalWebhookEndpointOut>(
             "POST",
             url.build(),
             headers = headers.build(),
@@ -60,8 +58,8 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
     /** Get an operational webhook endpoint. */
     suspend fun get(endpointId: String): OperationalWebhookEndpointOut {
         val url =
-            this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
-        return this.executeRequest<Any, OperationalWebhookEndpointOut>("GET", url.build())
+            client.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
+        return client.executeRequest<Any, OperationalWebhookEndpointOut>("GET", url.build())
     }
 
     /** Update an operational webhook endpoint. */
@@ -70,9 +68,12 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
         operationalWebhookEndpointUpdate: OperationalWebhookEndpointUpdate,
     ): OperationalWebhookEndpointOut {
         val url =
-            this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
+            client.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
 
-        return this.executeRequest<OperationalWebhookEndpointUpdate, OperationalWebhookEndpointOut>(
+        return client.executeRequest<
+            OperationalWebhookEndpointUpdate,
+            OperationalWebhookEndpointOut,
+        >(
             "PUT",
             url.build(),
             reqBody = operationalWebhookEndpointUpdate,
@@ -82,16 +83,17 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
     /** Delete an operational webhook endpoint. */
     suspend fun delete(endpointId: String) {
         val url =
-            this.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
-        this.executeRequest<Any, Boolean>("DELETE", url.build())
+            client.newUrlBuilder().encodedPath("/api/v1/operational-webhook/endpoint/$endpointId")
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /** Get the additional headers to be sent with the operational webhook. */
     suspend fun getHeaders(endpointId: String): OperationalWebhookEndpointHeadersOut {
         val url =
-            this.newUrlBuilder()
+            client
+                .newUrlBuilder()
                 .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/headers")
-        return this.executeRequest<Any, OperationalWebhookEndpointHeadersOut>("GET", url.build())
+        return client.executeRequest<Any, OperationalWebhookEndpointHeadersOut>("GET", url.build())
     }
 
     /** Set the additional headers to be sent with the operational webhook. */
@@ -100,10 +102,11 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
         operationalWebhookEndpointHeadersIn: OperationalWebhookEndpointHeadersIn,
     ) {
         val url =
-            this.newUrlBuilder()
+            client
+                .newUrlBuilder()
                 .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/headers")
 
-        this.executeRequest<OperationalWebhookEndpointHeadersIn, Boolean>(
+        client.executeRequest<OperationalWebhookEndpointHeadersIn, Boolean>(
             "PUT",
             url.build(),
             reqBody = operationalWebhookEndpointHeadersIn,
@@ -118,9 +121,10 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
      */
     suspend fun getSecret(endpointId: String): OperationalWebhookEndpointSecretOut {
         val url =
-            this.newUrlBuilder()
+            client
+                .newUrlBuilder()
                 .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/secret")
-        return this.executeRequest<Any, OperationalWebhookEndpointSecretOut>("GET", url.build())
+        return client.executeRequest<Any, OperationalWebhookEndpointSecretOut>("GET", url.build())
     }
 
     /**
@@ -135,12 +139,13 @@ class OperationalWebhookEndpoint(baseUrl: HttpUrl, defaultHeaders: Map<String, S
             OperationalWebhookEndpointRotateSecretOptions(),
     ) {
         val url =
-            this.newUrlBuilder()
+            client
+                .newUrlBuilder()
                 .encodedPath("/api/v1/operational-webhook/endpoint/$endpointId/secret/rotate")
-        var headers = Headers.Builder()
-        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
 
-        this.executeRequest<OperationalWebhookEndpointSecretIn, Boolean>(
+        client.executeRequest<OperationalWebhookEndpointSecretIn, Boolean>(
             "POST",
             url.build(),
             headers = headers.build(),
