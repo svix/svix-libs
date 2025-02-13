@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-* Libs/Kotlin **(Breaking)**  Deprecated functions `MessageAttempt.list` and `MessageAttempt.listAttemptsForEndpoint` is removed
+* Libs/Kotlin **(Breaking)**  Deprecated functions `MessageAttempt.list` and `MessageAttempt.listAttemptsForEndpoint` are removed
 * Libs/Kotlin **(Breaking)**: All uses of `java.time.OffsetDateTime` replaced with `kotlinx.datetime.Instant`
 * Libs/Kotlin **(Breaking)**: All uses of `java.net.URL` in request/response models are replaced with `String`
 * Libs/Kotlin **(Breaking)**: All uses of `Map<String,Any>` in request/response models are replaced with `kotlinx.serialization.json.JsonObject`
