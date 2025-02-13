@@ -21,12 +21,7 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Regen openapi libs
-        run: |
-          yarn
-          ./regen_openapi.sh
-
       - name: Build
         run: |
           cd kotlin
-          ./gradlew build -x test
+          ./gradlew build
