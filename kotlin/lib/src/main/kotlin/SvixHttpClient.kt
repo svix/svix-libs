@@ -26,11 +26,9 @@ internal constructor(
         headers: Headers? = null,
         reqBody: Req? = null,
     ): Res {
-        var reqBuilder = Request.Builder().url(url)
-        var jsonBody: String? = null
+        val reqBuilder = Request.Builder().url(url)
         if (reqBody != null) {
-            jsonBody = Json.encodeToString(reqBody)
-            reqBuilder.method(method, jsonBody.toRequestBody())
+            reqBuilder.method(method, Json.encodeToString(reqBody).toRequestBody())
         } else {
             reqBuilder.method(method, null)
         }
@@ -46,13 +44,13 @@ internal constructor(
         reqBuilder.addHeader("svix-req-id", Random.nextULong().toString())
 
         val request = reqBuilder.build()
-        val (res, _bodyString) = executeRequestWithRetry(request, jsonBody)
+        val res = executeRequestWithRetry(request)
 
         // if body is null panic
         if (res.body == null) {
             throw ApiException("Body is null", res.code)
         }
-        val bodyString = _bodyString // res.body!!.string()
+        val bodyString = res.body!!.string()
         if (res.code == 204) {
             return Json.decodeFromString<Res>("true")
         }
@@ -62,12 +60,9 @@ internal constructor(
         throw ApiException("None 200 status code", res.code, bodyString)
     }
 
-    suspend fun executeRequestWithRetry(
-        request: Request,
-        jsonBody: String?,
-    ): Pair<Response, String> {
+    suspend fun executeRequestWithRetry(request: Request): Response {
 
-        var (res, bodyString) = executeRequestWithDebug(request, jsonBody)
+        var res = client.newCall(request).execute()
 
         if (res.code >= 500) {
             retrySchedule.forEachIndexed { index, sleepTime ->
@@ -78,60 +73,10 @@ internal constructor(
                             .newBuilder()
                             .header("svix-retry-count", (index + 1).toString())
                             .build()
-                    val ret = executeRequestWithDebug(newReq, jsonBody)
-                    res = ret.first
-                    bodyString = ret.second
+                    res = client.newCall(newReq).execute()
                 }
             }
         }
-        //        val bodyString = res.body!!.string()
-
-        return Pair(res, bodyString)
-    }
-
-    suspend fun executeRequestWithDebug(
-        request: Request,
-        jsonBody: String?,
-    ): Pair<Response, String> {
-        val debug: String = System.getenv("DEBUG") ?: "no"
-        if (debug == "yes") {
-            dbgRequest(request, jsonBody)
-        }
-
-        val res = client.newCall(request).execute()
-
-        val bodyString = res.body!!.string()
-
-        if (debug == "yes") {
-            dbgResponse(res, bodyString)
-        }
-        return Pair(res, bodyString)
-    }
-}
-
-fun dbgRequest(request: Request, jsonBody: String?) {
-    println("_____ start dbg _____")
-    println("Url: ${request.url}")
-    println("${request.method} /${request.url.toString().split("/").drop(3).joinToString("/")}")
-    for ((k, v) in request.headers) {
-        println("$k: $v")
-    }
-    println()
-    if (jsonBody != null) {
-        println(jsonBody)
-        println()
-    }
-}
-
-fun dbgResponse(response: Response, bodyString: String?) {
-    println("Status code: ${response.code}")
-    for ((k, v) in response.headers) {
-        println("$k: $v")
-    }
-    println()
-
-    if (response.body != null) {
-        println(bodyString)
-        println()
+        return res
     }
 }
