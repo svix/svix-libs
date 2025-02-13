@@ -5,9 +5,12 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.svix.kotlin.models.EndpointPatch
+import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.Ordering
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -146,6 +149,30 @@ class WiremockTests {
             1,
             patchRequestedFor(urlEqualTo("/api/v1/app/ap/endpoint/endp"))
                 .withRequestBody(equalTo("""{"version":42}""")),
+        )
+    }
+
+    @Test
+    fun optionsHeadersAreSent() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.post(urlMatching("/api/v1/app/ap/msg"))
+                .willReturn(WireMock.ok().withBodyFile("MessageOut.json"))
+        )
+        runBlocking {
+            svx.message.create(
+                "ap",
+                MessageIn(
+                    eventType = "event.test",
+                    payload = JsonObject(mapOf("key" to JsonPrimitive("val"))),
+                ),
+                MessageCreateOptions(idempotencyKey = "key123"),
+            )
+        }
+        wireMockServer.verify(
+            1,
+            postRequestedFor(urlEqualTo("/api/v1/app/ap/msg"))
+                .withHeader("idempotency-key", equalTo("key123")),
         )
     }
 }
