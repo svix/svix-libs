@@ -1,10 +1,14 @@
 // this file is @generated
 package com.svix.kotlin
 
+import com.svix.kotlin.models.ApplicationIn
 import com.svix.kotlin.models.ListResponseMessageOut
 import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.MessageOut
 import kotlinx.datetime.Instant
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import okhttp3.Headers
 
 data class MessageListOptions(
@@ -137,24 +141,24 @@ fun messageInRaw(
     payloadRetentionHours: Long? = null,
     payloadRetentionPeriod: Long? = 90L,
     tags: Set<String>? = null,
-    transformationsParams: Map<String, Any> = mapOf(),
+    transformationsParams: Map<String, JsonElement> = mapOf(),
 ): MessageIn {
     val transformationsParams = transformationsParams.toMutableMap()
-    transformationsParams.put("rawPayload", payload)
+    transformationsParams["rawPayload"] = JsonPrimitive(payload)
     if (contentType != null) {
-        val headers = mapOf("content-type" to contentType)
-        transformationsParams.put("headers", headers)
+        val headers = mapOf("content-type" to JsonPrimitive(contentType))
+        transformationsParams["headers"] = JsonObject(headers)
     }
 
     return MessageIn(
         eventType = eventType,
-        payload = mapOf<String, String>(),
+        payload = JsonObject(mapOf()),
         application = application,
         channels = channels,
         eventId = eventId,
         payloadRetentionHours = payloadRetentionHours,
         payloadRetentionPeriod = payloadRetentionPeriod,
         tags = tags,
-        transformationsParams = transformationsParams,
+        transformationsParams = JsonObject(transformationsParams),
     )
 }
