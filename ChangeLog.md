@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-* Libs/C#, Libs/Go and Libs/Kotlin **(Breaking)**: All uses of `ListOptions`/`PostOptions` are removed, and renamed to `{Resource}{Operation}Options`. For example in `Endpoint.List` you would now use `EndpointListOptions`
+* Libs/Kotlin **(Breaking)**: All uses of `ListOptions`/`PostOptions` are removed, and renamed to `{Resource}{Operation}Options`. For example in `Endpoint.List` you would now use `EndpointListOptions`
 * Libs/Kotlin **(Breaking)**: `SvixOptions` no longer has `initialRetryDelayMillis` or `numRetries` instead use `retrySchedule`
 * Libs/Kotlin **(Breaking)**: Fix the parameter names of `Endpoint.get` - `appId` and `endpointId` were swapped
 * Libs/Kotlin **(Breaking)**: Fix the parameter names of `Message.get` and `Message.expungeContent` - `appId` and `msgId` were swapped
@@ -9,7 +9,6 @@
 * Libs/Kotlin **(Breaking)**: Deprecated functions `MessageAttempt.list` and `MessageAttempt.listAttemptsForEndpoint` are removed
 * Libs/Kotlin **(Breaking)**: All uses of `java.time.OffsetDateTime` replaced with `kotlinx.datetime.Instant`
 * Libs/Kotlin **(Breaking)**: All uses of `java.net.URL` in request/response models are replaced with `String`
-* Libs/Kotlin **(Breaking)**: All uses of `Map<String,Any>` in request/response models are replaced with `kotlinx.serialization.json.JsonObject`
 
 ## Version 1.57.0
 This version contains a big overhaul of the client libraries, with improved typing.
