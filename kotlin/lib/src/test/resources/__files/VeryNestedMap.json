@@ -1,6 +1,6 @@
 {
     "description": "",
-    "name": "",
+    "name": "now tests will break",
     "schemas": {
         "nestedMap": {
             "l1": {
