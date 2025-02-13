@@ -1,13 +1,20 @@
 package com.svix.kotlin
 
 import com.svix.kotlin.exceptions.ApiException
+import kotlin.random.Random
+import kotlin.random.nextULong
+import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 
 open class SvixHttpClient
-constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String>) {
-    val client: OkHttpClient = OkHttpClient()
+internal constructor(
+    private val baseUrl: HttpUrl,
+    private val defaultHeaders: Map<String, String>,
+    private val retrySchedule: List<Long>,
+) {
+    private val client: OkHttpClient = OkHttpClient()
 
     fun newUrlBuilder(): HttpUrl.Builder {
         return HttpUrl.Builder().scheme(baseUrl.scheme).host(baseUrl.host).port(baseUrl.port)
@@ -23,35 +30,29 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         var jsonBody: String? = null
         if (reqBody != null) {
             jsonBody = Json.encodeToString(reqBody)
-            reqBuilder = reqBuilder.method(method, jsonBody.toRequestBody())
+            reqBuilder.method(method, jsonBody.toRequestBody())
         } else {
-            reqBuilder = reqBuilder.method(method, null)
+            reqBuilder.method(method, null)
         }
 
         for ((k, v) in defaultHeaders) {
-            reqBuilder = reqBuilder.addHeader(k, v)
+            reqBuilder.addHeader(k, v)
         }
         if (headers != null) {
             for ((k, v) in headers) {
-                reqBuilder = reqBuilder.addHeader(k, v)
+                reqBuilder.addHeader(k, v)
             }
         }
+        reqBuilder.addHeader("svix-req-id", Random.nextULong().toString())
 
         val request = reqBuilder.build()
-        val debug: String = System.getenv("DEBUG") ?: "no"
-        if (debug == "yes") {
-            dbgRequest(request, jsonBody)
-        }
-        val res = executeRequestWithRetry(request)
+        val (res, _bodyString) = executeRequestWithRetry(request, jsonBody)
 
         // if body is null panic
         if (res.body == null) {
             throw ApiException("Body is null", res.code)
         }
-        val bodyString = res.body!!.string()
-        if (debug == "yes") {
-            dbgResponse(res, bodyString)
-        }
+        val bodyString = _bodyString // res.body!!.string()
         if (res.code == 204) {
             return Json.decodeFromString<Res>("true")
         }
@@ -61,8 +62,50 @@ constructor(private val baseUrl: HttpUrl, val defaultHeaders: Map<String, String
         throw ApiException("None 200 status code", res.code, bodyString)
     }
 
-    suspend fun executeRequestWithRetry(request: Request): Response {
-        return client.newCall(request).execute()
+    suspend fun executeRequestWithRetry(
+        request: Request,
+        jsonBody: String?,
+    ): Pair<Response, String> {
+
+        var (res, bodyString) = executeRequestWithDebug(request, jsonBody)
+
+        if (res.code >= 500) {
+            retrySchedule.forEachIndexed { index, sleepTime ->
+                run {
+                    delay(sleepTime)
+                    val newReq =
+                        request
+                            .newBuilder()
+                            .header("svix-retry-count", (index + 1).toString())
+                            .build()
+                    val ret = executeRequestWithDebug(newReq, jsonBody)
+                    res = ret.first
+                    bodyString = ret.second
+                }
+            }
+        }
+        //        val bodyString = res.body!!.string()
+
+        return Pair(res, bodyString)
+    }
+
+    suspend fun executeRequestWithDebug(
+        request: Request,
+        jsonBody: String?,
+    ): Pair<Response, String> {
+        val debug: String = System.getenv("DEBUG") ?: "no"
+        if (debug == "yes") {
+            dbgRequest(request, jsonBody)
+        }
+
+        val res = client.newCall(request).execute()
+
+        val bodyString = res.body!!.string()
+
+        if (debug == "yes") {
+            dbgResponse(res, bodyString)
+        }
+        return Pair(res, bodyString)
     }
 }
 

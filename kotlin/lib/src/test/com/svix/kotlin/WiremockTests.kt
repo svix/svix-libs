@@ -4,9 +4,11 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
+import com.svix.kotlin.exceptions.ApiException
 import com.svix.kotlin.models.EndpointPatch
 import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.Ordering
+import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonObject
@@ -189,5 +191,37 @@ class WiremockTests {
             getRequestedFor(urlEqualTo("/api/v1/app/ap/msg"))
                 .withHeader("User-Agent", matching("svix-libs/.*/kotlin")),
         )
+    }
+
+    @Test
+    fun defaultRetryStatusCode500() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.get(urlMatching("/api/v1/app/ap/msg"))
+                .willReturn(WireMock.status(500).withBodyFile("ListResponseMessageOut.json"))
+        )
+        runBlocking {
+            try {
+                svx.message.list("ap")
+            } catch (e: ApiException) {
+                assertEquals(500, e.statusCode)
+            }
+        }
+
+        wireMockServer.verify(
+            1,
+            getRequestedFor(urlEqualTo("/api/v1/app/ap/msg"))
+                // first request does not have `svix-retry-count` header
+                .withHeader("svix-retry-count", absent()),
+        )
+
+        // check the svix-retry-count are set correctly
+        for (retryCount in 1..3) {
+            wireMockServer.verify(
+                1,
+                getRequestedFor(urlEqualTo("/api/v1/app/ap/msg"))
+                    .withHeader("svix-retry-count", equalTo("$retryCount")),
+            )
+        }
     }
 }
