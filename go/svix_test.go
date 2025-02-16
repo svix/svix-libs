@@ -633,7 +633,7 @@ func TestListResponseOutModels(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", "http://testapi.test/api/v1/app",
 		func(r *http.Request) (*http.Response, error) {
-			return httpmock.NewStringResponse(200, `{"data":[],"done":true}`), nil
+			return httpmock.NewStringResponse(200, `{"data":[],"done":true,"iterator":null,"prevIterator":null}`), nil
 		},
 	)
 	res, err := svx.Application.List(ctx, nil)
