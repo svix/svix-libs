@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class IntegrationOut(
     val createdAt: Instant,
+    val featureFlags: Set<String>? = null,
     val id: String,
     val name: String,
     val updatedAt: Instant,
