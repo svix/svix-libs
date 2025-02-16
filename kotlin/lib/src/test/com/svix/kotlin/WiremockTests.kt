@@ -367,4 +367,17 @@ class WiremockTests {
                 ),
         )
     }
+
+    @Test
+    fun listResponseOutCorrectlyDeserialized() {
+        val svx = testClient()
+        wireMockServer.stubFor(
+            WireMock.get(urlMatching("/api/v1/app"))
+                .willReturn(
+                    WireMock.ok()
+                        .withBody("""{"data":[],"iterator":null,"prevIterator":null,"done":true}""")
+                )
+        )
+        runBlocking { svx.application.list() }
+    }
 }
