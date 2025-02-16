@@ -625,3 +625,23 @@ func TestEndpointPatchUnsetNotSentToServer(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestListResponseOutModels(t *testing.T) {
+	ctx := context.Background()
+	svx := newMockClient()
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("GET", "http://testapi.test/api/v1/app",
+		func(r *http.Request) (*http.Response, error) {
+			return httpmock.NewStringResponse(200, `{"data":[],"done":true}`), nil
+		},
+	)
+	res, err := svx.Application.List(ctx, nil)
+	if err != nil {
+		t.Error(err)
+	}
+	if res.Iterator != nil {
+		t.Errorf("Expected res.Iterator to be nil")
+	}
+
+}
