@@ -101,6 +101,7 @@ class BasicTest {
                 epPatched.filterTypes,
                 "patched ep should have 2 filter types",
             )
+            svix.application.delete(appOut.id)
         }
     }
 }
