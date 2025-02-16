@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 data class ListResponseEventTypeOut(
     val data: List<EventTypeOut>,
     val done: Boolean,
-    val iterator: String,
+    val iterator: String? = null,
     val prevIterator: String? = null,
 )
