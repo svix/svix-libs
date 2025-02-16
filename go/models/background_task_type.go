@@ -10,12 +10,13 @@ import (
 type BackgroundTaskType string
 
 const (
-	BACKGROUNDTASKTYPE_ENDPOINT_REPLAY      BackgroundTaskType = "endpoint.replay"
-	BACKGROUNDTASKTYPE_ENDPOINT_RECOVER     BackgroundTaskType = "endpoint.recover"
-	BACKGROUNDTASKTYPE_APPLICATION_STATS    BackgroundTaskType = "application.stats"
-	BACKGROUNDTASKTYPE_MESSAGE_BROADCAST    BackgroundTaskType = "message.broadcast"
-	BACKGROUNDTASKTYPE_SDK_GENERATE         BackgroundTaskType = "sdk.generate"
-	BACKGROUNDTASKTYPE_EVENT_TYPE_AGGREGATE BackgroundTaskType = "event-type.aggregate"
+	BACKGROUNDTASKTYPE_ENDPOINT_REPLAY           BackgroundTaskType = "endpoint.replay"
+	BACKGROUNDTASKTYPE_ENDPOINT_RECOVER          BackgroundTaskType = "endpoint.recover"
+	BACKGROUNDTASKTYPE_APPLICATION_STATS         BackgroundTaskType = "application.stats"
+	BACKGROUNDTASKTYPE_MESSAGE_BROADCAST         BackgroundTaskType = "message.broadcast"
+	BACKGROUNDTASKTYPE_SDK_GENERATE              BackgroundTaskType = "sdk.generate"
+	BACKGROUNDTASKTYPE_EVENT_TYPE_AGGREGATE      BackgroundTaskType = "event-type.aggregate"
+	BACKGROUNDTASKTYPE_APPLICATION_PURGE_CONTENT BackgroundTaskType = "application.purge_content"
 )
 
 var allowedBackgroundTaskType = []BackgroundTaskType{
@@ -25,6 +26,7 @@ var allowedBackgroundTaskType = []BackgroundTaskType{
 	"message.broadcast",
 	"sdk.generate",
 	"event-type.aggregate",
+	"application.purge_content",
 }
 
 func (v *BackgroundTaskType) UnmarshalJSON(src []byte) error {

@@ -19,7 +19,7 @@ type EndpointPatch struct {
 	// Format: `base64` encoded random bytes optionally prefixed with `whsec_`.
 	// It is recommended to not set this and let the server generate the secret.
 	Secret  utils.Nullable[string] `json:"secret"`
-	Uid     utils.Nullable[string] `json:"uid"` // The ep's UID
+	Uid     utils.Nullable[string] `json:"uid"` // The Endpoint's UID.
 	Url     *string                `json:"url,omitempty"`
 	Version *uint16                `json:"version,omitempty"`
 }

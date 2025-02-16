@@ -2,7 +2,7 @@
 package models
 
 type ReplayOut struct {
-	Id     string               `json:"id"`
+	Id     string               `json:"id"` // The QueueBackgroundTask's ID.
 	Status BackgroundTaskStatus `json:"status"`
 	Task   BackgroundTaskType   `json:"task"`
 }
