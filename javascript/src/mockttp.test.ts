@@ -87,7 +87,6 @@ describe("mockttp tests", () => {
     await svx.message.list("app1", { eventTypes: ["val8", "val1", "val5"] });
     const requests = await endpointMock.getSeenRequests();
     expect(requests.length).toBe(1);
-    console.log(requests[0].url);
     expect(
       requests[0].url.endsWith("/api/v1/app/app1/msg?event_types=val8%2Cval1%2Cval5")
     ).toBe(true);

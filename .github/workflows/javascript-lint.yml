@@ -27,3 +27,8 @@ jobs:
         run: |
           cd javascript
           yarn run lint
+
+      - name: Test
+        run: |
+          cd javascript
+          yarn run test
