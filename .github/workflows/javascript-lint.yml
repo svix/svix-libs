@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - "javascript/**"
-      - "lib-openapi.json"
       - '.github/workflows/javascript-lint.yml'
 
 jobs:
