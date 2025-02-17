@@ -1,10 +1,20 @@
 // this file is @generated
 import {
   AppPortalAccessIn,
+  AppPortalAccessInSerializer,
+} from "../models/appPortalAccessIn";
+import {
   AppPortalAccessOut,
+  AppPortalAccessOutSerializer,
+} from "../models/appPortalAccessOut";
+import {
   ApplicationTokenExpireIn,
+  ApplicationTokenExpireInSerializer,
+} from "../models/applicationTokenExpireIn";
+import {
   DashboardAccessOut,
-} from "../openapi";
+  DashboardAccessOutSerializer,
+} from "../models/dashboardAccessOut";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface AuthenticationAppPortalAccessOptions {
@@ -39,9 +49,9 @@ export class Authentication {
 
     request.setPathParam("app_id", appId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(appPortalAccessIn, "AppPortalAccessIn");
+    request.setBody(AppPortalAccessInSerializer._toJsonObject(appPortalAccessIn));
 
-    return request.send(this.requestCtx, "AppPortalAccessOut");
+    return request.send(this.requestCtx, AppPortalAccessOutSerializer._fromJsonObject);
   }
 
   /** Expire all of the tokens associated with a specific application. */
@@ -57,7 +67,9 @@ export class Authentication {
 
     request.setPathParam("app_id", appId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(applicationTokenExpireIn, "ApplicationTokenExpireIn");
+    request.setBody(
+      ApplicationTokenExpireInSerializer._toJsonObject(applicationTokenExpireIn)
+    );
 
     return request.sendNoResponseBody(this.requestCtx);
   }
@@ -81,7 +93,7 @@ export class Authentication {
     request.setPathParam("app_id", appId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
 
-    return request.send(this.requestCtx, "DashboardAccessOut");
+    return request.send(this.requestCtx, DashboardAccessOutSerializer._fromJsonObject);
   }
 
   /**

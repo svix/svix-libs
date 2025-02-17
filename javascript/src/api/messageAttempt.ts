@@ -1,25 +1,23 @@
 // this file is @generated
 import {
   ListResponseEndpointMessageOut,
+  ListResponseEndpointMessageOutSerializer,
+} from "../models/listResponseEndpointMessageOut";
+import {
   ListResponseMessageAttemptOut,
+  ListResponseMessageAttemptOutSerializer,
+} from "../models/listResponseMessageAttemptOut";
+import {
   ListResponseMessageEndpointOut,
+  ListResponseMessageEndpointOutSerializer,
+} from "../models/listResponseMessageEndpointOut";
+import {
   MessageAttemptOut,
-  MessageStatus,
-  StatusCodeClass,
-} from "../openapi";
+  MessageAttemptOutSerializer,
+} from "../models/messageAttemptOut";
+import { MessageStatus } from "../models/messageStatus";
+import { StatusCodeClass } from "../models/statusCodeClass";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
-
-export interface MessageAttemptListOptions {
-  iterator?: string | null;
-  limit?: number;
-  status?: MessageStatus;
-  eventTypes?: string[];
-  before?: Date | null;
-  after?: Date | null;
-  statusCodeClass?: StatusCodeClass;
-  channel?: string;
-  withContent?: boolean;
-}
 
 export interface MessageAttemptListByEndpointOptions {
   /** Limit the number of returned items */
@@ -107,17 +105,6 @@ export class MessageAttempt {
   public constructor(private readonly requestCtx: SvixRequestContext) {}
 
   /**
-   * @deprecated Since version 0.48.0. Use listByMsg or listByEndpoint instead.
-   */
-  public list(
-    appId: string,
-    msgId: string,
-    options?: MessageAttemptListByMsgOptions
-  ): Promise<ListResponseMessageAttemptOut> {
-    return this.listByMsg(appId, msgId, options);
-  }
-
-  /**
    * List attempts by endpoint id
    *
    * Note that by default this endpoint is limited to retrieving 90 days' worth of data
@@ -149,7 +136,10 @@ export class MessageAttempt {
     request.setQueryParam("with_msg", options?.withMsg);
     request.setQueryParam("event_types", options?.eventTypes);
 
-    return request.send(this.requestCtx, "ListResponseMessageAttemptOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseMessageAttemptOutSerializer._fromJsonObject
+    );
   }
 
   /**
@@ -184,7 +174,10 @@ export class MessageAttempt {
     request.setQueryParam("with_content", options?.withContent);
     request.setQueryParam("event_types", options?.eventTypes);
 
-    return request.send(this.requestCtx, "ListResponseMessageAttemptOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseMessageAttemptOutSerializer._fromJsonObject
+    );
   }
 
   /**
@@ -219,7 +212,10 @@ export class MessageAttempt {
     request.setQueryParam("with_content", options?.withContent);
     request.setQueryParam("event_types", options?.eventTypes);
 
-    return request.send(this.requestCtx, "ListResponseEndpointMessageOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseEndpointMessageOutSerializer._fromJsonObject
+    );
   }
 
   /** `msg_id`: Use a message id or a message `eventId` */
@@ -237,7 +233,7 @@ export class MessageAttempt {
     request.setPathParam("msg_id", msgId);
     request.setPathParam("attempt_id", attemptId);
 
-    return request.send(this.requestCtx, "MessageAttemptOut");
+    return request.send(this.requestCtx, MessageAttemptOutSerializer._fromJsonObject);
   }
 
   /**
@@ -280,7 +276,10 @@ export class MessageAttempt {
     request.setQueryParam("limit", options?.limit);
     request.setQueryParam("iterator", options?.iterator);
 
-    return request.send(this.requestCtx, "ListResponseMessageEndpointOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseMessageEndpointOutSerializer._fromJsonObject
+    );
   }
 
   /** Resend a message to the specified endpoint. */

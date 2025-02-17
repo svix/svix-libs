@@ -1,11 +1,15 @@
 // this file is @generated
 import {
   BackgroundTaskOut,
-  BackgroundTaskStatus,
-  BackgroundTaskType,
+  BackgroundTaskOutSerializer,
+} from "../models/backgroundTaskOut";
+import { BackgroundTaskStatus } from "../models/backgroundTaskStatus";
+import { BackgroundTaskType } from "../models/backgroundTaskType";
+import {
   ListResponseBackgroundTaskOut,
-  Ordering,
-} from "../openapi";
+  ListResponseBackgroundTaskOutSerializer,
+} from "../models/listResponseBackgroundTaskOut";
+import { Ordering } from "../models/ordering";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface BackgroundTaskListOptions {
@@ -36,7 +40,10 @@ export class BackgroundTask {
     request.setQueryParam("iterator", options?.iterator);
     request.setQueryParam("order", options?.order);
 
-    return request.send(this.requestCtx, "ListResponseBackgroundTaskOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseBackgroundTaskOutSerializer._fromJsonObject
+    );
   }
 
   /**
@@ -56,6 +63,6 @@ export class BackgroundTask {
 
     request.setPathParam("task_id", taskId);
 
-    return request.send(this.requestCtx, "BackgroundTaskOut");
+    return request.send(this.requestCtx, BackgroundTaskOutSerializer._fromJsonObject);
   }
 }

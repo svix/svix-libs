@@ -1,5 +1,14 @@
 // this file is @generated
-import { ListResponseMessageOut, MessageIn, MessageOut } from "../openapi";
+import {
+  ExpungAllContentsOut,
+  ExpungAllContentsOutSerializer,
+} from "../models/expungAllContentsOut";
+import {
+  ListResponseMessageOut,
+  ListResponseMessageOutSerializer,
+} from "../models/listResponseMessageOut";
+import { MessageIn, MessageInSerializer } from "../models/messageIn";
+import { MessageOut, MessageOutSerializer } from "../models/messageOut";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface MessageListOptions {
@@ -24,6 +33,10 @@ export interface MessageListOptions {
 export interface MessageCreateOptions {
   /** When `true`, message payloads are included in the response. */
   withContent?: boolean;
+  idempotencyKey?: string;
+}
+
+export interface MessageExpungeAllContentsOptions {
   idempotencyKey?: string;
 }
 
@@ -62,7 +75,10 @@ export class Message {
     request.setQueryParam("tag", options?.tag);
     request.setQueryParam("event_types", options?.eventTypes);
 
-    return request.send(this.requestCtx, "ListResponseMessageOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseMessageOutSerializer._fromJsonObject
+    );
   }
 
   /**
@@ -86,9 +102,29 @@ export class Message {
     request.setPathParam("app_id", appId);
     request.setQueryParam("with_content", options?.withContent);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(messageIn, "MessageIn");
+    request.setBody(MessageInSerializer._toJsonObject(messageIn));
 
-    return request.send(this.requestCtx, "MessageOut");
+    return request.send(this.requestCtx, MessageOutSerializer._fromJsonObject);
+  }
+
+  /**
+   * Purge all message content for the application.
+   *
+   * Delete all message payloads for the application.
+   */
+  public expungeAllContents(
+    appId: string,
+    options?: MessageExpungeAllContentsOptions
+  ): Promise<ExpungAllContentsOut> {
+    const request = new SvixRequest(
+      HttpMethod.POST,
+      "/api/v1/app/{app_id}/msg/expunge-all-contents"
+    );
+
+    request.setPathParam("app_id", appId);
+    request.setHeaderParam("idempotency-key", options?.idempotencyKey);
+
+    return request.send(this.requestCtx, ExpungAllContentsOutSerializer._fromJsonObject);
   }
 
   /** Get a message by its ID or eventID. */
@@ -103,7 +139,7 @@ export class Message {
     request.setPathParam("msg_id", msgId);
     request.setQueryParam("with_content", options?.withContent);
 
-    return request.send(this.requestCtx, "MessageOut");
+    return request.send(this.requestCtx, MessageOutSerializer._fromJsonObject);
   }
 
   /**
