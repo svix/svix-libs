@@ -28,11 +28,6 @@ jobs:
           node-version: 'latest'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Regen openapi libs
-        run: |
-          yarn
-          ./regen_openapi.sh
-
       - name: Install modules
         run: |
           cd javascript
