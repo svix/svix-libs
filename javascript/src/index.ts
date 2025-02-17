@@ -1,33 +1,26 @@
 import { Authentication } from "./api/authentication";
 import { Application } from "./api/application";
-import { BackgroundTask } from "./api/background_task";
+import { BackgroundTask } from "./api/backgroundTask";
 import { Endpoint } from "./api/endpoint";
-import { EventType } from "./api/event_type";
+import { EventType } from "./api/eventType";
 import { Integration } from "./api/integration";
 import { Message } from "./api/message";
-import { MessageAttempt } from "./api/message_attempt";
-import { OperationalWebhookEndpoint } from "./api/operational_webhook_endpoint";
+import { MessageAttempt } from "./api/messageAttempt";
+import { OperationalWebhookEndpoint } from "./api/operationalWebhookEndpoint";
 import { Statistics } from "./api/statistics";
-import { LIB_VERSION, SvixRequestContext } from "./request";
-import * as openapi from "./openapi";
-
-export * from "./openapi/models/all";
-export * from "./openapi/apis/exception";
+import { SvixRequestContext } from "./request";
 
 export { PostOptions } from "./util";
 export * from "./webhook";
 
 export { ApplicationListOptions } from "./api/application";
-export { BackgroundTaskListOptions } from "./api/background_task";
+export { BackgroundTaskListOptions } from "./api/backgroundTask";
 export { EndpointListOptions, EndpointGetStatsOptions } from "./api/endpoint";
-export { EventTypeListOptions } from "./api/event_type";
+export { EventTypeListOptions } from "./api/eventType";
 export { IntegrationListOptions } from "./api/integration";
 export { MessageListOptions, messageInRaw } from "./api/message";
-export {
-  MessageAttemptListByEndpointOptions,
-  MessageAttemptListOptions,
-} from "./api/message_attempt";
-export { OperationalWebhookEndpointListOptions } from "./api/operational_webhook_endpoint";
+export { MessageAttemptListByEndpointOptions } from "./api/messageAttempt";
+export { OperationalWebhookEndpointListOptions } from "./api/operationalWebhookEndpoint";
 
 export interface SvixOptions {
   debug?: boolean;
@@ -42,38 +35,14 @@ const REGIONS = [
   { region: "in", url: "https://api.in.svix.com" },
 ];
 
-class UserAgentMiddleware implements openapi.Middleware {
-  public pre(context: openapi.RequestContext): Promise<openapi.RequestContext> {
-    context.setHeaderParam("User-Agent", `svix-libs/${LIB_VERSION}/javascript`);
-    return Promise.resolve(context);
-  }
-
-  public post(context: openapi.ResponseContext): Promise<openapi.ResponseContext> {
-    return Promise.resolve(context);
-  }
-}
-
 export class Svix {
   private readonly requestCtx: SvixRequestContext;
-  public readonly _configuration: openapi.Configuration;
 
   public constructor(token: string, options: SvixOptions = {}) {
     const regionalUrl = REGIONS.find((x) => x.region === token.split(".")[1])?.url;
     const baseUrl: string = options.serverUrl ?? regionalUrl ?? "https://api.svix.com";
 
     this.requestCtx = { baseUrl, token, timeout: options.requestTimeout };
-
-    this._configuration = openapi.createConfiguration({
-      baseServer: new openapi.ServerConfiguration<any>(baseUrl, {}),
-      promiseMiddleware: [new UserAgentMiddleware()],
-      authMethods: {
-        HTTPBearer: {
-          tokenProvider: {
-            getToken: () => token,
-          },
-        },
-      },
-    });
   }
 
   public get authentication() {
