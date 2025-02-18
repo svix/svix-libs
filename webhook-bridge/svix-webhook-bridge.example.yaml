@@ -1,0 +1,169 @@
+# Set the log level for the service. Supported: error, info, warn, debug, trace. Default: info
+#log_level: "debug"
+
+# The log format that all output will follow. Supported: default, json
+#log_format: "json"
+
+# The OpenTelemetry address to send events to if given.
+#opentelemetry_address: "http://localhost:1234"
+
+# The OpenTelemetry service name to use. Default: "svix-webhook-bridge"
+# If the OpenTelemetry address is not set, this will do nothing.
+#opentelemetry_service_name: "my-agent"
+
+# The ratio at which to sample spans when sending to OpenTelemetry. When not given it defaults
+# to always sending.
+# If the OpenTelemetry address is not set, this will do nothing.
+#opentelemetry_sample_ratio: 0.1
+
+# A list of plugins to run.
+# Note: the service requires at least 1 valid plugin to be defined or else it will exit immediately.
+plugins:
+# GCP Pub/Sub Consumer
+- type: "gcppubsubconsumer"
+  input:
+    subscription_id: "my-subscription"
+    # Optional - will fallback to looking at env vars when left unset.
+    credentials_file: "/path/to/credentials.json"
+  # Optional - when unset, messages from the queue will be sent to Svix as-is.
+  transformation: |
+    function handler(input) {
+      return {
+        app_id: input.key,
+        message: {
+          eventType: input.event_type,
+          payload: input.data
+        }
+      };
+    }
+  output:
+    # Required (the Svix token to use when creating messages with this consumer)
+    token: "XYZ"
+
+# RabbitMQ Consumer
+- type: "rabbitmqconsumer"
+  input:
+    # Required
+    uri: "amqp://guest:guest@localhost:5672/%2f"
+    # Required
+    queue_name: "my-queue"
+    # Optional (default: unset, managed by rabbitmq)
+    consumer_tag: "my-consumer-001"
+    # Optional (default: false)
+    requeue_on_nack: true
+  # Optional - when unset, messages from the queue will be sent to Svix as-is.
+  transformation: |
+    function handler(input) {
+      return {
+        app_id: input.key,
+        message: {
+          eventType: input.event_type,
+          payload: input.data
+        }
+      };
+    }
+  output:
+    # Required (the Svix token to use when creating messages with this consumer)
+    token: "XYZ"
+
+# Redis Consumer
+- type: "redisconsumer"
+  input:
+    # Required
+    dsn: "redis://localhost:6379/"
+    # Required
+    queue_key: "my_queue"
+    # Required
+    consumer_name: "my_consumer"
+    # Required
+    consumer_group: "my_group"
+    # Required
+    max_connections: 4
+    # Optional (default: false)
+    requeue_on_nack: true
+  # Optional - when unset, messages from the queue will be sent to Svix as-is.
+  transformation: |
+    function handler(input) {
+      return {
+        app_id: input.key,
+        message: {
+          eventType: input.event_type,
+          payload: input.data
+        }
+      };
+    }
+  output:
+    # Required (the Svix token to use when creating messages with this consumer)
+    token: "XYZ"
+
+# SQS Consumer
+# Also remember to set your AWS credentials in env vars to use this:
+# - `AWS_DEFAULT_REGION`
+# - `AWS_ACCESS_KEY_ID`
+# - `AWS_SECRET_ACCESS_KEY`
+- type: "sqsconsumer"
+  input:
+    # Required
+    queue_dsn: "http://localhost:19324/000000000000/local"
+    # Optional (default: false)
+    override_endpoint: true
+  # Optional - when unset, messages from the queue will be sent to Svix as-is.
+  transformation: |
+    function handler(input) {
+      return {
+        app_id: input.key,
+        message: {
+          eventType: input.event_type,
+          payload: input.data
+        }
+      };
+    }
+  output:
+    # Required (the Svix token to use when creating messages with this consumer)
+    token: "XYZ"
+
+# Webhook Receiver
+- type: "webhookreceiver"
+  listen_addr: "0.0.0.0:5000"
+  routes:
+  - name: "goog-forwarder"
+    verification:
+      type: "svix"
+      secret: "whsec_zzYYxx="
+    destination:
+      type: "gcppubsub"
+      topic: "my-topic"
+      # Optional - falls back to env otherwise, eg.
+      # - `GOOGLE_APPLICATION_CREDENTIALS`
+      # - `GOOGLE_APPLICATION_CREDENTIALS_JSON`
+      credentials_file: "/path/to/creds.json"
+
+  - name: "open-rabbit"
+    verification:
+      type: "none"
+    destination:
+      type: "rabbitmq"
+      uri: "amqp://guest:guest@localhost:5672/%2f"
+      exchange: ""
+      routing_key: "example"
+
+  - name: "secure-rabbit"
+    verification:
+      type: "svix"
+      secret: "whsec_zzYYxx="
+    destination:
+      type: "rabbitmq"
+      uri: "amqp://guest:guest@localhost:5672/%2f"
+      exchange: ""
+      routing_key: "example"
+
+  - name: "amz"
+    verification:
+      type: "none"
+    destination:
+    # Note that the SQS forwarder requires credentials to be set as environment vars:
+    # - `AWS_DEFAULT_REGION`
+    # - `AWS_ACCESS_KEY_ID`
+    # - `AWS_SECRET_ACCESS_KEY`
+    type: "sqs"
+    queue_dsn: "https://example.aws.com/my-queue"
