@@ -1,13 +1,13 @@
-import { Authentication } from "./api/authentication";
-import { Application } from "./api/application";
-import { BackgroundTask } from "./api/background_task";
-import { Endpoint } from "./api/endpoint";
-import { EventType } from "./api/event_type";
-import { Integration } from "./api/integration";
+import { Authentication } from "./api/Authentication";
+import { Application } from "./api/Application";
+import { BackgroundTask } from "./api/BackgroundTask";
+import { Endpoint } from "./api/Endpoint";
+import { EventType } from "./api/EventType";
+import { Integration } from "./api/Integration";
 import { Message } from "./api/message";
-import { MessageAttempt } from "./api/message_attempt";
-import { OperationalWebhookEndpoint } from "./api/operational_webhook_endpoint";
-import { Statistics } from "./api/statistics";
+import { MessageAttempt } from "./api/MessageAttempt";
+import { OperationalWebhookEndpoint } from "./api/OperationalWebhookEndpoint";
+import { Statistics } from "./api/Statistics";
 import { LIB_VERSION, SvixRequestContext } from "./request";
 import * as openapi from "./openapi";
 
@@ -17,17 +17,17 @@ export * from "./openapi/apis/exception";
 export { PostOptions } from "./util";
 export * from "./webhook";
 
-export { ApplicationListOptions } from "./api/application";
-export { BackgroundTaskListOptions } from "./api/background_task";
-export { EndpointListOptions, EndpointGetStatsOptions } from "./api/endpoint";
-export { EventTypeListOptions } from "./api/event_type";
-export { IntegrationListOptions } from "./api/integration";
+export { ApplicationListOptions } from "./api/Application";
+export { BackgroundTaskListOptions } from "./api/BackgroundTask";
+export { EndpointListOptions, EndpointGetStatsOptions } from "./api/Endpoint";
+export { EventTypeListOptions } from "./api/EventType";
+export { IntegrationListOptions } from "./api/Integration";
 export { MessageListOptions, messageInRaw } from "./api/message";
 export {
   MessageAttemptListByEndpointOptions,
   MessageAttemptListOptions,
-} from "./api/message_attempt";
-export { OperationalWebhookEndpointListOptions } from "./api/operational_webhook_endpoint";
+} from "./api/MessageAttempt";
+export { OperationalWebhookEndpointListOptions } from "./api/OperationalWebhookEndpoint";
 
 export interface SvixOptions {
   debug?: boolean;
