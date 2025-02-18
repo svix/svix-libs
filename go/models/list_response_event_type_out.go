@@ -4,6 +4,6 @@ package models
 type ListResponseEventTypeOut struct {
 	Data         []EventTypeOut `json:"data"`
 	Done         bool           `json:"done"`
-	Iterator     string         `json:"iterator"`
+	Iterator     *string        `json:"iterator,omitempty"`
 	PrevIterator *string        `json:"prevIterator,omitempty"`
 }

@@ -9,7 +9,7 @@ type MessageEndpointOut struct {
 	Description string        `json:"description"` // An example endpoint name.
 	Disabled    *bool         `json:"disabled,omitempty"`
 	FilterTypes []string      `json:"filterTypes,omitempty"`
-	Id          string        `json:"id"` // The ep's ID
+	Id          string        `json:"id"` // The Endpoint's ID.
 	NextAttempt *time.Time    `json:"nextAttempt,omitempty"`
 	RateLimit   *uint16       `json:"rateLimit,omitempty"`
 	Status      MessageStatus `json:"status"`

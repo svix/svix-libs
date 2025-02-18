@@ -91,6 +91,14 @@ func isNotConflict(err error) error {
 	return err
 }
 
+func deleteApp(t *testing.T, ctx context.Context, client svix.Svix, app_id string) {
+	err := client.Application.Delete(ctx, app_id)
+	if err != nil {
+		t.Error(err)
+	}
+
+}
+
 // Runs through some common API interactions.
 func TestKitchenSink(t *testing.T) {
 	ctx := context.Background()
@@ -102,6 +110,7 @@ func TestKitchenSink(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer deleteApp(t, ctx, *client, app.Id)
 
 	_, err = client.EventType.Create(ctx, models.EventTypeIn{Name: "event.started", Description: "Something started"}, nil)
 
@@ -471,6 +480,7 @@ func TestApplicationPatchNullableAgainstServer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer deleteApp(t, ctx, *client, app.Id)
 
 	// uid is unset
 	appPatch1 := models.ApplicationPatch{
@@ -526,6 +536,7 @@ func TestEndpointPatchNullableAgainstServer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer deleteApp(t, ctx, *client, app.Id)
 	endp, err := client.Endpoint.Create(ctx, app.Id, models.EndpointIn{
 		Url: "https://play.svix.com",
 	}, nil)
@@ -624,4 +635,24 @@ func TestEndpointPatchUnsetNotSentToServer(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+}
+
+func TestListResponseOutModels(t *testing.T) {
+	ctx := context.Background()
+	svx := newMockClient()
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("GET", "http://testapi.test/api/v1/app",
+		func(r *http.Request) (*http.Response, error) {
+			return httpmock.NewStringResponse(200, `{"data":[],"done":true,"iterator":null,"prevIterator":null}`), nil
+		},
+	)
+	res, err := svx.Application.List(ctx, nil)
+	if err != nil {
+		t.Error(err)
+	}
+	if res.Iterator != nil {
+		t.Errorf("Expected res.Iterator to be nil")
+	}
+
 }

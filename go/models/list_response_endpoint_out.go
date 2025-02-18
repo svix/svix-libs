@@ -4,6 +4,6 @@ package models
 type ListResponseEndpointOut struct {
 	Data         []EndpointOut `json:"data"`
 	Done         bool          `json:"done"`
-	Iterator     string        `json:"iterator"`
+	Iterator     *string       `json:"iterator,omitempty"`
 	PrevIterator *string       `json:"prevIterator,omitempty"`
 }

@@ -8,7 +8,7 @@ type OperationalWebhookEndpointOut struct {
 	Description string            `json:"description"` // An example endpoint name.
 	Disabled    *bool             `json:"disabled,omitempty"`
 	FilterTypes []string          `json:"filterTypes,omitempty"`
-	Id          string            `json:"id"` // The ep's ID
+	Id          string            `json:"id"` // The Endpoint's ID.
 	Metadata    map[string]string `json:"metadata"`
 	RateLimit   *uint16           `json:"rateLimit,omitempty"`
 	Uid         *string           `json:"uid,omitempty"` // Optional unique identifier for the endpoint.
