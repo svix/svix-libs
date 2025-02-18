@@ -30,7 +30,7 @@ const filesPaths = [
     // Kotlin
     "kotlin/gradle.properties",
     "kotlin/README.md",
-    "kotlin/lib/src/main/kotlin/SvixOptions.kt",
+    "kotlin/lib/src/main/kotlin/Version.kt",
     // Python
     "python/svix/__init__.py",
     // Ruby

@@ -1,106 +1,106 @@
-// this file is @generated (with minor manual changes)
+// this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.ApplicationApi
 import com.svix.kotlin.models.ApplicationIn
 import com.svix.kotlin.models.ApplicationOut
 import com.svix.kotlin.models.ApplicationPatch
 import com.svix.kotlin.models.ListResponseApplicationOut
 import com.svix.kotlin.models.Ordering
+import okhttp3.Headers
 
-class ApplicationListOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var order: Ordering? = null
-
+data class ApplicationListOptions(
     /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
+    val limit: ULong? = null,
     /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
+    val iterator: String? = null,
     /** The sorting order of the returned items */
-    fun order(order: Ordering) = apply { this.order = order }
-}
+    val order: Ordering? = null,
+)
 
-class Application internal constructor(token: String, options: SvixOptions) {
-    private val api = ApplicationApi(options.serverUrl)
+data class ApplicationCreateOptions(val idempotencyKey: String? = null)
 
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+class Application(private val client: SvixHttpClient) {
 
     /** List of all the organization's applications. */
     suspend fun list(
         options: ApplicationListOptions = ApplicationListOptions()
     ): ListResponseApplicationOut {
-        try {
-            return api.v1ApplicationList(options.limit, options.iterator, options.order)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseApplicationOut>("GET", url.build())
     }
 
     /** Create a new application. */
     suspend fun create(
         applicationIn: ApplicationIn,
-        options: PostOptions = PostOptions(),
+        options: ApplicationCreateOptions = ApplicationCreateOptions(),
     ): ApplicationOut {
-        try {
-            return api.v1ApplicationCreate(applicationIn, null, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<ApplicationIn, ApplicationOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = applicationIn,
+        )
     }
 
+    /** Get or create an application. */
     suspend fun getOrCreate(
         applicationIn: ApplicationIn,
-        options: PostOptions = PostOptions(),
+        options: ApplicationCreateOptions = ApplicationCreateOptions(),
     ): ApplicationOut {
-        try {
-            return api.v1ApplicationCreate(applicationIn, true, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client
+                .newUrlBuilder()
+                .encodedPath("/api/v1/app")
+                .addQueryParameter("get_if_exists", "true")
+        var headers = Headers.Builder()
+        options.idempotencyKey?.let { headers = headers.add("idempotency-key", it) }
+
+        return client.executeRequest<ApplicationIn, ApplicationOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = applicationIn,
+        )
     }
 
     /** Get an application. */
     suspend fun get(appId: String): ApplicationOut {
-        try {
-            return api.v1ApplicationGet(appId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+        return client.executeRequest<Any, ApplicationOut>("GET", url.build())
     }
 
     /** Update an application. */
     suspend fun update(appId: String, applicationIn: ApplicationIn): ApplicationOut {
-        try {
-            return api.v1ApplicationUpdate(appId, applicationIn)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+
+        return client.executeRequest<ApplicationIn, ApplicationOut>(
+            "PUT",
+            url.build(),
+            reqBody = applicationIn,
+        )
     }
 
     /** Delete an application. */
     suspend fun delete(appId: String) {
-        try {
-            api.v1ApplicationDelete(appId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /** Partially update an application. */
     suspend fun patch(appId: String, applicationPatch: ApplicationPatch): ApplicationOut {
-        try {
-            return api.v1ApplicationPatch(appId, applicationPatch)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId")
+
+        return client.executeRequest<ApplicationPatch, ApplicationOut>(
+            "PATCH",
+            url.build(),
+            reqBody = applicationPatch,
+        )
     }
 }

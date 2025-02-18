@@ -1,21 +1,14 @@
 // this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.StatisticsApi
 import com.svix.kotlin.models.AggregateEventTypesOut
 import com.svix.kotlin.models.AppUsageStatsIn
 import com.svix.kotlin.models.AppUsageStatsOut
+import okhttp3.Headers
 
-class Statistics internal constructor(token: String, options: SvixOptions) {
-    private val api = StatisticsApi(options.serverUrl)
+data class StatisticsAggregateAppStatsOptions(val idempotencyKey: String? = null)
 
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+class Statistics(private val client: SvixHttpClient) {
 
     /**
      * Creates a background task to calculate the message destinations for all applications in the
@@ -26,13 +19,18 @@ class Statistics internal constructor(token: String, options: SvixOptions) {
      */
     suspend fun aggregateAppStats(
         appUsageStatsIn: AppUsageStatsIn,
-        options: PostOptions = PostOptions(),
+        options: StatisticsAggregateAppStatsOptions = StatisticsAggregateAppStatsOptions(),
     ): AppUsageStatsOut {
-        try {
-            return api.v1StatisticsAggregateAppStats(appUsageStatsIn, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/stats/usage/app")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<AppUsageStatsIn, AppUsageStatsOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = appUsageStatsIn,
+        )
     }
 
     /**
@@ -43,10 +41,7 @@ class Statistics internal constructor(token: String, options: SvixOptions) {
      * endpoint to retrieve the results of the operation.
      */
     suspend fun aggregateEventTypes(): AggregateEventTypesOut {
-        try {
-            return api.v1StatisticsAggregateEventTypes()
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/stats/usage/event-types")
+        return client.executeRequest<Any, AggregateEventTypesOut>("PUT", url.build())
     }
 }

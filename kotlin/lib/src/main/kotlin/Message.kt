@@ -1,58 +1,47 @@
-// this file is @generated (with manual changes)
+// this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.MessageApi
 import com.svix.kotlin.models.ApplicationIn
 import com.svix.kotlin.models.ListResponseMessageOut
 import com.svix.kotlin.models.MessageIn
 import com.svix.kotlin.models.MessageOut
-import java.time.OffsetDateTime
+import kotlinx.datetime.Instant
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import okhttp3.Headers
 
-class MessageListOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var channel: String? = null
-    var before: OffsetDateTime? = null
-    var after: OffsetDateTime? = null
-    var withContent: Boolean? = null
-    var tag: String? = null
-    var eventTypes: List<String>? = null
-
+data class MessageListOptions(
     /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
+    val limit: ULong? = null,
     /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
+    val iterator: String? = null,
     /** Filter response based on the channel. */
-    fun channel(channel: String) = apply { this.channel = channel }
-
+    val channel: String? = null,
     /** Only include items created before a certain date. */
-    fun before(before: OffsetDateTime) = apply { this.before = before }
-
+    val before: Instant? = null,
     /** Only include items created after a certain date. */
-    fun after(after: OffsetDateTime) = apply { this.after = after }
-
+    val after: Instant? = null,
     /** When `true` message payloads are included in the response. */
-    fun withContent(withContent: Boolean) = apply { this.withContent = withContent }
-
+    val withContent: Boolean? = null,
     /** Filter messages matching the provided tag. */
-    fun tag(tag: String) = apply { this.tag = tag }
-
+    val tag: String? = null,
     /** Filter response based on the event type */
-    fun eventTypes(eventTypes: List<String>) = apply { this.eventTypes = eventTypes }
-}
+    val eventTypes: Set<String>? = null,
+)
 
-class Message internal constructor(token: String, options: SvixOptions) {
-    private val api = MessageApi(options.serverUrl)
+data class MessageCreateOptions(
+    /** When `true`, message payloads are included in the response. */
+    val withContent: Boolean? = null,
+    val idempotencyKey: String? = null,
+)
 
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+data class MessageGetOptions(
+    /** When `true` message payloads are included in the response. */
+    val withContent: Boolean? = null
+)
+
+class Message(private val client: SvixHttpClient) {
 
     /**
      * List all of the application's messages.
@@ -70,21 +59,16 @@ class Message internal constructor(token: String, options: SvixOptions) {
         appId: String,
         options: MessageListOptions = MessageListOptions(),
     ): ListResponseMessageOut {
-        try {
-            return api.v1MessageList(
-                appId,
-                options.limit,
-                options.iterator,
-                options.channel,
-                options.before,
-                options.after,
-                options.withContent,
-                options.tag,
-                HashSet(options.eventTypes),
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.channel?.let { url.addQueryParameter("channel", it) }
+        options.before?.let { url.addQueryParameter("before", serializeQueryParam(it)) }
+        options.after?.let { url.addQueryParameter("after", serializeQueryParam(it)) }
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        options.tag?.let { url.addQueryParameter("tag", it) }
+        options.eventTypes?.let { url.addQueryParameter("event_types", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseMessageOut>("GET", url.build())
     }
 
     /**
@@ -107,22 +91,30 @@ class Message internal constructor(token: String, options: SvixOptions) {
     suspend fun create(
         appId: String,
         messageIn: MessageIn,
-        options: PostOptions = PostOptions(),
+        options: MessageCreateOptions = MessageCreateOptions(),
     ): MessageOut {
-        try {
-            return api.v1MessageCreate(appId, messageIn, null, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg")
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<MessageIn, MessageOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = messageIn,
+        )
     }
 
     /** Get a message by its ID or eventID. */
-    suspend fun get(msgId: String, appId: String): MessageOut {
-        try {
-            return api.v1MessageGet(appId, msgId, null)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+    suspend fun get(
+        appId: String,
+        msgId: String,
+        options: MessageGetOptions = MessageGetOptions(),
+    ): MessageOut {
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId")
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        return client.executeRequest<Any, MessageOut>("GET", url.build())
     }
 
     /**
@@ -131,12 +123,9 @@ class Message internal constructor(token: String, options: SvixOptions) {
      * Useful in cases when a message was accidentally sent with sensitive content. The message
      * can't be replayed or resent once its payload has been deleted or expired.
      */
-    suspend fun expungeContent(msgId: String, appId: String) {
-        try {
-            api.v1MessageExpungeContent(appId, msgId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+    suspend fun expungeContent(appId: String, msgId: String) {
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/msg/$msgId/content")
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 }
 
@@ -164,24 +153,24 @@ fun messageInRaw(
     payloadRetentionHours: Long? = null,
     payloadRetentionPeriod: Long? = 90L,
     tags: Set<String>? = null,
-    transformationsParams: Map<String, Any> = mapOf(),
+    transformationsParams: Map<String, JsonElement> = mapOf(),
 ): MessageIn {
     val transformationsParams = transformationsParams.toMutableMap()
-    transformationsParams.put("rawPayload", payload)
+    transformationsParams["rawPayload"] = JsonPrimitive(payload)
     if (contentType != null) {
-        val headers = mapOf("content-type" to contentType)
-        transformationsParams.put("headers", headers)
+        val headers = mapOf("content-type" to JsonPrimitive(contentType))
+        transformationsParams["headers"] = JsonObject(headers)
     }
 
     return MessageIn(
         eventType = eventType,
-        payload = mapOf<String, String>(),
+        payload = JsonObject(mapOf()),
         application = application,
         channels = channels,
         eventId = eventId,
         payloadRetentionHours = payloadRetentionHours,
         payloadRetentionPeriod = payloadRetentionPeriod,
         tags = tags,
-        transformationsParams = transformationsParams,
+        transformationsParams = JsonObject(transformationsParams),
     )
 }

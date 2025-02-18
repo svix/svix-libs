@@ -57,8 +57,6 @@ yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g typescript -
 
 yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g java -o java/lib/generated/openapi -c java/openapi-generator-config.json -t java/templates
 
-yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g kotlin -o kotlin/lib/generated/openapi -c kotlin/openapi-generator-config.json -t kotlin/templates
-
 yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g ruby -o ruby -c ruby/openapi-generator-config.json -t ruby/templates
 
 rm -rf .codegen-tmp

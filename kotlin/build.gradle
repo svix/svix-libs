@@ -1,13 +1,5 @@
-group GROUP
-version VERSION_NAME
-
-wrapper {
-    gradleVersion = '8.7'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
-}
-
 buildscript {
-    ext.kotlin_version = '1.9.23'
+    ext.kotlin_version = '2.1.10'
     ext.spotless_version = "6.25.0"
 
     repositories {
@@ -21,6 +13,21 @@ buildscript {
     }
 }
 
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '2.1.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.1.10'
+}
+
+group GROUP
+version VERSION_NAME
+
+
+wrapper {
+    gradleVersion = '8.7'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
+
 apply plugin: 'kotlin'
 apply plugin: 'com.diffplug.spotless'
 
@@ -30,23 +37,29 @@ repositories {
 
 sourceSets {
     main.kotlin.srcDirs += 'lib/src/main/kotlin'
-    main.kotlin.srcDirs += 'lib/generated/openapi/src/main/kotlin'        
+    // main.kotlin.srcDirs += 'lib/generated/openapi/src/main/kotlin'
     sourceSets.test.kotlin.srcDirs = ["lib/src/test/main/kotlin"]
     test.kotlin.srcDirs = ['lib/src/test']
 }
 
 test {
     useJUnitPlatform()
+    testLogging {
+		events "failed"
+		exceptionFormat "full"
+	}
 }
 
 dependencies {
+    implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
-    implementation "com.squareup.moshi:moshi-kotlin:1.12.0"
-    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "com.squareup.okhttp3:okhttp:4.12.0"
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:1.5.21'
+    testImplementation "org.wiremock:wiremock:3.12.0"
 }
 
 jar {

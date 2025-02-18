@@ -1,8 +1,6 @@
 // this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.EndpointApi
 import com.svix.kotlin.models.EndpointHeadersIn
 import com.svix.kotlin.models.EndpointHeadersOut
 import com.svix.kotlin.models.EndpointHeadersPatchIn
@@ -23,54 +21,47 @@ import com.svix.kotlin.models.RecoverIn
 import com.svix.kotlin.models.RecoverOut
 import com.svix.kotlin.models.ReplayIn
 import com.svix.kotlin.models.ReplayOut
-import java.time.OffsetDateTime
+import kotlinx.datetime.Instant
+import okhttp3.Headers
 
-class EndpointListOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var order: Ordering? = null
-
+data class EndpointListOptions(
     /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
+    val limit: ULong? = null,
     /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
+    val iterator: String? = null,
     /** The sorting order of the returned items */
-    fun order(order: Ordering) = apply { this.order = order }
-}
+    val order: Ordering? = null,
+)
 
-class EndpointGetStatsOptions {
-    var since: OffsetDateTime? = null
-    var until: OffsetDateTime? = null
+data class EndpointCreateOptions(val idempotencyKey: String? = null)
 
+data class EndpointRecoverOptions(val idempotencyKey: String? = null)
+
+data class EndpointReplayMissingOptions(val idempotencyKey: String? = null)
+
+data class EndpointRotateSecretOptions(val idempotencyKey: String? = null)
+
+data class EndpointSendExampleOptions(val idempotencyKey: String? = null)
+
+data class EndpointGetStatsOptions(
     /** Filter the range to data starting from this date. */
-    fun since(since: OffsetDateTime) = apply { this.since = since }
-
+    val since: Instant? = null,
     /** Filter the range to data ending by this date. */
-    fun until(until: OffsetDateTime) = apply { this.until = until }
-}
+    val until: Instant? = null,
+)
 
-class Endpoint internal constructor(token: String, options: SvixOptions) {
-    private val api = EndpointApi(options.serverUrl)
-
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+class Endpoint(private val client: SvixHttpClient) {
 
     /** List the application's endpoints. */
     suspend fun list(
         appId: String,
         options: EndpointListOptions = EndpointListOptions(),
     ): ListResponseEndpointOut {
-        try {
-            return api.v1EndpointList(appId, options.limit, options.iterator, options.order)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseEndpointOut>("GET", url.build())
     }
 
     /**
@@ -81,22 +72,24 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
     suspend fun create(
         appId: String,
         endpointIn: EndpointIn,
-        options: PostOptions = PostOptions(),
+        options: EndpointCreateOptions = EndpointCreateOptions(),
     ): EndpointOut {
-        try {
-            return api.v1EndpointCreate(appId, endpointIn, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<EndpointIn, EndpointOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = endpointIn,
+        )
     }
 
     /** Get an endpoint. */
-    suspend fun get(endpointId: String, appId: String): EndpointOut {
-        try {
-            return api.v1EndpointGet(appId, endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+    suspend fun get(appId: String, endpointId: String): EndpointOut {
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId")
+        return client.executeRequest<Any, EndpointOut>("GET", url.build())
     }
 
     /** Update an endpoint. */
@@ -105,20 +98,19 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         endpointId: String,
         endpointUpdate: EndpointUpdate,
     ): EndpointOut {
-        try {
-            return api.v1EndpointUpdate(appId, endpointId, endpointUpdate)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId")
+
+        return client.executeRequest<EndpointUpdate, EndpointOut>(
+            "PUT",
+            url.build(),
+            reqBody = endpointUpdate,
+        )
     }
 
     /** Delete an endpoint. */
     suspend fun delete(appId: String, endpointId: String) {
-        try {
-            api.v1EndpointDelete(appId, endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId")
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /** Partially update an endpoint. */
@@ -127,20 +119,20 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         endpointId: String,
         endpointPatch: EndpointPatch,
     ): EndpointOut {
-        try {
-            return api.v1EndpointPatch(appId, endpointId, endpointPatch)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId")
+
+        return client.executeRequest<EndpointPatch, EndpointOut>(
+            "PATCH",
+            url.build(),
+            reqBody = endpointPatch,
+        )
     }
 
     /** Get the additional headers to be sent with the webhook. */
     suspend fun getHeaders(appId: String, endpointId: String): EndpointHeadersOut {
-        try {
-            return api.v1EndpointGetHeaders(appId, endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/headers")
+        return client.executeRequest<Any, EndpointHeadersOut>("GET", url.build())
     }
 
     /** Set the additional headers to be sent with the webhook. */
@@ -149,11 +141,14 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         endpointId: String,
         endpointHeadersIn: EndpointHeadersIn,
     ) {
-        try {
-            api.v1EndpointUpdateHeaders(appId, endpointId, endpointHeadersIn)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/headers")
+
+        client.executeRequest<EndpointHeadersIn, Boolean>(
+            "PUT",
+            url.build(),
+            reqBody = endpointHeadersIn,
+        )
     }
 
     /** Partially set the additional headers to be sent with the webhook. */
@@ -162,11 +157,14 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         endpointId: String,
         endpointHeadersPatchIn: EndpointHeadersPatchIn,
     ) {
-        try {
-            api.v1EndpointPatchHeaders(appId, endpointId, endpointHeadersPatchIn)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/headers")
+
+        client.executeRequest<EndpointHeadersPatchIn, Boolean>(
+            "PATCH",
+            url.build(),
+            reqBody = endpointHeadersPatchIn,
+        )
     }
 
     /**
@@ -178,13 +176,19 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         appId: String,
         endpointId: String,
         recoverIn: RecoverIn,
-        options: PostOptions = PostOptions(),
+        options: EndpointRecoverOptions = EndpointRecoverOptions(),
     ): RecoverOut {
-        try {
-            return api.v1EndpointRecover(appId, endpointId, recoverIn, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/recover")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<RecoverIn, RecoverOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = recoverIn,
+        )
     }
 
     /**
@@ -197,13 +201,21 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         appId: String,
         endpointId: String,
         replayIn: ReplayIn,
-        options: PostOptions = PostOptions(),
+        options: EndpointReplayMissingOptions = EndpointReplayMissingOptions(),
     ): ReplayOut {
-        try {
-            return api.v1EndpointReplayMissing(appId, endpointId, replayIn, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client
+                .newUrlBuilder()
+                .encodedPath("/api/v1/app/$appId/endpoint/$endpointId/replay-missing")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<ReplayIn, ReplayOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = replayIn,
+        )
     }
 
     /**
@@ -213,11 +225,9 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
      * [the consuming webhooks docs](https://docs.svix.com/consuming-webhooks/).
      */
     suspend fun getSecret(appId: String, endpointId: String): EndpointSecretOut {
-        try {
-            return api.v1EndpointGetSecret(appId, endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/secret")
+        return client.executeRequest<Any, EndpointSecretOut>("GET", url.build())
     }
 
     /**
@@ -229,18 +239,21 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         appId: String,
         endpointId: String,
         endpointSecretRotateIn: EndpointSecretRotateIn,
-        options: PostOptions = PostOptions(),
+        options: EndpointRotateSecretOptions = EndpointRotateSecretOptions(),
     ) {
-        try {
-            api.v1EndpointRotateSecret(
-                appId,
-                endpointId,
-                endpointSecretRotateIn,
-                options.idempotencyKey,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client
+                .newUrlBuilder()
+                .encodedPath("/api/v1/app/$appId/endpoint/$endpointId/secret/rotate")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        client.executeRequest<EndpointSecretRotateIn, Boolean>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = endpointSecretRotateIn,
+        )
     }
 
     /** Send an example message for an event. */
@@ -248,18 +261,21 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         appId: String,
         endpointId: String,
         eventExampleIn: EventExampleIn,
-        options: PostOptions = PostOptions(),
+        options: EndpointSendExampleOptions = EndpointSendExampleOptions(),
     ): MessageOut {
-        try {
-            return api.v1EndpointSendExample(
-                appId,
-                endpointId,
-                eventExampleIn,
-                options.idempotencyKey,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client
+                .newUrlBuilder()
+                .encodedPath("/api/v1/app/$appId/endpoint/$endpointId/send-example")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<EventExampleIn, MessageOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = eventExampleIn,
+        )
     }
 
     /** Get basic statistics for the endpoint. */
@@ -268,20 +284,20 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         endpointId: String,
         options: EndpointGetStatsOptions = EndpointGetStatsOptions(),
     ): EndpointStats {
-        try {
-            return api.v1EndpointGetStats(appId, endpointId, options.since, options.until)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client.newUrlBuilder().encodedPath("/api/v1/app/$appId/endpoint/$endpointId/stats")
+        options.since?.let { url.addQueryParameter("since", serializeQueryParam(it)) }
+        options.until?.let { url.addQueryParameter("until", serializeQueryParam(it)) }
+        return client.executeRequest<Any, EndpointStats>("GET", url.build())
     }
 
     /** Get the transformation code associated with this endpoint. */
     suspend fun transformationGet(appId: String, endpointId: String): EndpointTransformationOut {
-        try {
-            return api.v1EndpointTransformationGet(appId, endpointId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client
+                .newUrlBuilder()
+                .encodedPath("/api/v1/app/$appId/endpoint/$endpointId/transformation")
+        return client.executeRequest<Any, EndpointTransformationOut>("GET", url.build())
     }
 
     /** Set or unset the transformation code associated with this endpoint. */
@@ -290,10 +306,15 @@ class Endpoint internal constructor(token: String, options: SvixOptions) {
         endpointId: String,
         endpointTransformationIn: EndpointTransformationIn,
     ) {
-        try {
-            api.v1EndpointTransformationPartialUpdate(appId, endpointId, endpointTransformationIn)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url =
+            client
+                .newUrlBuilder()
+                .encodedPath("/api/v1/app/$appId/endpoint/$endpointId/transformation")
+
+        client.executeRequest<EndpointTransformationIn, Boolean>(
+            "PATCH",
+            url.build(),
+            reqBody = endpointTransformationIn,
+        )
     }
 }

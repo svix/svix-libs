@@ -1,8 +1,6 @@
-// this file is @generated (with minor manual changes)
+// this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.EventTypeApi
 import com.svix.kotlin.models.EventTypeImportOpenApiIn
 import com.svix.kotlin.models.EventTypeImportOpenApiOut
 import com.svix.kotlin.models.EventTypeIn
@@ -11,68 +9,48 @@ import com.svix.kotlin.models.EventTypePatch
 import com.svix.kotlin.models.EventTypeUpdate
 import com.svix.kotlin.models.ListResponseEventTypeOut
 import com.svix.kotlin.models.Ordering
+import okhttp3.Headers
 
-class EventTypeListOptions {
-    var limit: Int? = null
-    var iterator: String? = null
-    var order: Ordering? = null
-    var includeArchived: Boolean? = null
-    var withContent: Boolean? = null
-
+data class EventTypeListOptions(
     /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
+    val limit: ULong? = null,
     /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
+    val iterator: String? = null,
     /** The sorting order of the returned items */
-    fun order(order: Ordering) = apply { this.order = order }
-
+    val order: Ordering? = null,
     /** When `true` archived (deleted but not expunged) items are included in the response. */
-    fun includeArchived(includeArchived: Boolean) = apply { this.includeArchived = includeArchived }
-
-    @Deprecated("Use the new includeArchived() method")
-    fun includeAchived(includeArchived: Boolean) = apply { this.includeArchived = includeArchived }
-
+    val includeArchived: Boolean? = null,
     /** When `true` the full item (including the schema) is included in the response. */
-    fun withContent(withContent: Boolean) = apply { this.withContent = withContent }
-}
+    val withContent: Boolean? = null,
+)
 
-class EventTypeDeleteOptions {
-    var expunge: Boolean? = null
+data class EventTypeCreateOptions(val idempotencyKey: String? = null)
 
+data class EventTypeImportOpenapiOptions(val idempotencyKey: String? = null)
+
+data class EventTypeDeleteOptions(
     /**
      * By default event types are archived when "deleted". Passing this to `true` deletes them
      * entirely.
      */
-    fun expunge(expunge: Boolean) = apply { this.expunge = expunge }
-}
+    val expunge: Boolean? = null
+)
 
-class EventType internal constructor(token: String, options: SvixOptions) {
-    private val api = EventTypeApi(options.serverUrl)
-
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+class EventType(private val client: SvixHttpClient) {
 
     /** Return the list of event types. */
     suspend fun list(
         options: EventTypeListOptions = EventTypeListOptions()
     ): ListResponseEventTypeOut {
-        try {
-            return api.v1EventTypeList(
-                options.limit,
-                options.iterator,
-                options.order,
-                options.includeArchived,
-                options.withContent,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type")
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
+        options.includeArchived?.let {
+            url.addQueryParameter("include_archived", serializeQueryParam(it))
         }
+        options.withContent?.let { url.addQueryParameter("with_content", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseEventTypeOut>("GET", url.build())
     }
 
     /**
@@ -84,13 +62,18 @@ class EventType internal constructor(token: String, options: SvixOptions) {
      */
     suspend fun create(
         eventTypeIn: EventTypeIn,
-        options: PostOptions = PostOptions(),
+        options: EventTypeCreateOptions = EventTypeCreateOptions(),
     ): EventTypeOut {
-        try {
-            return api.v1EventTypeCreate(eventTypeIn, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<EventTypeIn, EventTypeOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = eventTypeIn,
+        )
     }
 
     /**
@@ -102,31 +85,35 @@ class EventType internal constructor(token: String, options: SvixOptions) {
      */
     suspend fun importOpenapi(
         eventTypeImportOpenApiIn: EventTypeImportOpenApiIn,
-        options: PostOptions = PostOptions(),
+        options: EventTypeImportOpenapiOptions = EventTypeImportOpenapiOptions(),
     ): EventTypeImportOpenApiOut {
-        try {
-            return api.v1EventTypeImportOpenapi(eventTypeImportOpenApiIn, options.idempotencyKey)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/import/openapi")
+        val headers = Headers.Builder()
+        options.idempotencyKey?.let { headers.add("idempotency-key", it) }
+
+        return client.executeRequest<EventTypeImportOpenApiIn, EventTypeImportOpenApiOut>(
+            "POST",
+            url.build(),
+            headers = headers.build(),
+            reqBody = eventTypeImportOpenApiIn,
+        )
     }
 
     /** Get an event type. */
     suspend fun get(eventTypeName: String): EventTypeOut {
-        try {
-            return api.v1EventTypeGet(eventTypeName)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+        return client.executeRequest<Any, EventTypeOut>("GET", url.build())
     }
 
     /** Update an event type. */
     suspend fun update(eventTypeName: String, eventTypeUpdate: EventTypeUpdate): EventTypeOut {
-        try {
-            return api.v1EventTypeUpdate(eventTypeName, eventTypeUpdate)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+
+        return client.executeRequest<EventTypeUpdate, EventTypeOut>(
+            "PUT",
+            url.build(),
+            reqBody = eventTypeUpdate,
+        )
     }
 
     /**
@@ -141,19 +128,19 @@ class EventType internal constructor(token: String, options: SvixOptions) {
         eventTypeName: String,
         options: EventTypeDeleteOptions = EventTypeDeleteOptions(),
     ) {
-        try {
-            api.v1EventTypeDelete(eventTypeName, options.expunge)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+        options.expunge?.let { url.addQueryParameter("expunge", serializeQueryParam(it)) }
+        client.executeRequest<Any, Boolean>("DELETE", url.build())
     }
 
     /** Partially update an event type. */
     suspend fun patch(eventTypeName: String, eventTypePatch: EventTypePatch): EventTypeOut {
-        try {
-            return api.v1EventTypePatch(eventTypeName, eventTypePatch)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/event-type/$eventTypeName")
+
+        return client.executeRequest<EventTypePatch, EventTypeOut>(
+            "PATCH",
+            url.build(),
+            reqBody = eventTypePatch,
+        )
     }
 }

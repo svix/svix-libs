@@ -6,7 +6,6 @@ import com.svix.kotlin.models.EndpointIn
 import com.svix.kotlin.models.EndpointPatch
 import com.svix.kotlin.models.EventTypeIn
 import com.svix.kotlin.models.MessageIn
-import java.net.URI
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
@@ -80,10 +79,7 @@ class BasicTest {
             val epOut =
                 svix.endpoint.create(
                     appOut.id,
-                    EndpointIn(
-                        url = URI("https://example.svix.com"),
-                        channels = setOf("ch0", "ch1"),
-                    ),
+                    EndpointIn(url = "https://example.svix.com", channels = setOf("ch0", "ch1")),
                 )
             assertEquals(setOf("ch0", "ch1"), epOut.channels, "initial ep should have 2 channels")
             assertEquals(0, epOut.filterTypes?.size ?: 0, "initial ep should have 0 filter types")
@@ -91,7 +87,9 @@ class BasicTest {
                 svix.endpoint.patch(
                     appOut.id,
                     epOut.id,
-                    EndpointPatch(filterTypes = setOf("event.started", "event.ended")),
+                    EndpointPatch(
+                        filterTypes = MaybeUnset.Present(setOf("event.started", "event.ended"))
+                    ),
                 )
             assertEquals(
                 setOf("ch0", "ch1"),
@@ -103,6 +101,7 @@ class BasicTest {
                 epPatched.filterTypes,
                 "patched ep should have 2 filter types",
             )
+            svix.application.delete(appOut.id)
         }
     }
 }

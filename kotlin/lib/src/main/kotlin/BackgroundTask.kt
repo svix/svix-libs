@@ -1,70 +1,43 @@
 // this file is @generated
 package com.svix.kotlin
 
-import com.svix.kotlin.exceptions.ApiException
-import com.svix.kotlin.internal.apis.BackgroundTasksApi
 import com.svix.kotlin.models.BackgroundTaskOut
 import com.svix.kotlin.models.BackgroundTaskStatus
 import com.svix.kotlin.models.BackgroundTaskType
 import com.svix.kotlin.models.ListResponseBackgroundTaskOut
 import com.svix.kotlin.models.Ordering
 
-class BackgroundTaskListOptions {
-    var status: BackgroundTaskStatus? = null
-    var task: BackgroundTaskType? = null
-    var limit: Int? = null
-    var iterator: String? = null
-    var order: Ordering? = null
-
+data class BackgroundTaskListOptions(
     /** Filter the response based on the status. */
-    fun status(status: BackgroundTaskStatus) = apply { this.status = status }
-
+    val status: BackgroundTaskStatus? = null,
     /** Filter the response based on the type. */
-    fun task(task: BackgroundTaskType) = apply { this.task = task }
-
+    val task: BackgroundTaskType? = null,
     /** Limit the number of returned items */
-    fun limit(limit: Int) = apply { this.limit = limit }
-
+    val limit: ULong? = null,
     /** The iterator returned from a prior invocation */
-    fun iterator(iterator: String) = apply { this.iterator = iterator }
-
+    val iterator: String? = null,
     /** The sorting order of the returned items */
-    fun order(order: Ordering) = apply { this.order = order }
-}
+    val order: Ordering? = null,
+)
 
-class BackgroundTask internal constructor(token: String, options: SvixOptions) {
-    private val api = BackgroundTasksApi(options.serverUrl)
-
-    init {
-        api.accessToken = token
-        api.userAgent = options.getUA()
-        options.initialRetryDelayMillis?.let { api.initialRetryDelayMillis = it }
-        options.numRetries?.let { api.numRetries = it }
-    }
+class BackgroundTask(private val client: SvixHttpClient) {
 
     /** List background tasks executed in the past 90 days. */
     suspend fun list(
         options: BackgroundTaskListOptions = BackgroundTaskListOptions()
     ): ListResponseBackgroundTaskOut {
-        try {
-            return api.v1BackgroundTaskList(
-                options.status,
-                options.task,
-                options.limit,
-                options.iterator,
-                options.order,
-            )
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/background-task")
+        options.status?.let { url.addQueryParameter("status", serializeQueryParam(it)) }
+        options.task?.let { url.addQueryParameter("task", serializeQueryParam(it)) }
+        options.limit?.let { url.addQueryParameter("limit", serializeQueryParam(it)) }
+        options.iterator?.let { url.addQueryParameter("iterator", it) }
+        options.order?.let { url.addQueryParameter("order", serializeQueryParam(it)) }
+        return client.executeRequest<Any, ListResponseBackgroundTaskOut>("GET", url.build())
     }
 
     /** Get a background task by ID. */
     suspend fun get(taskId: String): BackgroundTaskOut {
-        try {
-            return api.v1BackgroundTaskGet(taskId)
-        } catch (e: Exception) {
-            throw ApiException.wrap(e)
-        }
+        val url = client.newUrlBuilder().encodedPath("/api/v1/background-task/$taskId")
+        return client.executeRequest<Any, BackgroundTaskOut>("GET", url.build())
     }
 }
