@@ -1,8 +1,9 @@
-package com.svix;
+package com.svix.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
+import com.svix.Webhook;
 import com.svix.exceptions.WebhookVerificationException;
 import com.svix.exceptions.WebhookSigningException;
 

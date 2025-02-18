@@ -1,6 +1,8 @@
-package com.svix;
+package com.svix.test;
 
 
+import com.svix.Svix;
+import com.svix.SvixOptions;
 import com.svix.internal.ApiException;
 import com.svix.models.ApplicationIn;
 import com.svix.models.ApplicationOut;

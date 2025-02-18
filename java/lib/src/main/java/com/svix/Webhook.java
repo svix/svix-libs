@@ -15,13 +15,13 @@ import com.svix.exceptions.WebhookSigningException;
 
 
 public final class Webhook {
-	static final String SECRET_PREFIX = "whsec_";
-	static final String SVIX_MSG_ID_KEY = "svix-id";
-	static final String SVIX_MSG_SIGNATURE_KEY = "svix-signature";
-	static final String SVIX_MSG_TIMESTAMP_KEY = "svix-timestamp";
-	static final String UNBRANDED_MSG_ID_KEY = "webhook-id";
-	static final String UNBRANDED_MSG_SIGNATURE_KEY = "webhook-signature";
-	static final String UNBRANDED_MSG_TIMESTAMP_KEY = "webhook-timestamp";
+	public static final String SECRET_PREFIX = "whsec_";
+	public static final String SVIX_MSG_ID_KEY = "svix-id";
+	public static final String SVIX_MSG_SIGNATURE_KEY = "svix-signature";
+	public static final String SVIX_MSG_TIMESTAMP_KEY = "svix-timestamp";
+	public static final String UNBRANDED_MSG_ID_KEY = "webhook-id";
+	public static final String UNBRANDED_MSG_SIGNATURE_KEY = "webhook-signature";
+	public static final String UNBRANDED_MSG_TIMESTAMP_KEY = "webhook-timestamp";
 	private static final String HMAC_SHA256 = "HmacSHA256";
 	private static final int TOLERANCE_IN_SECONDS = 5 * 60; // 5 minutes
 	private static final long SECOND_IN_MS = 1000L;
