@@ -49,6 +49,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    # the codegen uses `rustfmt +nightly`
+    - uses: dtolnay/rust-toolchain@nightly
+      with:
+        components: rustfmt
+
     - name: Regen openapi libs
       run: |
         yarn
