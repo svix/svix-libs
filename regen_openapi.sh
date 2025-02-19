@@ -1,10 +1,45 @@
 #!/bin/bash
 
-set -exo pipefail
+set -eo pipefail
+
+OPENAPI_GIT_REV='98dbc5b090a5c8d72fe50962ee04b46fb9d7db20'
 
 if [ -n "$1" ]; then
     curl "$1" | python -m json.tool > lib-openapi.json
 fi
+
+# Rust - using the new openapi-codegen
+if ! command -v openapi-codegen >/dev/null; then
+    if [[ -z "$GITHUB_WORKFLOW" ]]; then
+        echo openapi-codegen is not installed. install using
+        echo "cargo install --git https://github.com/svix/openapi-codegen --rev $OPENAPI_GIT_REV --locked"
+        exit 1
+    else
+        cargo install --git https://github.com/svix/openapi-codegen --rev $OPENAPI_GIT_REV --locked
+    fi
+fi
+
+(
+    # Print commands we run
+    set -x
+
+    openapi-codegen generate \
+        --template rust/templates/api_resource.rs.jinja \
+        --input-file lib-openapi.json \
+        --output-dir rust/src/api
+    openapi-codegen generate \
+        --template rust/templates/component_type.rs.jinja \
+        --input-file lib-openapi.json \
+        --output-dir rust/src/models
+
+    # Remove APIs we may not (yet) want to expose
+    rm rust/src/api/{environment,health}.rs
+
+    # Remove .codegen.json files, its purpose is fulfilled already:
+    # - The expected git rev of the tool is encoded at the top of this file.
+    # - The lib-openapi.json used as input is also committed to this repo.
+    rm rust/src/{api,models}/.codegen.json
+)
 
 cd $(dirname "$0")
 mkdir -p .codegen-tmp
@@ -52,6 +87,9 @@ jq --indent 4 '.components.schemas |= with_entries(
     )' \
     < .codegen-tmp/openapi.json \
     > .codegen-tmp/openapi-less-null.json
+
+# Print commands we run
+set -x
 
 yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g typescript -o javascript/src/openapi -c javascript/openapi-generator-config.json --type-mappings=set=Array -t javascript/templates
 

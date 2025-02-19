@@ -1,0 +1,92 @@
+{% if type.name is endingwith "Patch" -%}
+    use js_option::JsOption;
+{% endif -%}
+use serde::{Deserialize, Serialize};
+
+use super::{
+    {% for c in referenced_components -%}
+        {{ c | to_snake_case }}::{{ c | to_upper_camel_case }},
+    {% endfor -%}
+};
+
+{{ doc_comment }}
+#[derive(Clone, Debug, Default, PartialEq, Deserialize, Serialize)]
+pub struct {{ type.name | to_upper_camel_case }} {
+    {% for field in type.fields %}
+        {% if field.description is defined -%}
+            {{ field.description | to_doc_comment(style="rust") }}
+            {# we currently use String for date-time params, for backwards compat -#}
+            {# document the format so it's not _that_ awkward -#}
+            {% if field.type.is_datetime() -%}
+            ///
+            /// RFC3339 date string.
+            {% endif -%}
+        {% endif -%}
+
+        {% if field.deprecated -%}
+            #[deprecated]
+        {% endif -%}
+
+        {% if field.name != field.name | to_snake_case -%}
+            #[serde(rename = "{{ field.name }}")]
+        {% endif -%}
+
+        {#
+            we only have defaults on optional fields now, and the old codegen
+            was not doing anything with them, so leave them alone here as well,
+            at least for now
+        -#}
+        {# {% if field.default is defined and field.default is not none -%}
+        #[serde(default = "{{ field.name | to_snake_case }}_default")]
+        {% endif -%} -#}
+        {% if field.type.is_datetime() -%}
+            {% set field_ty = "String" -%}
+        {% else -%}
+            {% set field_ty = field.type.to_rust() -%}
+        {% endif -%}
+
+        {% if not field.required or field.nullable -%}
+            {# only for patch requests, if the field is both non-required
+               and nullable, use JsOption -#}
+            {% if type.name is endingwith "Patch" and field.nullable -%}
+                {% set field_ty %}JsOption<{{ field_ty }}>{% endset -%}
+                #[serde(default, skip_serializing_if = "JsOption::is_undefined")]
+            {% else -%}
+                {% set field_ty %}Option<{{ field_ty }}>{% endset -%}
+                #[serde(skip_serializing_if = "Option::is_none")]
+            {% endif -%}
+        {% endif -%}
+
+        pub {{ field.name | to_snake_case }}: {{ field_ty }},
+    {% endfor %}
+}
+
+impl {{ type.name | to_upper_camel_case }} {
+    pub fn new(
+        {% for field in type.fields -%}
+            {% if field.type.is_datetime() -%}
+                {% set field_ty = "String" -%}
+            {% else -%}
+                {% set field_ty = field.type.to_rust() -%}
+            {% endif -%}
+            {% if field.required and not field.nullable -%}
+                {{ field.name | to_snake_case }}: {{ field_ty }},
+            {% endif -%}
+        {% endfor -%}
+    ) -> Self {
+        {% if type.fields | selectattr("deprecated") | length > 0 -%}
+            #[allow(deprecated)]
+        {% endif -%}
+        Self {
+            {% for field in type.fields -%}
+                {% if field.required and not field.nullable -%}
+                    {{ field.name | to_snake_case }},
+                {% elif type.name is endingwith "Patch" and field.nullable -%}
+                    {{ field.name | to_snake_case }}: JsOption::Undefined,
+                {% else -%}
+                    {{ field.name | to_snake_case }}: None,
+                {% endif -%}
+            {% endfor -%}
+        }
+    }
+}

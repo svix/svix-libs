@@ -40,6 +40,11 @@ pub struct MessageCreateOptions {
 }
 
 #[derive(Default)]
+pub struct MessageExpungeAllContentsOptions {
+    pub idempotency_key: Option<String>,
+}
+
+#[derive(Default)]
 pub struct MessageGetOptions {
     /// When `true` message payloads are included in the response.
     pub with_content: Option<bool>,
@@ -132,6 +137,26 @@ impl<'a> Message<'a> {
             .with_body_param(message_in)
             .execute(self.cfg)
             .await
+    }
+
+    /// Purge all message content for the application.
+    ///
+    /// Delete all message payloads for the application.
+    pub async fn expunge_all_contents(
+        &self,
+        app_id: String,
+        options: Option<MessageExpungeAllContentsOptions>,
+    ) -> Result<ExpungAllContentsOut> {
+        let MessageExpungeAllContentsOptions { idempotency_key } = options.unwrap_or_default();
+
+        crate::request::Request::new(
+            http1::Method::POST,
+            "/api/v1/app/{app_id}/msg/expunge-all-contents",
+        )
+        .with_path_param("app_id", app_id)
+        .with_optional_header_param("idempotency-key", idempotency_key)
+        .execute(self.cfg)
+        .await
     }
 
     /// Get a message by its ID or eventID.

@@ -39,6 +39,7 @@ pub mod event_type_in;
 pub mod event_type_out;
 pub mod event_type_patch;
 pub mod event_type_update;
+pub mod expung_all_contents_out;
 pub mod http_error_out;
 pub mod http_validation_error;
 pub mod integration_in;
@@ -121,6 +122,7 @@ pub use self::{
     event_type_out::EventTypeOut,
     event_type_patch::EventTypePatch,
     event_type_update::EventTypeUpdate,
+    expung_all_contents_out::ExpungAllContentsOut,
     http_error_out::HttpErrorOut,
     http_validation_error::HttpValidationError,
     integration_in::IntegrationIn,

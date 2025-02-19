@@ -1,0 +1,145 @@
+{% set resource_type_name = resource.name | to_upper_camel_case -%}
+
+use crate::{
+    error::Result,
+    models::*,
+    Configuration,
+};
+
+{% for op in resource.operations -%}
+    {% if op | has_query_or_header_params %}
+    {% if not op | has_required_query_or_header_params -%}
+        #[derive(Default)]
+    {% endif -%}
+    pub struct {{ resource_type_name }}{{ op.name | to_upper_camel_case }}Options {
+        {% for p in op.query_params -%}
+            {% if p.type.is_datetime() -%}
+                {% set ty = "String" -%}
+            {% else -%}
+                {% set ty = p.type.to_rust() -%}
+            {% endif -%}
+            {% if not p.required %}{% set ty %}Option<{{ ty }}>{% endset %}{% endif %}
+            {% if p.description is defined -%}
+                {{ p.description | to_doc_comment(style="rust") }}
+                {# we currently use String for date-time params, for backwards compat -#}
+                {# document the format so it's not _that_ awkward -#}
+                {% if p.type.is_datetime() -%}
+                ///
+                /// RFC3339 date string.
+                {% endif -%}
+            {% endif -%}
+            pub {{ p.name | to_snake_case }}: {{ ty }},
+        {% endfor -%}
+        {% for p in op.header_params -%}
+            {% set ty = "String" -%}
+            {% if not p.required %}{% set ty %}Option<{{ ty }}>{% endset %}{% endif %}
+            {% if p.description is defined -%}
+                {{ p.description | to_doc_comment(style="rust") }}
+            {% endif -%}
+            pub {{ p.name | to_snake_case }}: {{ ty }},
+        {% endfor -%}
+    }
+    {% endif %}
+{% endfor -%}
+
+pub struct {{ resource_type_name }}<'a> {
+    cfg: &'a Configuration,
+}
+
+impl<'a> {{ resource_type_name }}<'a> {
+    pub(super) fn new(cfg: &'a Configuration) -> Self {
+        Self { cfg }
+    }
+
+    {% for op in resource.operations %}
+    {% set has_params = op | has_query_or_header_params -%}
+    {% if op.description is defined -%}
+        {{ op.description | to_doc_comment(style="rust") }}
+    {% endif -%}
+    {% if op.deprecated -%}
+        #[deprecated]
+    {% endif -%}
+    pub async fn {{ op.name | to_snake_case }}(
+        &self,
+
+        {#- path parameters -#}
+        {% for p in op.path_params -%}
+            {{ p }}: String,
+        {% endfor -%}
+
+        {# body parameter struct -#}
+        {% if op.request_body_schema_name is defined -%}
+            {{ op.request_body_schema_name | to_snake_case }}: {{ op.request_body_schema_name }},
+        {% endif -%}
+
+        {# query / header parameter struct -#}
+        {% if has_params -%}
+            {% set param_struct_name -%}
+                {{ resource_type_name }}{{ op.name | to_upper_camel_case }}Options
+            {%- endset -%}
+            {% set has_required_params = op | has_required_query_or_header_params -%}
+            {%- if has_required_params -%}
+                options: {{ param_struct_name }},
+            {%- else -%}
+                options: Option<{{ param_struct_name }}>,
+            {%- endif -%}
+        {% endif -%}
+    ) -> Result<{{ op.response_body_schema_name | default("()") | replace("_", "") }}> {
+        {% if has_params -%}
+            {# unpack query / header parameter struct -#}
+            let {{ param_struct_name }} {
+                {% for p in op.query_params %}{{ p.name | to_snake_case }},{% endfor %}
+                {% for p in op.header_params %}{{ p.name | to_snake_case }},{% endfor %}
+            } = options
+            {%- if not has_required_params %}.unwrap_or_default(){% endif -%}
+            ;
+        {% endif -%}
+
+        {% if has_header_params -%}
+            {# unpack PostOptions -#}
+            let PostOptions { idempotency_key } = options.unwrap_or_default();
+        {% endif -%}
+
+        {# make the request #}
+        crate::request::Request::new(http1::Method::{{ op.method | upper }}, "{{ op.path }}")
+
+        {% for p in op.path_params -%}
+            .with_path_param("{{ p }}", {{ p }})
+        {% endfor -%}
+
+        {% for p in op.query_params -%}
+            {% if p.required -%}
+                .with_query_param
+            {%- else -%}
+                .with_optional_query_param
+            {%- endif -%}
+            ("{{ p.name }}", {{ p.name | to_snake_case }})
+        {% endfor -%}
+
+        {% for p in op.header_params -%}
+            .with_optional_header_param("{{ p.name }}", {{ p.name | to_snake_case }})
+        {% endfor -%}
+
+        {% if op.request_body_schema_name is defined -%}
+            .with_body_param({{ op.request_body_schema_name | to_snake_case }})
+        {% endif -%}
+
+        {% if op.response_body_schema_name is undefined -%}
+            .returns_nothing()
+        {% endif -%}
+
+            .execute(self.cfg)
+            .await
+    }
+
+    {% set extra_path -%}
+        api_extra/{{ resource.name | to_snake_case }}_{{ op.name | to_snake_case }}.rs
+    {%- endset -%}
+    {% include extra_path ignore missing %}
+    {% endfor %}
+}
+
+{% set extra_path -%}
+    api_extra/{{ resource.name | to_snake_case }}.rs
+{%- endset -%}
+{% include extra_path ignore missing %}
