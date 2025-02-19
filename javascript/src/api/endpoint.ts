@@ -1,27 +1,48 @@
 // this file is @generated
 import {
   EndpointHeadersIn,
+  EndpointHeadersInSerializer,
+} from "../models/endpointHeadersIn";
+import {
   EndpointHeadersOut,
+  EndpointHeadersOutSerializer,
+} from "../models/endpointHeadersOut";
+import {
   EndpointHeadersPatchIn,
-  EndpointIn,
-  EndpointOauthConfigIn,
-  EndpointOut,
-  EndpointPatch,
+  EndpointHeadersPatchInSerializer,
+} from "../models/endpointHeadersPatchIn";
+import { EndpointIn, EndpointInSerializer } from "../models/endpointIn";
+import { EndpointOut, EndpointOutSerializer } from "../models/endpointOut";
+import { EndpointPatch, EndpointPatchSerializer } from "../models/endpointPatch";
+import {
   EndpointSecretOut,
+  EndpointSecretOutSerializer,
+} from "../models/endpointSecretOut";
+import {
   EndpointSecretRotateIn,
-  EndpointStats,
+  EndpointSecretRotateInSerializer,
+} from "../models/endpointSecretRotateIn";
+import { EndpointStats, EndpointStatsSerializer } from "../models/endpointStats";
+import {
   EndpointTransformationIn,
+  EndpointTransformationInSerializer,
+} from "../models/endpointTransformationIn";
+import {
   EndpointTransformationOut,
-  EndpointUpdate,
-  EventExampleIn,
+  EndpointTransformationOutSerializer,
+} from "../models/endpointTransformationOut";
+import { EndpointUpdate, EndpointUpdateSerializer } from "../models/endpointUpdate";
+import { EventExampleIn, EventExampleInSerializer } from "../models/eventExampleIn";
+import {
   ListResponseEndpointOut,
-  MessageOut,
-  Ordering,
-  RecoverIn,
-  RecoverOut,
-  ReplayIn,
-  ReplayOut,
-} from "../openapi";
+  ListResponseEndpointOutSerializer,
+} from "../models/listResponseEndpointOut";
+import { MessageOut, MessageOutSerializer } from "../models/messageOut";
+import { Ordering } from "../models/ordering";
+import { RecoverIn, RecoverInSerializer } from "../models/recoverIn";
+import { RecoverOut, RecoverOutSerializer } from "../models/recoverOut";
+import { ReplayIn, ReplayInSerializer } from "../models/replayIn";
+import { ReplayOut, ReplayOutSerializer } from "../models/replayOut";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface EndpointListOptions {
@@ -75,7 +96,10 @@ export class Endpoint {
     request.setQueryParam("iterator", options?.iterator);
     request.setQueryParam("order", options?.order);
 
-    return request.send(this.requestCtx, "ListResponseEndpointOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseEndpointOutSerializer._fromJsonObject
+    );
   }
 
   /**
@@ -92,9 +116,9 @@ export class Endpoint {
 
     request.setPathParam("app_id", appId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(endpointIn, "EndpointIn");
+    request.setBody(EndpointInSerializer._toJsonObject(endpointIn));
 
-    return request.send(this.requestCtx, "EndpointOut");
+    return request.send(this.requestCtx, EndpointOutSerializer._fromJsonObject);
   }
 
   /** Get an endpoint. */
@@ -107,7 +131,7 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
 
-    return request.send(this.requestCtx, "EndpointOut");
+    return request.send(this.requestCtx, EndpointOutSerializer._fromJsonObject);
   }
 
   /** Update an endpoint. */
@@ -123,9 +147,9 @@ export class Endpoint {
 
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
-    request.setBody(endpointUpdate, "EndpointUpdate");
+    request.setBody(EndpointUpdateSerializer._toJsonObject(endpointUpdate));
 
-    return request.send(this.requestCtx, "EndpointOut");
+    return request.send(this.requestCtx, EndpointOutSerializer._fromJsonObject);
   }
 
   /** Delete an endpoint. */
@@ -154,9 +178,9 @@ export class Endpoint {
 
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
-    request.setBody(endpointPatch, "EndpointPatch");
+    request.setBody(EndpointPatchSerializer._toJsonObject(endpointPatch));
 
-    return request.send(this.requestCtx, "EndpointOut");
+    return request.send(this.requestCtx, EndpointOutSerializer._fromJsonObject);
   }
 
   /** Get the additional headers to be sent with the webhook. */
@@ -169,7 +193,7 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
 
-    return request.send(this.requestCtx, "EndpointHeadersOut");
+    return request.send(this.requestCtx, EndpointHeadersOutSerializer._fromJsonObject);
   }
 
   /** Set the additional headers to be sent with the webhook. */
@@ -185,7 +209,7 @@ export class Endpoint {
 
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
-    request.setBody(endpointHeadersIn, "EndpointHeadersIn");
+    request.setBody(EndpointHeadersInSerializer._toJsonObject(endpointHeadersIn));
 
     return request.sendNoResponseBody(this.requestCtx);
   }
@@ -211,7 +235,9 @@ export class Endpoint {
 
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
-    request.setBody(endpointHeadersPatchIn, "EndpointHeadersPatchIn");
+    request.setBody(
+      EndpointHeadersPatchInSerializer._toJsonObject(endpointHeadersPatchIn)
+    );
 
     return request.sendNoResponseBody(this.requestCtx);
   }
@@ -243,9 +269,9 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(recoverIn, "RecoverIn");
+    request.setBody(RecoverInSerializer._toJsonObject(recoverIn));
 
-    return request.send(this.requestCtx, "RecoverOut");
+    return request.send(this.requestCtx, RecoverOutSerializer._fromJsonObject);
   }
 
   /**
@@ -268,9 +294,9 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(replayIn, "ReplayIn");
+    request.setBody(ReplayInSerializer._toJsonObject(replayIn));
 
-    return request.send(this.requestCtx, "ReplayOut");
+    return request.send(this.requestCtx, ReplayOutSerializer._fromJsonObject);
   }
 
   /**
@@ -288,7 +314,7 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
 
-    return request.send(this.requestCtx, "EndpointSecretOut");
+    return request.send(this.requestCtx, EndpointSecretOutSerializer._fromJsonObject);
   }
 
   /**
@@ -310,7 +336,9 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(endpointSecretRotateIn, "EndpointSecretRotateIn");
+    request.setBody(
+      EndpointSecretRotateInSerializer._toJsonObject(endpointSecretRotateIn)
+    );
 
     return request.sendNoResponseBody(this.requestCtx);
   }
@@ -330,9 +358,9 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(eventExampleIn, "EventExampleIn");
+    request.setBody(EventExampleInSerializer._toJsonObject(eventExampleIn));
 
-    return request.send(this.requestCtx, "MessageOut");
+    return request.send(this.requestCtx, MessageOutSerializer._fromJsonObject);
   }
 
   /** Get basic statistics for the endpoint. */
@@ -351,7 +379,7 @@ export class Endpoint {
     request.setQueryParam("since", options?.since);
     request.setQueryParam("until", options?.until);
 
-    return request.send(this.requestCtx, "EndpointStats");
+    return request.send(this.requestCtx, EndpointStatsSerializer._fromJsonObject);
   }
 
   /** Get the transformation code associated with this endpoint. */
@@ -367,7 +395,10 @@ export class Endpoint {
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
 
-    return request.send(this.requestCtx, "EndpointTransformationOut");
+    return request.send(
+      this.requestCtx,
+      EndpointTransformationOutSerializer._fromJsonObject
+    );
   }
 
   /** Set or unset the transformation code associated with this endpoint. */
@@ -383,36 +414,9 @@ export class Endpoint {
 
     request.setPathParam("app_id", appId);
     request.setPathParam("endpoint_id", endpointId);
-    request.setBody(endpointTransformationIn, "EndpointTransformationIn");
-
-    return request.sendNoResponseBody(this.requestCtx);
-  }
-
-  public oauthUpdate(
-    appId: string,
-    endpointId: string,
-    endpointOauthConfigIn: EndpointOauthConfigIn
-  ): Promise<void> {
-    const request = new SvixRequest(
-      HttpMethod.PUT,
-      "/app/{app_id}/endpoint/{endpoint_id}/oauth"
+    request.setBody(
+      EndpointTransformationInSerializer._toJsonObject(endpointTransformationIn)
     );
-
-    request.setPathParam("app_id", appId);
-    request.setPathParam("endpoint_id", endpointId);
-    request.setBody(endpointOauthConfigIn, "EndpointOauthConfigIn");
-
-    return request.sendNoResponseBody(this.requestCtx);
-  }
-
-  public oauthDelete(appId: string, endpointId: string): Promise<void> {
-    const request = new SvixRequest(
-      HttpMethod.DELETE,
-      "/app/{app_id}/endpoint/{endpoint_id}/oauth"
-    );
-
-    request.setPathParam("app_id", appId);
-    request.setPathParam("endpoint_id", endpointId);
 
     return request.sendNoResponseBody(this.requestCtx);
   }

@@ -1,7 +1,6 @@
 import "svix-fetch";
 import { ApiException } from "./util";
-import { HttpErrorOut, HTTPValidationError } from "./openapi";
-import { ObjectSerializer } from "./openapi/models/ObjectSerializer";
+import { HttpErrorOut, HTTPValidationError } from "./HttpErrors";
 
 export const LIB_VERSION = "1.58.1";
 const USER_AGENT = `svix-libs/${LIB_VERSION}/javascript`;
@@ -76,9 +75,9 @@ export class SvixRequest {
 
     this.headerParams[name] = value;
   }
-
-  public setBody(value: any, type: string) {
-    this.body = JSON.stringify(ObjectSerializer.serialize(value, type, ""));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public setBody(value: any) {
+    this.body = JSON.stringify(value);
   }
 
   /**
@@ -90,9 +89,13 @@ export class SvixRequest {
    * If the server returns a 5xx error, the request is retried up to two times with exponential backoff.
    * If retries are exhausted, an `ApiException<HttpErrorOut>` is thrown.
    */
-  public async send<R>(ctx: SvixRequestContext, responseType: string): Promise<R> {
+  public async send<R>(
+    ctx: SvixRequestContext,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    parseResponseBody: (jsonObject: any) => R
+  ): Promise<R> {
     const responseBody = await this.sendInner(ctx);
-    return ObjectSerializer.deserialize(JSON.parse(responseBody), responseType, "");
+    return parseResponseBody(JSON.parse(responseBody));
   }
 
   /** Same as `send`, but the response body is discarded, not parsed. */
@@ -106,7 +109,7 @@ export class SvixRequest {
       url.searchParams.set(name, value);
     }
 
-    const randomId = Math.floor(Math.random() * Math.pow(2, 32));
+    const randomId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
     // Cloudflare Workers fail if the credentials option is used in a fetch call.
     // This work around that. Source:
@@ -139,7 +142,7 @@ export class SvixRequest {
         body as HTTPValidationError,
         response.headers
       );
-    } else if (response.status >= 400) {
+    } else if (response.status >= 400 && response.status <= 499) {
       const body = JSON.parse(responseBody);
       throw new ApiException<HttpErrorOut>(
         response.status,

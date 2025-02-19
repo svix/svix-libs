@@ -41,9 +41,11 @@ test("empty key raises error", () => {
     new Webhook("");
   }).toThrowError(Error);
   expect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     new Webhook(undefined as any);
   }).toThrowError(Error);
   expect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     new Webhook(null as any);
   }).toThrowError(Error);
 });

@@ -1,11 +1,12 @@
 // this file is @generated
+import { ApplicationIn, ApplicationInSerializer } from "../models/applicationIn";
+import { ApplicationOut, ApplicationOutSerializer } from "../models/applicationOut";
+import { ApplicationPatch, ApplicationPatchSerializer } from "../models/applicationPatch";
 import {
-  ApplicationIn,
-  ApplicationOut,
-  ApplicationPatch,
   ListResponseApplicationOut,
-  Ordering,
-} from "../openapi";
+  ListResponseApplicationOutSerializer,
+} from "../models/listResponseApplicationOut";
+import { Ordering } from "../models/ordering";
 import { HttpMethod, SvixRequest, SvixRequestContext } from "../request";
 
 export interface ApplicationListOptions {
@@ -32,7 +33,10 @@ export class Application {
     request.setQueryParam("iterator", options?.iterator);
     request.setQueryParam("order", options?.order);
 
-    return request.send(this.requestCtx, "ListResponseApplicationOut");
+    return request.send(
+      this.requestCtx,
+      ListResponseApplicationOutSerializer._fromJsonObject
+    );
   }
 
   /** Create a new application. */
@@ -43,9 +47,9 @@ export class Application {
     const request = new SvixRequest(HttpMethod.POST, "/api/v1/app");
 
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(applicationIn, "ApplicationIn");
+    request.setBody(ApplicationInSerializer._toJsonObject(applicationIn));
 
-    return request.send(this.requestCtx, "ApplicationOut");
+    return request.send(this.requestCtx, ApplicationOutSerializer._fromJsonObject);
   }
 
   /** Get the application with the UID from `applicationIn`, or create it if it doesn't exist yet. */
@@ -57,9 +61,9 @@ export class Application {
 
     request.setQueryParam("get_if_exists", true);
     request.setHeaderParam("idempotency-key", options?.idempotencyKey);
-    request.setBody(applicationIn, "ApplicationIn");
+    request.setBody(ApplicationInSerializer._toJsonObject(applicationIn));
 
-    return request.send(this.requestCtx, "ApplicationOut");
+    return request.send(this.requestCtx, ApplicationOutSerializer._fromJsonObject);
   }
 
   /** Get an application. */
@@ -68,7 +72,7 @@ export class Application {
 
     request.setPathParam("app_id", appId);
 
-    return request.send(this.requestCtx, "ApplicationOut");
+    return request.send(this.requestCtx, ApplicationOutSerializer._fromJsonObject);
   }
 
   /** Update an application. */
@@ -76,9 +80,9 @@ export class Application {
     const request = new SvixRequest(HttpMethod.PUT, "/api/v1/app/{app_id}");
 
     request.setPathParam("app_id", appId);
-    request.setBody(applicationIn, "ApplicationIn");
+    request.setBody(ApplicationInSerializer._toJsonObject(applicationIn));
 
-    return request.send(this.requestCtx, "ApplicationOut");
+    return request.send(this.requestCtx, ApplicationOutSerializer._fromJsonObject);
   }
 
   /** Delete an application. */
@@ -98,8 +102,8 @@ export class Application {
     const request = new SvixRequest(HttpMethod.PATCH, "/api/v1/app/{app_id}");
 
     request.setPathParam("app_id", appId);
-    request.setBody(applicationPatch, "ApplicationPatch");
+    request.setBody(ApplicationPatchSerializer._toJsonObject(applicationPatch));
 
-    return request.send(this.requestCtx, "ApplicationOut");
+    return request.send(this.requestCtx, ApplicationOutSerializer._fromJsonObject);
   }
 }

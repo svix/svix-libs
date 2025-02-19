@@ -1,4 +1,6 @@
-import { ApiException, HttpErrorOut, Svix } from ".";
+import { Svix } from ".";
+import { HttpErrorOut } from "./HttpErrors";
+import { ApiException } from "./util";
 
 function getTestClient(): Svix | null {
   const token = process.env.SVIX_TOKEN;

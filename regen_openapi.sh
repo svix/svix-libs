@@ -53,8 +53,6 @@ jq --indent 4 '.components.schemas |= with_entries(
     < .codegen-tmp/openapi.json \
     > .codegen-tmp/openapi-less-null.json
 
-yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g typescript -o javascript/src/openapi -c javascript/openapi-generator-config.json --type-mappings=set=Array -t javascript/templates
-
 yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g java -o java/lib/generated/openapi -c java/openapi-generator-config.json -t java/templates
 
 yarn openapi-generator-cli generate -i .codegen-tmp/openapi.json -g kotlin -o kotlin/lib/generated/openapi -c kotlin/openapi-generator-config.json -t kotlin/templates

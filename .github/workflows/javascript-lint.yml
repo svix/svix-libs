@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - "javascript/**"
-      - "lib-openapi.json"
       - '.github/workflows/javascript-lint.yml'
 
 jobs:
@@ -18,11 +17,6 @@ jobs:
           node-version: 'latest'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Regen openapi libs
-        run: |
-          yarn
-          ./regen_openapi.sh
-
       - name: Install modules
         run: |
           cd javascript
@@ -32,3 +26,8 @@ jobs:
         run: |
           cd javascript
           yarn run lint
+
+      - name: Test
+        run: |
+          cd javascript
+          yarn run test
