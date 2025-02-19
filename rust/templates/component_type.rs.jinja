@@ -1,0 +1,14 @@
+// this file is @generated
+{% if type.description is defined -%}
+{% set doc_comment = type.description | to_doc_comment(style="rust") -%}
+{% endif -%}
+
+{% if type.kind == "struct" -%}
+    {% include "types/struct.rs.jinja" -%}
+{% elif type.kind == "string_enum" -%}
+    {% include "types/string_enum.rs.jinja" -%}
+{% elif type.kind == "integer_enum" -%}
+    {% include "types/integer_enum.rs.jinja" -%}
+{% else -%}
+    compile_error!("{{ type.kind }} types are not supported by this codegen template");
+{% endif %}

@@ -1,0 +1,33 @@
+use std::fmt;
+
+use serde_repr::{Deserialize_repr, Serialize_repr};
+
+{{ doc_comment }}
+#[repr(i64)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Default,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize_repr,
+    Deserialize_repr,
+)]
+pub enum {{ type.name | to_upper_camel_case }} {
+    {% for name, value in type.variants -%}
+        {% if loop.first -%}
+            #[default]
+        {% endif -%}
+        {{ name | to_upper_camel_case }} = {{ value }},
+    {% endfor -%}
+}
+
+impl fmt::Display for {{ type.name | to_upper_camel_case }} {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", *self as i64)
+    }
+}

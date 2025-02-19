@@ -1,0 +1,17 @@
+{% for resource in api.resources -%}
+    mod {{ resource.name | to_snake_case }};
+{% endfor %}
+
+pub use self::{
+    {% for resource in api.resources -%}
+        {% set resource_type_name = resource.name | to_upper_camel_case -%}
+        {{ resource.name | to_snake_case }}::{
+            {{ resource_type_name }},
+            {% for op in resource.operations -%}
+                {% if op.query_params | length > 0 -%}
+                    {{ resource_type_name }}{{ op.name | to_upper_camel_case }}Options,
+                {% endif -%}
+            {% endfor -%}
+        },
+    {% endfor -%}
+};
