@@ -23,11 +23,6 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Regen openapi libs
-        run: |
-          yarn
-          ./regen_openapi.sh
-
       - name: Restore gradle.properties
         run: |
           mkdir -p ~/.gradle/
