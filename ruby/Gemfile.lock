@@ -6,10 +6,13 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    base64 (0.2.0)
     diff-lcs (1.4.4)
     ethon (0.16.0)
       ffi (>= 1.15.0)
-    ffi (1.17.0)
+    ffi (1.16.3)
+    logger (1.6.6)
+    ostruct (0.6.1)
     rake (13.0.6)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
@@ -31,10 +34,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  base64
+  logger
+  ostruct
   rake (~> 13.0)
   rspec (~> 3.2)
   svix!
   typhoeus (~> 1.0, >= 1.0.1)
 
 BUNDLED WITH
-   2.2.33
+   2.6.5
