@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 require "net/http"
 
 module Svix
   class SvixHttpClient
-    def initialize(token, base_url)
+    def initialize(token, base_url, debug)
       @token = token
       @base_url = base_url
+      @debug = debug
     end
 
     def execute_request(method, path, **kwargs)
@@ -45,10 +48,13 @@ module Svix
       end
 
       # Execute request
-      debug_http_message(request, uri, "Request")
+      if @debug
+        debug_http_message(request, uri, "Request")
+      end
       res = http.request(request)
-      res.header
-      debug_http_message(res, uri, "Response")
+      if @debug
+        debug_http_message(res, uri, "Response")
+      end
       if Integer(res.code) == 204
         res
       elsif Integer(res.code) >= 200 && Integer(res.code) <= 299

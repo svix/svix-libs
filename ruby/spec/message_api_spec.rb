@@ -1,7 +1,6 @@
 # frozen_string_literal: true
-
+require "svix"
 require_relative "../lib/svix/api/message.rb"
-require_relative "../lib/svix"
 
 RSpec.describe Svix::Message do
   describe "message_in_raw" do

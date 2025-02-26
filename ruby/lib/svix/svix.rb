@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Svix
   class SvixOptions
     attr_accessor :debug
@@ -32,14 +34,7 @@ module Svix
 
       uri = URI(options.server_url || regional_url)
 
-      configuration = Configuration.new
-      configuration.debugging = options.debug
-      configuration.scheme = uri.scheme
-      configuration.host = uri.port ? "#{uri.host}:#{uri.port}" : uri.host
-      configuration.access_token = auth_token
-      configuration.server_index = nil
-
-      api_client = SvixHttpClient.new(auth_token, uri)
+      api_client = SvixHttpClient.new(auth_token, uri,options.debug)
       # api_client.user_agent = "svix-libs/#{VERSION}/ruby"
 
       @application = Application.new(api_client)
