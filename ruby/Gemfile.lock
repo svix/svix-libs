@@ -7,28 +7,23 @@ GEM
   remote: https://rubygems.org/
   specs:
     base64 (0.2.0)
-    diff-lcs (1.4.4)
-    ethon (0.16.0)
-      ffi (>= 1.15.0)
-    ffi (1.16.3)
+    diff-lcs (1.6.0)
     logger (1.6.6)
     ostruct (0.6.1)
-    rake (13.0.6)
-    rspec (3.10.0)
-      rspec-core (~> 3.10.0)
-      rspec-expectations (~> 3.10.0)
-      rspec-mocks (~> 3.10.0)
-    rspec-core (3.10.1)
-      rspec-support (~> 3.10.0)
-    rspec-expectations (3.10.1)
+    rake (13.2.1)
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
+    rspec-core (3.13.3)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
-    rspec-mocks (3.10.2)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
-    rspec-support (3.10.2)
-    typhoeus (1.4.1)
-      ethon (>= 0.9.0)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.2)
 
 PLATFORMS
   ruby
@@ -40,7 +35,6 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.2)
   svix!
-  typhoeus (~> 1.0, >= 1.0.1)
 
 BUNDLED WITH
    2.6.5
