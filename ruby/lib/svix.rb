@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# This file is @generated
+
 require "json"
 require "openssl"
 require "base64"
@@ -101,9 +104,4 @@ require "svix/svix"
 require "svix/util"
 require "svix/version"
 require "svix/webhook"
-require "svix/validation_error"
-require "svix/http_validation_error"
-require "svix/http_error_out"
-require "svix/svix_http_client"
-
 require "svix/internal"

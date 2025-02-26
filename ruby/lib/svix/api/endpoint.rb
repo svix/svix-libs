@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 # This file is @generated
+
 require "net/http"
 
 module Svix
