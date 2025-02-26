@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative '../lib/svix/api/message.rb'
-require_relative '../lib/svix'
+require_relative "../lib/svix/api/message.rb"
+require_relative "../lib/svix"
 
 RSpec.describe Svix::Message do
   let(:app_id) { "app_123" }
   let(:msg_id) { "msg_123" }
-  let(:options) { {with_content: true} }
+  let(:options) { { with_content: true } }
   subject { described_class.new(param_mock) }
 
   let(:param_mock) { double("MessageApiParam") }
