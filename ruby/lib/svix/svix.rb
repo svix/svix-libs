@@ -33,9 +33,7 @@ module Svix
       end
 
       uri = URI(options.server_url || regional_url)
-
-      api_client = SvixHttpClient.new(auth_token, uri,options.debug)
-      # api_client.user_agent = "svix-libs/#{VERSION}/ruby"
+      api_client = SvixHttpClient.new(auth_token, uri, options.debug)
 
       @application = Application.new(api_client)
       # @authentication = AuthenticationAPI.new(api_client)

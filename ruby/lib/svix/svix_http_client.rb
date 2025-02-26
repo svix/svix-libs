@@ -37,6 +37,7 @@ module Svix
       # Create request object
       request = request_class.new(uri.request_uri)
       request["Authorization"] = "Bearer #{@token}"
+      request["User-Agent"] = "svix-libs/#{VERSION}/ruby"
 
       # Add headers
       headers.each { |key, value| request[key] = value }
