@@ -20,11 +20,6 @@ jobs:
         with:
           ruby-version: 3.4.2
 
-      - name: Regen openapi libs
-        run: |
-          yarn
-          ./regen_openapi.sh
-
       - name: Install dependencies
         run: |
           cd ruby
