@@ -11,16 +11,16 @@ module Svix
     end
 
     def initialize(value)
-      unless value.is_a?(String)
-        fail ArgumentError, "The input argument (value) must be a String in `Svix::BackgroundTaskStatus` new method"
+      unless BackgroundTaskStatus.all_vars.include?(value)
+        raise "Invalid ENUM value '#{value}' for class #BackgroundTaskStatus"
       end
+
       @value = value
-      return value if BackgroundTaskStatus.all_vars.include?(value)
-      raise "Invalid ENUM value '#{value}' for class #BackgroundTaskStatus"
     end
 
     def self.deserialize(value)
-      new value
+      return value if BackgroundTaskStatus.all_vars.include?(value)
+      raise "Invalid ENUM value '#{value}' for class #BackgroundTaskStatus"
     end
 
     def serialize

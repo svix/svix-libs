@@ -13,16 +13,16 @@ module Svix
     end
 
     def initialize(value)
-      unless value.is_a?(Integer)
-        fail ArgumentError, "The input argument (value) must be a Integer in `Svix::MessageAttemptTriggerType` new method"
+      unless MessageAttemptTriggerType.all_vars.include?(value)
+        raise "Invalid ENUM value '#{value}' for class #MessageAttemptTriggerType"
       end
+
       @value = value
-      return value if MessageAttemptTriggerType.all_vars.include?(value)
-      raise "Invalid ENUM value '#{value}' for class #MessageAttemptTriggerType"
     end
 
     def self.deserialize(value)
-      new value
+      return value if MessageAttemptTriggerType.all_vars.include?(value)
+      raise "Invalid ENUM value '#{value}' for class #MessageAttemptTriggerType"
     end
 
     def serialize

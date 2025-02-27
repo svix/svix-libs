@@ -6,27 +6,35 @@ module Svix
   class IntegrationKeyOut
     attr_accessor :key
 
+    ALL_FIELD ||= ["key"].freeze
+    private_constant :ALL_FIELD
+
     def initialize(attributes = {})
       unless attributes.is_a?(Hash)
-        fail ArgumentError, "The input argument (attributes) must be a hash in `Svix::EndpointPatch` new method"
+        fail(ArgumentError, "The input argument (attributes) must be a hash in `Svix::IntegrationKeyOut` new method")
       end
+
       attributes.each do |k, v|
-        instance_variable_set "@#{k}", v
+        unless ALL_FIELD.include?(k.to_s)
+          fail(ArgumentError, "The field #{k} is not part of Svix::IntegrationKeyOut")
+        end
+
+        instance_variable_set("@#{k}", v)
+        instance_variable_set("@__#{k}_is_defined", true)
       end
     end
 
     def self.deserialize(attributes = {})
       attributes = attributes.transform_keys(&:to_s)
-      attrs = {
-        'key': attributes["key"],
-      }
-      new attrs
+      attrs = Hash.new
+      attrs["key"] = attributes["key"]
+      new(attrs)
     end
 
     def serialize
       out = Hash.new
-      out["key"] = @key
-      out.compact
+      out["key"] = Svix::serialize_primitive(@key) if @key
+      out
     end
 
     # Serializes the object to a json string

@@ -14,43 +14,61 @@ module Svix
     attr_accessor :tags
     attr_accessor :transformations_params
 
+    ALL_FIELD ||= [
+      "application",
+      "channels",
+      "event_id",
+      "event_type",
+      "payload",
+      "payload_retention_hours",
+      "payload_retention_period",
+      "tags",
+      "transformations_params"
+    ].freeze
+    private_constant :ALL_FIELD
+
     def initialize(attributes = {})
       unless attributes.is_a?(Hash)
-        fail ArgumentError, "The input argument (attributes) must be a hash in `Svix::EndpointPatch` new method"
+        fail(ArgumentError, "The input argument (attributes) must be a hash in `Svix::MessageIn` new method")
       end
+
       attributes.each do |k, v|
-        instance_variable_set "@#{k}", v
+        unless ALL_FIELD.include?(k.to_s)
+          fail(ArgumentError, "The field #{k} is not part of Svix::MessageIn")
+        end
+
+        instance_variable_set("@#{k}", v)
+        instance_variable_set("@__#{k}_is_defined", true)
       end
     end
 
     def self.deserialize(attributes = {})
       attributes = attributes.transform_keys(&:to_s)
-      attrs = {
-        'application': Svix::ApplicationIn.deserialize(attributes["application"]),
-        'channels': attributes["channels"],
-        'event_id': attributes["eventId"],
-        'event_type': attributes["eventType"],
-        'payload': attributes["payload"],
-        'payload_retention_hours': attributes["payloadRetentionHours"],
-        'payload_retention_period': attributes["payloadRetentionPeriod"],
-        'tags': attributes["tags"],
-        'transformations_params': attributes["transformationsParams"],
-      }
-      new attrs
+      attrs = Hash.new
+      attrs["application"] = Svix::ApplicationIn.deserialize(attributes["application"]) if attributes["application"]
+      attrs["channels"] = attributes["channels"]
+      attrs["event_id"] = attributes["eventId"]
+      attrs["event_type"] = attributes["eventType"]
+      attrs["payload"] = attributes["payload"]
+      attrs["payload_retention_hours"] = attributes["payloadRetentionHours"]
+      attrs["payload_retention_period"] = attributes["payloadRetentionPeriod"]
+      attrs["tags"] = attributes["tags"]
+      attrs["transformations_params"] = attributes["transformationsParams"]
+      new(attrs)
     end
 
     def serialize
       out = Hash.new
-      out["application"] = @application.serialize
-      out["channels"] = @channels
-      out["eventId"] = @event_id
-      out["eventType"] = @event_type
-      out["payload"] = @payload
-      out["payloadRetentionHours"] = @payload_retention_hours
-      out["payloadRetentionPeriod"] = @payload_retention_period
-      out["tags"] = @tags
-      out["transformationsParams"] = @transformations_params
-      out.compact
+      out["application"] = @application.serialize if @application
+      out["channels"] = Svix::serialize_primitive(@channels) if @channels
+      out["eventId"] = Svix::serialize_primitive(@event_id) if @event_id
+      out["eventType"] = Svix::serialize_primitive(@event_type) if @event_type
+      out["payload"] = Svix::serialize_primitive(@payload) if @payload
+      out["payloadRetentionHours"] = Svix::serialize_primitive(@payload_retention_hours) if @payload_retention_hours
+      out["payloadRetentionPeriod"] = Svix::serialize_primitive(@payload_retention_period) if @payload_retention_period
+      out["tags"] = Svix::serialize_primitive(@tags) if @tags
+      out["transformationsParams"] = Svix::serialize_primitive(@transformations_params) if @transformations_params
+      out
     end
 
     # Serializes the object to a json string

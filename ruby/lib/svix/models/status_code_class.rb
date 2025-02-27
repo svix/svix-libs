@@ -21,16 +21,16 @@ module Svix
     end
 
     def initialize(value)
-      unless value.is_a?(Integer)
-        fail ArgumentError, "The input argument (value) must be a Integer in `Svix::StatusCodeClass` new method"
+      unless StatusCodeClass.all_vars.include?(value)
+        raise "Invalid ENUM value '#{value}' for class #StatusCodeClass"
       end
+
       @value = value
-      return value if StatusCodeClass.all_vars.include?(value)
-      raise "Invalid ENUM value '#{value}' for class #StatusCodeClass"
     end
 
     def self.deserialize(value)
-      new value
+      return value if StatusCodeClass.all_vars.include?(value)
+      raise "Invalid ENUM value '#{value}' for class #StatusCodeClass"
     end
 
     def serialize

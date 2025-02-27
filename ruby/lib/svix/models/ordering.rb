@@ -11,16 +11,16 @@ module Svix
     end
 
     def initialize(value)
-      unless value.is_a?(String)
-        fail ArgumentError, "The input argument (value) must be a String in `Svix::Ordering` new method"
+      unless Ordering.all_vars.include?(value)
+        raise "Invalid ENUM value '#{value}' for class #Ordering"
       end
+
       @value = value
-      return value if Ordering.all_vars.include?(value)
-      raise "Invalid ENUM value '#{value}' for class #Ordering"
     end
 
     def self.deserialize(value)
-      new value
+      return value if Ordering.all_vars.include?(value)
+      raise "Invalid ENUM value '#{value}' for class #Ordering"
     end
 
     def serialize

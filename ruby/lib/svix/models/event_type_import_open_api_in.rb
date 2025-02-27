@@ -12,33 +12,44 @@ module Svix
     attr_accessor :spec
     attr_accessor :spec_raw
 
+    ALL_FIELD ||= ["dry_run", "replace_all", "spec", "spec_raw"].freeze
+    private_constant :ALL_FIELD
+
     def initialize(attributes = {})
       unless attributes.is_a?(Hash)
-        fail ArgumentError, "The input argument (attributes) must be a hash in `Svix::EndpointPatch` new method"
+        fail(
+          ArgumentError,
+          "The input argument (attributes) must be a hash in `Svix::EventTypeImportOpenApiIn` new method"
+        )
       end
+
       attributes.each do |k, v|
-        instance_variable_set "@#{k}", v
+        unless ALL_FIELD.include?(k.to_s)
+          fail(ArgumentError, "The field #{k} is not part of Svix::EventTypeImportOpenApiIn")
+        end
+
+        instance_variable_set("@#{k}", v)
+        instance_variable_set("@__#{k}_is_defined", true)
       end
     end
 
     def self.deserialize(attributes = {})
       attributes = attributes.transform_keys(&:to_s)
-      attrs = {
-        'dry_run': attributes["dryRun"],
-        'replace_all': attributes["replaceAll"],
-        'spec': attributes["spec"],
-        'spec_raw': attributes["specRaw"],
-      }
-      new attrs
+      attrs = Hash.new
+      attrs["dry_run"] = attributes["dryRun"]
+      attrs["replace_all"] = attributes["replaceAll"]
+      attrs["spec"] = attributes["spec"]
+      attrs["spec_raw"] = attributes["specRaw"]
+      new(attrs)
     end
 
     def serialize
       out = Hash.new
-      out["dryRun"] = @dry_run
-      out["replaceAll"] = @replace_all
-      out["spec"] = @spec
-      out["specRaw"] = @spec_raw
-      out.compact
+      out["dryRun"] = Svix::serialize_primitive(@dry_run) if @dry_run
+      out["replaceAll"] = Svix::serialize_primitive(@replace_all) if @replace_all
+      out["spec"] = Svix::serialize_primitive(@spec) if @spec
+      out["specRaw"] = Svix::serialize_primitive(@spec_raw) if @spec_raw
+      out
     end
 
     # Serializes the object to a json string

@@ -13,41 +13,52 @@ module Svix
     attr_accessor :uid
     attr_accessor :url
 
+    ALL_FIELD ||= ["description", "disabled", "filter_types", "metadata", "rate_limit", "secret", "uid", "url"].freeze
+    private_constant :ALL_FIELD
+
     def initialize(attributes = {})
       unless attributes.is_a?(Hash)
-        fail ArgumentError, "The input argument (attributes) must be a hash in `Svix::EndpointPatch` new method"
+        fail(
+          ArgumentError,
+          "The input argument (attributes) must be a hash in `Svix::OperationalWebhookEndpointIn` new method"
+        )
       end
+
       attributes.each do |k, v|
-        instance_variable_set "@#{k}", v
+        unless ALL_FIELD.include?(k.to_s)
+          fail(ArgumentError, "The field #{k} is not part of Svix::OperationalWebhookEndpointIn")
+        end
+
+        instance_variable_set("@#{k}", v)
+        instance_variable_set("@__#{k}_is_defined", true)
       end
     end
 
     def self.deserialize(attributes = {})
       attributes = attributes.transform_keys(&:to_s)
-      attrs = {
-        'description': attributes["description"],
-        'disabled': attributes["disabled"],
-        'filter_types': attributes["filterTypes"],
-        'metadata': attributes["metadata"],
-        'rate_limit': attributes["rateLimit"],
-        'secret': attributes["secret"],
-        'uid': attributes["uid"],
-        'url': attributes["url"],
-      }
-      new attrs
+      attrs = Hash.new
+      attrs["description"] = attributes["description"]
+      attrs["disabled"] = attributes["disabled"]
+      attrs["filter_types"] = attributes["filterTypes"]
+      attrs["metadata"] = attributes["metadata"]
+      attrs["rate_limit"] = attributes["rateLimit"]
+      attrs["secret"] = attributes["secret"]
+      attrs["uid"] = attributes["uid"]
+      attrs["url"] = attributes["url"]
+      new(attrs)
     end
 
     def serialize
       out = Hash.new
-      out["description"] = @description
-      out["disabled"] = @disabled
-      out["filterTypes"] = @filter_types
-      out["metadata"] = @metadata
-      out["rateLimit"] = @rate_limit
-      out["secret"] = @secret
-      out["uid"] = @uid
-      out["url"] = @url
-      out.compact
+      out["description"] = Svix::serialize_primitive(@description) if @description
+      out["disabled"] = Svix::serialize_primitive(@disabled) if @disabled
+      out["filterTypes"] = Svix::serialize_primitive(@filter_types) if @filter_types
+      out["metadata"] = Svix::serialize_primitive(@metadata) if @metadata
+      out["rateLimit"] = Svix::serialize_primitive(@rate_limit) if @rate_limit
+      out["secret"] = Svix::serialize_primitive(@secret) if @secret
+      out["uid"] = Svix::serialize_primitive(@uid) if @uid
+      out["url"] = Svix::serialize_primitive(@url) if @url
+      out
     end
 
     # Serializes the object to a json string

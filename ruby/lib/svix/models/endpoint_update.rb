@@ -14,43 +14,61 @@ module Svix
     attr_accessor :url
     attr_accessor :version
 
+    ALL_FIELD ||= [
+      "channels",
+      "description",
+      "disabled",
+      "filter_types",
+      "metadata",
+      "rate_limit",
+      "uid",
+      "url",
+      "version"
+    ].freeze
+    private_constant :ALL_FIELD
+
     def initialize(attributes = {})
       unless attributes.is_a?(Hash)
-        fail ArgumentError, "The input argument (attributes) must be a hash in `Svix::EndpointPatch` new method"
+        fail(ArgumentError, "The input argument (attributes) must be a hash in `Svix::EndpointUpdate` new method")
       end
+
       attributes.each do |k, v|
-        instance_variable_set "@#{k}", v
+        unless ALL_FIELD.include?(k.to_s)
+          fail(ArgumentError, "The field #{k} is not part of Svix::EndpointUpdate")
+        end
+
+        instance_variable_set("@#{k}", v)
+        instance_variable_set("@__#{k}_is_defined", true)
       end
     end
 
     def self.deserialize(attributes = {})
       attributes = attributes.transform_keys(&:to_s)
-      attrs = {
-        'channels': attributes["channels"],
-        'description': attributes["description"],
-        'disabled': attributes["disabled"],
-        'filter_types': attributes["filterTypes"],
-        'metadata': attributes["metadata"],
-        'rate_limit': attributes["rateLimit"],
-        'uid': attributes["uid"],
-        'url': attributes["url"],
-        'version': attributes["version"],
-      }
-      new attrs
+      attrs = Hash.new
+      attrs["channels"] = attributes["channels"]
+      attrs["description"] = attributes["description"]
+      attrs["disabled"] = attributes["disabled"]
+      attrs["filter_types"] = attributes["filterTypes"]
+      attrs["metadata"] = attributes["metadata"]
+      attrs["rate_limit"] = attributes["rateLimit"]
+      attrs["uid"] = attributes["uid"]
+      attrs["url"] = attributes["url"]
+      attrs["version"] = attributes["version"]
+      new(attrs)
     end
 
     def serialize
       out = Hash.new
-      out["channels"] = @channels
-      out["description"] = @description
-      out["disabled"] = @disabled
-      out["filterTypes"] = @filter_types
-      out["metadata"] = @metadata
-      out["rateLimit"] = @rate_limit
-      out["uid"] = @uid
-      out["url"] = @url
-      out["version"] = @version
-      out.compact
+      out["channels"] = Svix::serialize_primitive(@channels) if @channels
+      out["description"] = Svix::serialize_primitive(@description) if @description
+      out["disabled"] = Svix::serialize_primitive(@disabled) if @disabled
+      out["filterTypes"] = Svix::serialize_primitive(@filter_types) if @filter_types
+      out["metadata"] = Svix::serialize_primitive(@metadata) if @metadata
+      out["rateLimit"] = Svix::serialize_primitive(@rate_limit) if @rate_limit
+      out["uid"] = Svix::serialize_primitive(@uid) if @uid
+      out["url"] = Svix::serialize_primitive(@url) if @url
+      out["version"] = Svix::serialize_primitive(@version) if @version
+      out
     end
 
     # Serializes the object to a json string
