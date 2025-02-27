@@ -7,11 +7,3 @@
 /spec/reports/
 /tmp/
 *.gem
-
-lib/svix/api
-lib/svix/models
-lib/svix/api_client.rb
-lib/svix/api_error.rb
-lib/svix/configuration.rb
-.openapi-generator
-.gitlab-ci.yml

@@ -18,12 +18,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
-
-      - name: Regen openapi libs
-        run: |
-          yarn
-          ./regen_openapi.sh
+          ruby-version: 3.4.2
 
       - name: Install dependencies
         run: |
