@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require "uri"
 require "net/http"
 
 module Svix
@@ -57,7 +57,7 @@ module Svix
         debug_http_message(res, uri, "Response")
       end
       if Integer(res.code) == 204
-        res
+        nil
       elsif Integer(res.code) >= 200 && Integer(res.code) <= 299
         JSON.parse res.body
       else
@@ -70,9 +70,11 @@ module Svix
       query_params.each do |k, v|
         unless v.nil?
           if v.kind_of?(Array)
-            encoded_query_pairs.append "#{k}=" + v.join(",")
+            encoded_query_pairs.append "#{k}=" + CGI::escape(v.sort.join(","))
+          elsif v.kind_of?(Time)
+            encoded_query_pairs.append "#{k}=#{CGI::escape(v.utc.to_datetime.rfc3339)}"
           else
-            encoded_query_pairs.append "#{k}=#{v}"
+            encoded_query_pairs.append "#{k}=#{CGI::escape(v)}"
           end
         end
       end
