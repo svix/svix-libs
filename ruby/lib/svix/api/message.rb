@@ -26,7 +26,7 @@ module Svix
     content_type = attributes.delete(:content_type)
     if content_type != nil
       attributes[:transformations_params][:headers] ||= {}
-      attributes[:transformations_params][:headers][:'content-type'] = content_type
+      attributes[:transformations_params][:headers][:"content-type"] = content_type
     end
 
     MessageIn.new(attributes)
@@ -38,53 +38,75 @@ module Svix
     end
 
     def list(app_id, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/msg"
       res = @client.execute_request(
         "GET",
         path,
-        query_params: { "limit" => options["limit"], "iterator" => options["iterator"], "channel" => options["channel"], "before" => options["before"], "after" => options["after"], "with_content" => options["with_content"], "tag" => options["tag"], "event_types" => options["event_types"] },
+        query_params: {
+          "limit" => options["limit"],
+          "iterator" => options["iterator"],
+          "channel" => options["channel"],
+          "before" => options["before"],
+          "after" => options["after"],
+          "with_content" => options["with_content"],
+          "tag" => options["tag"],
+          "event_types" => options["event_types"]
+        }
       )
-      ListResponseMessageOut.deserialize res
+      ListResponseMessageOut.deserialize(res)
     end
 
     def create(app_id, message_in, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/msg"
       res = @client.execute_request(
         "POST",
         path,
-        query_params: { "with_content" => options["with_content"] },
-        headers: { "idempotency-key" => options["idempotency-key"] },
-        body: message_in,
+        query_params: {
+          "with_content" => options["with_content"]
+        },
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: message_in
       )
-      MessageOut.deserialize res
+      MessageOut.deserialize(res)
     end
 
     def expunge_all_contents(app_id, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/msg/expunge-all-contents"
       res = @client.execute_request(
         "POST",
         path,
-        headers: { "idempotency-key" => options["idempotency-key"] },
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        }
       )
-      ExpungAllContentsOut.deserialize res
+      ExpungAllContentsOut.deserialize(res)
     end
 
     def get(app_id, msg_id, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/msg/#{msg_id}"
       res = @client.execute_request(
         "GET",
         path,
-        query_params: { "with_content" => options["with_content"] },
+        query_params: {
+          "with_content" => options["with_content"]
+        }
       )
-      MessageOut.deserialize res
+      MessageOut.deserialize(res)
     end
 
     def expunge_content(app_id, msg_id)
       path = "/api/v1/app/#{app_id}/msg/#{msg_id}/content"
-      res = @client.execute_request(
+      @client.execute_request(
         "DELETE",
-        path,
+        path
       )
     end
+
   end
 end

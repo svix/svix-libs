@@ -10,33 +10,41 @@ module Svix
     end
 
     def list(app_id, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/endpoint"
       res = @client.execute_request(
         "GET",
         path,
-        query_params: { "limit" => options["limit"], "iterator" => options["iterator"], "order" => options["order"] },
+        query_params: {
+          "limit" => options["limit"],
+          "iterator" => options["iterator"],
+          "order" => options["order"]
+        }
       )
-      ListResponseEndpointOut.deserialize res
+      ListResponseEndpointOut.deserialize(res)
     end
 
     def create(app_id, endpoint_in, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/endpoint"
       res = @client.execute_request(
         "POST",
         path,
-        headers: { "idempotency-key" => options["idempotency-key"] },
-        body: endpoint_in,
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: endpoint_in
       )
-      EndpointOut.deserialize res
+      EndpointOut.deserialize(res)
     end
 
     def get(app_id, endpoint_id)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}"
       res = @client.execute_request(
         "GET",
-        path,
+        path
       )
-      EndpointOut.deserialize res
+      EndpointOut.deserialize(res)
     end
 
     def update(app_id, endpoint_id, endpoint_update)
@@ -44,16 +52,16 @@ module Svix
       res = @client.execute_request(
         "PUT",
         path,
-        body: endpoint_update,
+        body: endpoint_update
       )
-      EndpointOut.deserialize res
+      EndpointOut.deserialize(res)
     end
 
     def delete(app_id, endpoint_id)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}"
-      res = @client.execute_request(
+      @client.execute_request(
         "DELETE",
-        path,
+        path
       )
     end
 
@@ -62,116 +70,133 @@ module Svix
       res = @client.execute_request(
         "PATCH",
         path,
-        body: endpoint_patch,
+        body: endpoint_patch
       )
-      EndpointOut.deserialize res
+      EndpointOut.deserialize(res)
     end
 
     def get_headers(app_id, endpoint_id)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/headers"
       res = @client.execute_request(
         "GET",
-        path,
+        path
       )
-      EndpointHeadersOut.deserialize res
+      EndpointHeadersOut.deserialize(res)
     end
 
     def update_headers(app_id, endpoint_id, endpoint_headers_in)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/headers"
-      res = @client.execute_request(
+      @client.execute_request(
         "PUT",
         path,
-        body: endpoint_headers_in,
+        body: endpoint_headers_in
       )
     end
 
     def patch_headers(app_id, endpoint_id, endpoint_headers_patch_in)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/headers"
-      res = @client.execute_request(
+      @client.execute_request(
         "PATCH",
         path,
-        body: endpoint_headers_patch_in,
+        body: endpoint_headers_patch_in
       )
     end
 
     def recover(app_id, endpoint_id, recover_in, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/recover"
       res = @client.execute_request(
         "POST",
         path,
-        headers: { "idempotency-key" => options["idempotency-key"] },
-        body: recover_in,
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: recover_in
       )
-      RecoverOut.deserialize res
+      RecoverOut.deserialize(res)
     end
 
     def replay_missing(app_id, endpoint_id, replay_in, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/replay-missing"
       res = @client.execute_request(
         "POST",
         path,
-        headers: { "idempotency-key" => options["idempotency-key"] },
-        body: replay_in,
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: replay_in
       )
-      ReplayOut.deserialize res
+      ReplayOut.deserialize(res)
     end
 
     def get_secret(app_id, endpoint_id)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/secret"
       res = @client.execute_request(
         "GET",
-        path,
+        path
       )
-      EndpointSecretOut.deserialize res
+      EndpointSecretOut.deserialize(res)
     end
 
     def rotate_secret(app_id, endpoint_id, endpoint_secret_rotate_in, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/secret/rotate"
-      res = @client.execute_request(
+      @client.execute_request(
         "POST",
         path,
-        headers: { "idempotency-key" => options["idempotency-key"] },
-        body: endpoint_secret_rotate_in,
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: endpoint_secret_rotate_in
       )
     end
 
     def send_example(app_id, endpoint_id, event_example_in, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/send-example"
       res = @client.execute_request(
         "POST",
         path,
-        headers: { "idempotency-key" => options["idempotency-key"] },
-        body: event_example_in,
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: event_example_in
       )
-      MessageOut.deserialize res
+      MessageOut.deserialize(res)
     end
 
     def get_stats(app_id, endpoint_id, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/stats"
       res = @client.execute_request(
         "GET",
         path,
-        query_params: { "since" => options["since"], "until" => options["until"] },
+        query_params: {
+          "since" => options["since"],
+          "until" => options["until"]
+        }
       )
-      EndpointStats.deserialize res
+      EndpointStats.deserialize(res)
     end
 
     def transformation_get(app_id, endpoint_id)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/transformation"
       res = @client.execute_request(
         "GET",
-        path,
+        path
       )
-      EndpointTransformationOut.deserialize res
+      EndpointTransformationOut.deserialize(res)
     end
 
     def transformation_partial_update(app_id, endpoint_id, endpoint_transformation_in)
       path = "/api/v1/app/#{app_id}/endpoint/#{endpoint_id}/transformation"
-      res = @client.execute_request(
+      @client.execute_request(
         "PATCH",
         path,
-        body: endpoint_transformation_in,
+        body: endpoint_transformation_in
       )
     end
+
   end
 end

@@ -10,37 +10,58 @@ module Svix
     end
 
     def list(options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app"
       res = @client.execute_request(
         "GET",
         path,
-        query_params: { "limit" => options["limit"], "iterator" => options["iterator"], "order" => options["order"] },
+        query_params: {
+          "limit" => options["limit"],
+          "iterator" => options["iterator"],
+          "order" => options["order"]
+        }
       )
-      ListResponseApplicationOut.deserialize res
+      ListResponseApplicationOut.deserialize(res)
     end
 
     def create(application_in, options = {})
+      options = options.transform_keys(&:to_s)
       path = "/api/v1/app"
       res = @client.execute_request(
         "POST",
         path,
-        headers: { "idempotency-key" => options["idempotency-key"] },
-        body: application_in,
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: application_in
       )
-      ApplicationOut.deserialize res
+      ApplicationOut.deserialize(res)
     end
 
     def get_or_create(application_in, options = {})
-      ## return @api.v1_application_create(application_in, {**options, get_if_exists: true})
+      options = options.transform_keys(&:to_s)
+      path = "/api/v1/app"
+      res = @client.execute_request(
+        "POST",
+        path,
+        query_params: {
+          "get_if_exists" => true
+        },
+        headers: {
+          "idempotency-key" => options["idempotency-key"]
+        },
+        body: application_in
+      )
+      ApplicationOut.deserialize(res)
     end
 
     def get(app_id)
       path = "/api/v1/app/#{app_id}"
       res = @client.execute_request(
         "GET",
-        path,
+        path
       )
-      ApplicationOut.deserialize res
+      ApplicationOut.deserialize(res)
     end
 
     def update(app_id, application_in)
@@ -48,16 +69,16 @@ module Svix
       res = @client.execute_request(
         "PUT",
         path,
-        body: application_in,
+        body: application_in
       )
-      ApplicationOut.deserialize res
+      ApplicationOut.deserialize(res)
     end
 
     def delete(app_id)
       path = "/api/v1/app/#{app_id}"
-      res = @client.execute_request(
+      @client.execute_request(
         "DELETE",
-        path,
+        path
       )
     end
 
@@ -66,9 +87,10 @@ module Svix
       res = @client.execute_request(
         "PATCH",
         path,
-        body: application_patch,
+        body: application_patch
       )
-      ApplicationOut.deserialize res
+      ApplicationOut.deserialize(res)
     end
+
   end
 end

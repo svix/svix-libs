@@ -9,12 +9,13 @@ module Svix
       @client = client
     end
 
-    def get()
+    def get
       path = "/api/v1/health"
-      res = @client.execute_request(
+      @client.execute_request(
         "GET",
-        path,
+        path
       )
     end
+
   end
 end
