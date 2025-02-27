@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require "date"
 # Constant time string comparison, for fixed length strings.
 # Code borrowed from ActiveSupport
 # https://github.com/rails/rails/blob/75ac626c4e21129d8296d4206a1960563cc3d4aa/activesupport/lib/active_support/security_utils.rb#L33
@@ -35,4 +35,22 @@ module Svix
   end
 
   module_function :secure_compare
+
+
+  def serialize_primitive(v)
+    if v.kind_of?(Time)
+      v.utc.to_datetime.rfc3339
+    else
+      v
+    end
+  end
+
+  module_function :serialize_primitive
+
+  def deserialize_date(v)
+    DateTime.rfc3339(v)
+  end
+
+  module_function :deserialize_date
+
 end
