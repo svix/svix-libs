@@ -74,7 +74,7 @@ pub async fn new_pair(
         // "global" enforces the same limit for other consumers on the channel, which isn't
         // necessarily what we want
         consume_prefetch_count: Some(prefetch_size),
-        requeue_on_nack: false, // TODO
+        requeue_on_nack: true,
     })
     .build_pair()
     .await
