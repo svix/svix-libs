@@ -1,0 +1,59 @@
+# This file controls the behavior of Trunk: https://docs.trunk.io/cli
+# To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
+version: 0.1
+cli:
+  version: 1.16.0
+plugins:
+  sources:
+    - id: trunk
+      ref: v1.2.3
+      uri: https://github.com/trunk-io/plugins
+runtimes:
+  enabled:
+    - go@1.21.0
+    - java@13.0.11
+    - node@18.12.1
+    - python@3.10.8
+    - rust@1.72.0
+lint:
+  enabled:
+    - actionlint@1.6.25
+    - bandit@1.7.5
+    - black@23.9.1
+    - checkov@2.4.9
+    - clippy@1.72.0
+    - dotenv-linter@3.3.0
+    - git-diff-check
+    - gofmt@1.20.4
+    - gokart@0.5.1
+    - golangci-lint@1.54.2
+    - hadolint@2.12.0
+    - isort@5.12.0
+    - ktlint@1.0.0
+    - markdownlint@0.37.0
+    - osv-scanner@1.4.0
+    - oxipng@8.0.0
+    - prettier@3.0.3
+    - ruff@0.0.290
+    - rustfmt@1.72.0
+    - shellcheck@0.9.0
+    - shfmt@3.6.0
+    - taplo@0.8.1
+    - terrascan@1.18.3
+    - trivy@0.45.1
+    - trufflehog@3.56.1
+    - yamllint@1.32.0
+  ignore:
+    - linters: [clippy, rustfmt]
+      paths:
+        # do not reun
+        - rust/src/lib.rs
+    - linters: [ALL]
+      paths:
+        - go/internal/openapi/**
+actions:
+  enabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+    - trunk-upgrade-available
