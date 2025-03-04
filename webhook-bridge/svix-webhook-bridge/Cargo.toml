@@ -1,0 +1,73 @@
+[package]
+name = "svix-webhook-bridge"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4.2.4", features = ["env", "derive"] }
+
+# Latest deno: leaks.
+#deno_core = "0.185.0"
+#deno_runtime = "0.111.0"
+
+# This is just after what og-ingester was using (tagged 1.29.4).
+# The actuals: 0.165 and 0.91 (tagged 1.29.2). These fail to resolve deps - conflicts on tokio and related.
+# Still leaks!
+#deno_core = "0.167"
+#deno_runtime = "0.93"
+
+# These are "old" deno - about a year old, v1.22.0.
+# Worker API is different here. Not clear on how to get values back from a script execution in a worker; returns only unit.
+#deno_core = "0.135.0"
+#deno_runtime = "0.61.0"
+
+# This is v1.30.3 - the bug reports of leaks started in 1.31.x
+#deno_core = "0.171.0"
+#deno_runtime = "0.97.0"
+
+# tagged 1.27.2 (leaks)
+#deno_core = "0.158.0"
+
+# tagged 1.26.2 (leaks)
+#deno_core = "0.155.0"
+
+# tagged 1.25.4
+#deno_core = "0.152.0"
+
+# tagged 1.24.3 (leaks, but not quite as badly as later releases - backtrace showed v8 GC frames)
+#deno_core = "0.147.0"
+
+# tagged 1.23.3 (does not seem to leak)
+deno_core = "0.142.0"
+
+lazy_static = "1.4"
+opentelemetry = { version = "0.18.0", features = ["rt-tokio"] }
+opentelemetry-http = "0.7.0"
+opentelemetry-otlp = { version = "0.11.0", features = ["metrics", "grpc-tonic", "http-proto", "reqwest-client"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9.21"
+# FIXME: Used in deno execution - can we just use tokio?
+smol = "1.3.0"
+svix-webhook-bridge-plugin-queue-consumer = { optional=true, path = "../svix-webhook-bridge-plugin-queue-consumer" }
+svix-webhook-bridge-plugin-webhook-receiver = { optional=true, path = "../svix-webhook-bridge-plugin-webhook-receiver" }
+svix-webhook-bridge-types = { path = "../svix-webhook-bridge-types" }
+svix-ksuid = "0.7.0"
+threadpool = "1.8"
+tokio = { version = "1", features=["full"] }
+tracing = "0.1"
+tracing-opentelemetry = "0.18.0"
+tracing-subscriber = { version="0.3", features=["env-filter", "fmt", "json"] }
+
+[features]
+default = ["gcp-pubsub", "rabbitmq", "redis", "sqs", "webhook-receiver"]
+
+gcp-pubsub = ["generic-queue"]
+generic-queue = ["dep:svix-webhook-bridge-plugin-queue-consumer"]
+rabbitmq = ["generic-queue"]
+redis = ["generic-queue"]
+sqs = ["generic-queue"]
+webhook-receiver = ["dep:svix-webhook-bridge-plugin-webhook-receiver"]
