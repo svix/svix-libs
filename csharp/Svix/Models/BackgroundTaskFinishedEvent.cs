@@ -10,10 +10,10 @@ namespace Svix.Models
     public class BackgroundTaskFinishedEvent
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required BackgroundTaskFinishedEvent2 Data { get; set; }
+        public BackgroundTaskFinishedEvent2 Data { get; set; }
 
         [JsonProperty("type", Required = Required.Always)]
-        public required string Type { get; set; }
+        public string Type { get; set; }
 
         public override string ToString()
         {

@@ -10,7 +10,7 @@ namespace Svix.Models
         public Dictionary<string, string>? Metadata { get; set; } = null;
 
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("rateLimit")]
         public ushort? RateLimit { get; set; } = null;

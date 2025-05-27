@@ -10,22 +10,22 @@ namespace Svix.Models
     public class MessageAttemptFailingEventData
     {
         [JsonProperty("appId", Required = Required.Always)]
-        public required string AppId { get; set; }
+        public string AppId { get; set; }
 
         [JsonProperty("appUid")]
         public string? AppUid { get; set; } = null;
 
         [JsonProperty("endpointId", Required = Required.Always)]
-        public required string EndpointId { get; set; }
+        public string EndpointId { get; set; }
 
         [JsonProperty("lastAttempt", Required = Required.Always)]
-        public required MessageAttemptFailedData LastAttempt { get; set; }
+        public MessageAttemptFailedData LastAttempt { get; set; }
 
         [JsonProperty("msgEventId")]
         public string? MsgEventId { get; set; } = null;
 
         [JsonProperty("msgId", Required = Required.Always)]
-        public required string MsgId { get; set; }
+        public string MsgId { get; set; }
 
         public override string ToString()
         {

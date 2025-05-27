@@ -7,13 +7,13 @@ namespace Svix.Models
     public class PollingEndpointOut
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required List<PollingEndpointMessageOut> Data { get; set; }
+        public List<PollingEndpointMessageOut> Data { get; set; }
 
         [JsonProperty("done", Required = Required.Always)]
-        public required bool Done { get; set; }
+        public bool Done { get; set; }
 
         [JsonProperty("iterator", Required = Required.Always)]
-        public required string Iterator { get; set; }
+        public string Iterator { get; set; }
 
         public override string ToString()
         {

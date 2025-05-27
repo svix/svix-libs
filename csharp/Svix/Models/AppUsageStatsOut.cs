@@ -7,16 +7,16 @@ namespace Svix.Models
     public class AppUsageStatsOut
     {
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("status", Required = Required.Always)]
-        public required BackgroundTaskStatus Status { get; set; }
+        public BackgroundTaskStatus Status { get; set; }
 
         [JsonProperty("task", Required = Required.Always)]
-        public required BackgroundTaskType Task { get; set; }
+        public BackgroundTaskType Task { get; set; }
 
         [JsonProperty("unresolvedAppIds", Required = Required.Always)]
-        public required List<string> UnresolvedAppIds { get; set; }
+        public List<string> UnresolvedAppIds { get; set; }
 
         public override string ToString()
         {

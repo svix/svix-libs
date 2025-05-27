@@ -10,13 +10,13 @@ namespace Svix.Models
     public class IngestSourceIn
     {
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("uid")]
         public string? Uid { get; set; } = null;
 
         [JsonIgnore]
-        public required IngestSourceInConfig Config { get; set; }
+        public IngestSourceInConfig Config { get; set; }
 
         [JsonProperty("type")]
         private string Type => Config.GetDiscriminator();
@@ -412,16 +412,16 @@ namespace Svix.Models
     internal class IngestSourceInSurrogate
     {
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("uid")]
         public string? Uid { get; set; } = null;
 
         [JsonProperty("type", Required = Required.Always)]
-        public required string Type { get; set; }
+        public string Type { get; set; }
 
         [JsonProperty("config", Required = Required.Always)]
-        public required JObject Config { get; set; }
+        public JObject Config { get; set; }
     }
 
     public class IngestSourceInConverter : JsonConverter

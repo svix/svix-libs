@@ -7,7 +7,7 @@ namespace Svix.Models
     public class EndpointHeadersIn
     {
         [JsonProperty("headers", Required = Required.Always)]
-        public required Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
 
         public override string ToString()
         {

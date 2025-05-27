@@ -10,10 +10,10 @@ namespace Svix.Models
         public string? ContentType { get; set; } = null;
 
         [JsonProperty("payload", Required = Required.Always)]
-        public required string Payload { get; set; }
+        public string Payload { get; set; }
 
         [JsonProperty("schedule", Required = Required.Always)]
-        public required string Schedule { get; set; }
+        public string Schedule { get; set; }
 
         public override string ToString()
         {

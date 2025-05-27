@@ -7,7 +7,7 @@ namespace Svix.Models
     public class EventTypeImportOpenApiOutData
     {
         [JsonProperty("modified", Required = Required.Always)]
-        public required List<string> Modified { get; set; }
+        public List<string> Modified { get; set; }
 
         [JsonProperty("to_modify")]
         public List<EventTypeFromOpenApi>? ToModify { get; set; } = null;

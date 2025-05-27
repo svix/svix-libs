@@ -7,10 +7,10 @@ namespace Svix.Models
     public class ListResponseOperationalWebhookEndpointOut
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required List<OperationalWebhookEndpointOut> Data { get; set; }
+        public List<OperationalWebhookEndpointOut> Data { get; set; }
 
         [JsonProperty("done", Required = Required.Always)]
-        public required bool Done { get; set; }
+        public bool Done { get; set; }
 
         [JsonProperty("iterator")]
         public string? Iterator { get; set; } = null;

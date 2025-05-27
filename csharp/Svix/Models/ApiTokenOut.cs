@@ -7,13 +7,13 @@ namespace Svix.Models
     public class ApiTokenOut
     {
         [JsonProperty("createdAt", Required = Required.Always)]
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("expiresAt")]
         public DateTime? ExpiresAt { get; set; } = null;
 
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("name")]
         public string? Name { get; set; } = null;
@@ -22,7 +22,7 @@ namespace Svix.Models
         public List<string>? Scopes { get; set; } = null;
 
         [JsonProperty("token", Required = Required.Always)]
-        public required string Token { get; set; }
+        public string Token { get; set; }
 
         public override string ToString()
         {

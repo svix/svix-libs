@@ -7,7 +7,7 @@ namespace Svix.Models
     public class EventExampleIn
     {
         [JsonProperty("eventType", Required = Required.Always)]
-        public required string EventType { get; set; }
+        public string EventType { get; set; }
 
         [JsonProperty("exampleIndex")]
         public ulong? ExampleIndex { get; set; } = null;

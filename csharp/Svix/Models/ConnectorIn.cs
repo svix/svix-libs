@@ -25,13 +25,13 @@ namespace Svix.Models
         public ConnectorKind? Kind { get; set; } = null;
 
         [JsonProperty("logo", Required = Required.Always)]
-        public required string Logo { get; set; }
+        public string Logo { get; set; }
 
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("transformation", Required = Required.Always)]
-        public required string Transformation { get; set; }
+        public string Transformation { get; set; }
 
         public override string ToString()
         {

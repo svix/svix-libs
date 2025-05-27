@@ -10,10 +10,10 @@ namespace Svix.Models
     public class EndpointCreatedEvent
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required EndpointCreatedEventData Data { get; set; }
+        public EndpointCreatedEventData Data { get; set; }
 
         [JsonProperty("type", Required = Required.Always)]
-        public required string Type { get; set; }
+        public string Type { get; set; }
 
         public override string ToString()
         {

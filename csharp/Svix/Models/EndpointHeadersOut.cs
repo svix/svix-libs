@@ -12,10 +12,10 @@ namespace Svix.Models
     public class EndpointHeadersOut
     {
         [JsonProperty("headers", Required = Required.Always)]
-        public required Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
 
         [JsonProperty("sensitive", Required = Required.Always)]
-        public required List<string> Sensitive { get; set; }
+        public List<string> Sensitive { get; set; }
 
         public override string ToString()
         {

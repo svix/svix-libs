@@ -7,10 +7,10 @@ namespace Svix.Models
     public class ListResponseApplicationOut
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required List<ApplicationOut> Data { get; set; }
+        public List<ApplicationOut> Data { get; set; }
 
         [JsonProperty("done", Required = Required.Always)]
-        public required bool Done { get; set; }
+        public bool Done { get; set; }
 
         [JsonProperty("iterator")]
         public string? Iterator { get; set; } = null;

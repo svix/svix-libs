@@ -7,10 +7,10 @@ namespace Svix.Models
     public class EventTypeFromOpenApi
     {
         [JsonProperty("deprecated", Required = Required.Always)]
-        public required bool Deprecated { get; set; }
+        public bool Deprecated { get; set; }
 
         [JsonProperty("description", Required = Required.Always)]
-        public required string Description { get; set; }
+        public string Description { get; set; }
 
         [JsonProperty("featureFlag")]
         public string? FeatureFlag { get; set; } = null;
@@ -19,7 +19,7 @@ namespace Svix.Models
         public string? GroupName { get; set; } = null;
 
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("schemas")]
         public Object? Schemas { get; set; } = null;

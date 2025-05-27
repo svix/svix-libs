@@ -7,13 +7,13 @@ namespace Svix.Models
     public class MessageAttemptFailedData
     {
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("responseStatusCode", Required = Required.Always)]
-        public required short ResponseStatusCode { get; set; }
+        public short ResponseStatusCode { get; set; }
 
         [JsonProperty("timestamp", Required = Required.Always)]
-        public required DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         public override string ToString()
         {

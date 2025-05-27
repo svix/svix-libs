@@ -7,7 +7,7 @@ namespace Svix.Models
     public class PollingEndpointConsumerSeekOut
     {
         [JsonProperty("iterator", Required = Required.Always)]
-        public required string Iterator { get; set; }
+        public string Iterator { get; set; }
 
         public override string ToString()
         {

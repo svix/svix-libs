@@ -7,7 +7,7 @@ namespace Svix.Models
     public class SvixConfig
     {
         [JsonProperty("secret", Required = Required.Always)]
-        public required string Secret { get; set; }
+        public string Secret { get; set; }
 
         public override string ToString()
         {

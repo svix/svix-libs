@@ -7,7 +7,7 @@ namespace Svix.Models
     public class PollingEndpointConsumerSeekIn
     {
         [JsonProperty("after", Required = Required.Always)]
-        public required DateTime After { get; set; }
+        public DateTime After { get; set; }
 
         public override string ToString()
         {

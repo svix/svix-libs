@@ -10,25 +10,25 @@ namespace Svix.Models
     public class IngestSourceOut
     {
         [JsonProperty("createdAt", Required = Required.Always)]
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("ingestUrl")]
         public string? IngestUrl { get; set; } = null;
 
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("uid")]
         public string? Uid { get; set; } = null;
 
         [JsonProperty("updatedAt", Required = Required.Always)]
-        public required DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         [JsonIgnore]
-        public required IngestSourceOutConfig Config { get; set; }
+        public IngestSourceOutConfig Config { get; set; }
 
         [JsonProperty("type")]
         private string Type => Config.GetDiscriminator();
@@ -428,28 +428,28 @@ namespace Svix.Models
     internal class IngestSourceOutSurrogate
     {
         [JsonProperty("createdAt", Required = Required.Always)]
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("ingestUrl")]
         public string? IngestUrl { get; set; } = null;
 
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("uid")]
         public string? Uid { get; set; } = null;
 
         [JsonProperty("updatedAt", Required = Required.Always)]
-        public required DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         [JsonProperty("type", Required = Required.Always)]
-        public required string Type { get; set; }
+        public string Type { get; set; }
 
         [JsonProperty("config", Required = Required.Always)]
-        public required JObject Config { get; set; }
+        public JObject Config { get; set; }
     }
 
     public class IngestSourceOutConverter : JsonConverter

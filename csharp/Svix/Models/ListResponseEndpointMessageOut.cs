@@ -7,10 +7,10 @@ namespace Svix.Models
     public class ListResponseEndpointMessageOut
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required List<EndpointMessageOut> Data { get; set; }
+        public List<EndpointMessageOut> Data { get; set; }
 
         [JsonProperty("done", Required = Required.Always)]
-        public required bool Done { get; set; }
+        public bool Done { get; set; }
 
         [JsonProperty("iterator")]
         public string? Iterator { get; set; } = null;

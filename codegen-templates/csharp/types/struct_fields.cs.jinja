@@ -2,19 +2,17 @@
     {% set is_patch = type.name is endingwith "Patch" -%}
     [JsonProperty("{{ field.name }}"{% if field.required and not field.nullable %},Required = Required.Always{% endif %})]
     {% set f_ty = field.type.to_csharp() -%}
-    {% set modifier = "public"-%}
     {% if field.nullable or not field.required -%}
         {% set f_ty %}{{ f_ty }}?{% endset -%}
         {% set f_val = "= null;" -%}
     {% else -%}
-        {% set modifier %}{{ modifier }} required{% endset -%}
         {% set f_val = "" -%}
     {% endif -%}
     {% if is_patch and field.nullable -%}
         {% set f_ty %}MaybeUnset<{{ f_ty }}>{% endset -%}
         {% set f_val %}= {{ f_ty }}.Unset();{% endset -%}
     {% endif -%}
-    {{ modifier }} {{ f_ty }} {{ field.name | to_upper_camel_case }} { get; set; } {{ f_val }}
+    public {{ f_ty }} {{ field.name | to_upper_camel_case }} { get; set; } {{ f_val }}
     {% if is_patch and field.nullable -%}
     public bool ShouldSerialize{{ field.name | to_upper_camel_case }}() => !{{ field.name | to_upper_camel_case }}.IsUnset;
     {% elif is_patch and not field.nullable -%}

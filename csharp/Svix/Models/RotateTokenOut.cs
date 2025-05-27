@@ -7,7 +7,7 @@ namespace Svix.Models
     public class RotateTokenOut
     {
         [JsonProperty("ingestUrl", Required = Required.Always)]
-        public required string IngestUrl { get; set; }
+        public string IngestUrl { get; set; }
 
         public override string ToString()
         {

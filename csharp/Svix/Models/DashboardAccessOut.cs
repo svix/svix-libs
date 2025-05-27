@@ -7,10 +7,10 @@ namespace Svix.Models
     public class DashboardAccessOut
     {
         [JsonProperty("token", Required = Required.Always)]
-        public required string Token { get; set; }
+        public string Token { get; set; }
 
         [JsonProperty("url", Required = Required.Always)]
-        public required string Url { get; set; }
+        public string Url { get; set; }
 
         public override string ToString()
         {

@@ -16,25 +16,25 @@ namespace Svix.Models
         public string? EventId { get; set; } = null;
 
         [JsonProperty("eventType", Required = Required.Always)]
-        public required string EventType { get; set; }
+        public string EventType { get; set; }
 
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("nextAttempt")]
         public DateTime? NextAttempt { get; set; } = null;
 
         [JsonProperty("payload", Required = Required.Always)]
-        public required Object Payload { get; set; }
+        public Object Payload { get; set; }
 
         [JsonProperty("status", Required = Required.Always)]
-        public required MessageStatus Status { get; set; }
+        public MessageStatus Status { get; set; }
 
         [JsonProperty("tags")]
         public List<string>? Tags { get; set; } = null;
 
         [JsonProperty("timestamp", Required = Required.Always)]
-        public required DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         public override string ToString()
         {

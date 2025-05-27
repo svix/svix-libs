@@ -7,7 +7,7 @@ namespace Svix.Models
     public class AdobeSignConfig
     {
         [JsonProperty("clientId", Required = Required.Always)]
-        public required string ClientId { get; set; }
+        public string ClientId { get; set; }
 
         public override string ToString()
         {

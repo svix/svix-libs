@@ -16,10 +16,10 @@ namespace Svix.Models
         public string? EventId { get; set; } = null;
 
         [JsonProperty("eventType", Required = Required.Always)]
-        public required string EventType { get; set; }
+        public string EventType { get; set; }
 
         [JsonProperty("payload", Required = Required.Always)]
-        public required Object Payload { get; set; }
+        public Object Payload { get; set; }
 
         [JsonProperty("payloadRetentionHours")]
         public long? PayloadRetentionHours { get; set; } = null;

@@ -7,7 +7,7 @@ namespace Svix.Models
     public class IntegrationKeyOut
     {
         [JsonProperty("key", Required = Required.Always)]
-        public required string Key { get; set; }
+        public string Key { get; set; }
 
         public override string ToString()
         {

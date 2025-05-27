@@ -10,13 +10,13 @@ namespace Svix.Models
     public class EndpointUpdatedEventData
     {
         [JsonProperty("appId", Required = Required.Always)]
-        public required string AppId { get; set; }
+        public string AppId { get; set; }
 
         [JsonProperty("appUid")]
         public string? AppUid { get; set; } = null;
 
         [JsonProperty("endpointId", Required = Required.Always)]
-        public required string EndpointId { get; set; }
+        public string EndpointId { get; set; }
 
         [JsonProperty("endpointUid")]
         public string? EndpointUid { get; set; } = null;

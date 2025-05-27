@@ -10,10 +10,10 @@ namespace Svix.Models
         public List<string>? AppIds { get; set; } = null;
 
         [JsonProperty("since", Required = Required.Always)]
-        public required DateTime Since { get; set; }
+        public DateTime Since { get; set; }
 
         [JsonProperty("until", Required = Required.Always)]
-        public required DateTime Until { get; set; }
+        public DateTime Until { get; set; }
 
         public override string ToString()
         {

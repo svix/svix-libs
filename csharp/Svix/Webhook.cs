@@ -18,7 +18,7 @@ namespace Svix
         internal const string UNBRANDED_SIGNATURE_HEADER_KEY = "webhook-signature";
         internal const string UNBRANDED_TIMESTAMP_HEADER_KEY = "webhook-timestamp";
 
-        private const int SIGNATURE_LENGTH_BYTES = HMACSHA256.HashSizeInBytes;
+        private const int SIGNATURE_LENGTH_BYTES = 32;
         private const int SIGNATURE_LENGTH_BASE64 = 48;
         private const int SIGNATURE_LENGTH_STRING = 56;
         private const int TOLERANCE_IN_SECONDS = 60 * 5;

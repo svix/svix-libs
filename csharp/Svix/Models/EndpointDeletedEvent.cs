@@ -10,10 +10,10 @@ namespace Svix.Models
     public class EndpointDeletedEvent
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required EndpointDeletedEventData Data { get; set; }
+        public EndpointDeletedEventData Data { get; set; }
 
         [JsonProperty("type", Required = Required.Always)]
-        public required string Type { get; set; }
+        public string Type { get; set; }
 
         public override string ToString()
         {

@@ -10,10 +10,10 @@ namespace Svix.Models
     public class MessageAttemptExhaustedEvent
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required MessageAttemptExhaustedEventData Data { get; set; }
+        public MessageAttemptExhaustedEventData Data { get; set; }
 
         [JsonProperty("type", Required = Required.Always)]
-        public required string Type { get; set; }
+        public string Type { get; set; }
 
         public override string ToString()
         {

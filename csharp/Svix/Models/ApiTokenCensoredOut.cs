@@ -7,16 +7,16 @@ namespace Svix.Models
     public class ApiTokenCensoredOut
     {
         [JsonProperty("censoredToken", Required = Required.Always)]
-        public required string CensoredToken { get; set; }
+        public string CensoredToken { get; set; }
 
         [JsonProperty("createdAt", Required = Required.Always)]
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("expiresAt")]
         public DateTime? ExpiresAt { get; set; } = null;
 
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("name")]
         public string? Name { get; set; } = null;

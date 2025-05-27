@@ -7,19 +7,19 @@ namespace Svix.Models
     public class IntegrationOut
     {
         [JsonProperty("createdAt", Required = Required.Always)]
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("featureFlags")]
         public List<string>? FeatureFlags { get; set; } = null;
 
         [JsonProperty("id", Required = Required.Always)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("updatedAt", Required = Required.Always)]
-        public required DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public override string ToString()
         {

@@ -7,7 +7,7 @@ namespace Svix.Models
     public class EventTypeImportOpenApiOut
     {
         [JsonProperty("data", Required = Required.Always)]
-        public required EventTypeImportOpenApiOutData Data { get; set; }
+        public EventTypeImportOpenApiOutData Data { get; set; }
 
         public override string ToString()
         {

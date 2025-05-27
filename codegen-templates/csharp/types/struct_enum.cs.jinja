@@ -19,7 +19,7 @@ namespace Svix.Models {
     {
         {% include "types/struct_fields.cs.jinja" %}
         [JsonIgnore]
-        public required {{ enum_type_name }} {{ content_field_name }} { get; set; }
+        public {{ enum_type_name }} {{ content_field_name }} { get; set; }
 
         [JsonProperty("{{ type.discriminator_field }}")]
         private string {{ discriminator_field_name }} => Config.GetDiscriminator();
@@ -164,10 +164,10 @@ namespace Svix.Models {
     {
         {% include "types/struct_fields.cs.jinja" %}
         [JsonProperty("{{ type.discriminator_field }}", Required = Required.Always)]
-        public required string {{ discriminator_field_name }} { get; set; }
+        public string {{ discriminator_field_name }} { get; set; }
 
         [JsonProperty("{{ type.content_field }}", Required = Required.Always)]
-        public required JObject {{ content_field_name }} { get; set; }
+        public JObject {{ content_field_name }} { get; set; }
 
     }
 

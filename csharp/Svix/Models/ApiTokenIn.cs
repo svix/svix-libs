@@ -7,7 +7,7 @@ namespace Svix.Models
     public class ApiTokenIn
     {
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("scopes")]
         public List<string>? Scopes { get; set; } = null;

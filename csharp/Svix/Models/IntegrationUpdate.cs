@@ -10,7 +10,7 @@ namespace Svix.Models
         public List<string>? FeatureFlags { get; set; } = null;
 
         [JsonProperty("name", Required = Required.Always)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         public override string ToString()
         {

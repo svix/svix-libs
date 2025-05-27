@@ -7,16 +7,16 @@ namespace Svix.Models
     public class EnvironmentOut
     {
         [JsonProperty("createdAt", Required = Required.Always)]
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("eventTypes", Required = Required.Always)]
-        public required List<EventTypeOut> EventTypes { get; set; }
+        public List<EventTypeOut> EventTypes { get; set; }
 
         [JsonProperty("settings")]
         public Object? Settings { get; set; } = null;
 
         [JsonProperty("transformationTemplates", Required = Required.Always)]
-        public required List<ConnectorOut> TransformationTemplates { get; set; }
+        public List<ConnectorOut> TransformationTemplates { get; set; }
 
         [JsonProperty("version")]
         public long? Version { get; set; } = null;
