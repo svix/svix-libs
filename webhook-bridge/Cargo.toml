@@ -1,0 +1,14 @@
+[workspace]
+# Earlier versions of deno fail to compile in a workspace because of wgpu-hal
+# The "fix" is to enable resolver 2 at the workspace. Crates with edition 2021
+# use this by default, but workspaces are set independently for some reason.
+# <https://stackoverflow.com/questions/73967574/dependency-fails-to-compile-in-workspace-but-not-in-package>
+resolver = "2"
+
+members = [
+    "generic-queue",
+    "svix-webhook-bridge-types",
+    "svix-webhook-bridge",
+    "svix-webhook-bridge-plugin-queue-consumer",
+    "svix-webhook-bridge-plugin-webhook-receiver",
+]

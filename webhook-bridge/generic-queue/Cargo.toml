@@ -1,0 +1,40 @@
+[package]
+name = "generic_queue"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1"
+aws-config = { version = "0.55", optional = true }
+aws-sdk-kinesis = { version = "0.27.0", optional = true }
+aws-sdk-sqs = { version = "0.25", optional = true }
+bb8 = { version = "0.7.1", optional = true }
+bb8-redis = { version = "0.10.1", optional = true }
+futures = { version = "0.3", default-features = false, features = ["async-await", "std"] }
+lapin = { version = "2", optional = true }
+redis = { version = "0.21.5", features = ["tokio-comp", "tokio-native-tls-comp", "streams"], optional = true }
+redis_cluster_async = { git = "https://github.com/redis-rs/redis-cluster-async.git", rev = "e6fe168", optional = true }
+google-cloud-pubsub = { version="0.14.1", optional = true }
+google-cloud-googleapis = { version = "0.8.0", optional = true }
+google-cloud-gax = { version = "0.14.1", optional = true }
+google-cloud-default = { version = "0.2.0", features = ["pubsub"], optional = true }
+google-cloud-auth = { version = "0.9.2", optional = true }
+serde = { version = "1", features = ["derive", "rc"] }
+serde_json = "1"
+thiserror = "1"
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.7", optional = true }
+futures-util = { version = "0.3.28", optional = true }
+tracing = "0.1"
+
+[features]
+default = ["gcp_pubsub", "memory_queue", "rabbitmq", "redis", "redis_cluster", "sqs"]
+kinesis = ["dep:aws-config", "dep:aws-sdk-kinesis"]
+gcp_pubsub = ["dep:google-cloud-pubsub", "dep:google-cloud-googleapis", "dep:google-cloud-gax", "dep:tokio-util", "dep:futures-util", "dep:google-cloud-default", "dep:google-cloud-auth"]
+memory_queue = []
+rabbitmq = ["dep:lapin"]
+redis = ["dep:bb8", "dep:bb8-redis", "dep:redis"]
+redis_cluster = ["redis", "dep:redis_cluster_async"]
+sqs = ["dep:aws-config", "dep:aws-sdk-sqs"]
